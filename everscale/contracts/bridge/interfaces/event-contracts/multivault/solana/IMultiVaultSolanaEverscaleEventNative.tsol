@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 import "./../../../event-configuration-contracts/ISolanaEverscaleEventConfiguration.tsol";
@@ -15,7 +15,7 @@ interface IMultiVaultSolanaEverscaleEventNative {
         address tokenWallet_
     ) external;
 
-    function getDecodedData() external responsible returns(
+    function getDecodedData() externalMsg internalMsg external responsible returns(
         address token_,
         uint128 amount_,
         address recipient_,

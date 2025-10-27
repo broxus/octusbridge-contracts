@@ -1,7 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader pubkey;
-pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.tsol";
@@ -13,6 +10,8 @@ import "./../../../interfaces/proxy/ISolanaEverscaleProxyExtended.tsol";
 import "./../../base/solana/SolanaEverscaleBaseEvent.tsol";
 
 
+#[ExternalMessage(time, pubkey, expire)]
+#[CustomReplayProt]
 contract MultiVaultSolanaEverscaleEventNative is
     SolanaEverscaleBaseEvent,
     IMultiVaultSolanaEverscaleEventNative
@@ -28,11 +27,11 @@ contract MultiVaultSolanaEverscaleEventNative is
     address proxy;
     address tokenWallet;
 
-    address public limitApprover;
-    bool public isLimitApproved;
+    address limitApprover_;
+    bool isLimitApproved_;
 
     modifier onlyLimitApprover() {
-        require(msg.sender == limitApprover && limitApprover.value != 0, ErrorCodes.SENDER_IS_NOT_LIMIT_APPROVER);
+        require(msg.sender == limitApprover_ && !limitApprover_.isStdZero(), ErrorCodes.SENDER_IS_NOT_LIMIT_APPROVER);
         _;
     }
 
@@ -40,6 +39,14 @@ contract MultiVaultSolanaEverscaleEventNative is
         address _initializer,
         TvmCell _meta
     ) SolanaEverscaleBaseEvent(_initializer, _meta) {}
+
+    function isLimitApproved() externalMsg public view returns (bool) {
+        return isLimitApproved_;
+    }
+
+    function limitApprover() externalMsg public view returns (address) {
+        return limitApprover_;
+    }
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
         body.load(uint64, uint32);
@@ -80,7 +87,7 @@ contract MultiVaultSolanaEverscaleEventNative is
         }
 
         ISolanaEverscaleEventConfiguration(eventInitData.configuration).getDetails{
-            value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS, address(this).wid),
+            value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS),
             callback: MultiVaultSolanaEverscaleEventNative.receiveConfigurationDetails
         }();
     }
@@ -95,7 +102,7 @@ contract MultiVaultSolanaEverscaleEventNative is
         proxy = _networkConfiguration.proxy;
 
         ITokenRoot(token).walletOf{
-            value: gasToValue(Gas.GET_TOKEN_DATA_GAS, address(this).wid),
+            value: gasToValue(Gas.GET_TOKEN_DATA_GAS),
             callback: MultiVaultSolanaEverscaleEventNative.receiveProxyTokenWallet
         }(proxy);
     }
@@ -104,12 +111,12 @@ contract MultiVaultSolanaEverscaleEventNative is
         address tokenWallet_
     ) external override {
         require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
-        require(tokenWallet.value == 0, ErrorCodes.TOKEN_WALLET_ALREADY_SET);
+        require(tokenWallet.isNone(), ErrorCodes.TOKEN_WALLET_ALREADY_SET);
 
         tokenWallet = tokenWallet_;
 
         ITokenWallet(tokenWallet).root{
-            value: gasToValue(Gas.GET_TOKEN_DATA_GAS, address(this).wid),
+            value: gasToValue(Gas.GET_TOKEN_DATA_GAS),
             callback: MultiVaultSolanaEverscaleEventNative.receiveTokenWalletRoot
         }();
     }
@@ -128,7 +135,7 @@ contract MultiVaultSolanaEverscaleEventNative is
         }
     }
 
-    function getDecodedData() external override responsible returns(
+    function getDecodedData() externalMsg internalMsg external override responsible returns(
         address token_,
         uint128 amount_,
         address recipient_,
@@ -151,15 +158,15 @@ contract MultiVaultSolanaEverscaleEventNative is
     }
 
     function dailyLimitReached(address _approver) external override {
-        require(msg.sender == proxy && proxy.value != 0, ErrorCodes.SENDER_NOT_PROXY);
+        require(msg.sender == proxy && !proxy.isStdZero(), ErrorCodes.SENDER_NOT_PROXY);
 
         _setStatusLimitReached(_approver);
 
-        limitApprover = _approver;
+        limitApprover_ = _approver;
     }
 
     function approveLimit() external onlyLimitApprover {
-        isLimitApproved = true;
+        isLimitApproved_ = true;
 
         setStatusConfirmed();
         onConfirm();
@@ -173,7 +180,7 @@ contract MultiVaultSolanaEverscaleEventNative is
     function onConfirm() internal override {
         TvmCell metaData = abi.encode(
             address(this),
-            isLimitApproved,
+            isLimitApproved_,
             token,
             tokenWallet,
             amount,
@@ -182,6 +189,7 @@ contract MultiVaultSolanaEverscaleEventNative is
         );
 
         ISolanaEverscaleProxyExtended(eventInitData.configuration).onSolanaEventConfirmedExtended{
+            value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, metaData, initializer);
     }

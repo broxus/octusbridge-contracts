@@ -1,7 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader expire;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 import "../base/solana/EverscaleSolanaBaseEvent.tsol";
 import "../../interfaces/IEventNotificationReceiver.tsol";
@@ -11,6 +8,8 @@ import "../../../utils/cell-encoder/StakingCellEncoder.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
+#[ExternalMessage(time, pubkey, expire)]
+#[CustomReplayProt]
 contract StakingEverscaleSolanaEvent is EverscaleSolanaBaseEvent, StakingCellEncoder {
     constructor(
         address _initializer,
@@ -31,7 +30,7 @@ contract StakingEverscaleSolanaEvent is EverscaleSolanaBaseEvent, StakingCellEnc
 
     function onReject() override internal {}
 
-    function getDecodedData() public view responsible returns (uint32 round_num, uint256[] sol_keys, uint32 round_end) {
+    function getDecodedData() externalMsg internalMsg public view responsible returns (uint32 round_num, uint256[] sol_keys, uint32 round_end) {
         (round_num, sol_keys, round_end) = decodeEverscaleSolanaStakingEventData(eventInitData.voteData.eventData);
 
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (round_num, sol_keys, round_end);

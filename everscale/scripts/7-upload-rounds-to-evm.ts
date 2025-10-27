@@ -64,7 +64,7 @@ const main = async () => {
         );
 
         const {
-            round_number: roundNumber
+            value0: roundNumber
         } = await stakingTonEvent.methods.round_number().call();
 
         const encodedEvent = ethers.utils.defaultAbiCoder.encode(

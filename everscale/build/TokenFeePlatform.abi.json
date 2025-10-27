@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.7",
 	"header": ["time"],
 	"functions": [
 		{
@@ -14,19 +14,16 @@
 			]
 		}
 	],
-	"data": [
-		{"key":1,"name":"root","type":"address"},
-		{"key":2,"name":"platformType","type":"uint8"},
-		{"key":3,"name":"initialData","type":"cell"}
+	"getters": [
 	],
 	"events": [
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"root","type":"address"},
-		{"name":"platformType","type":"uint8"},
-		{"name":"initialData","type":"cell"}
+		{"init":true,"name":"_pubkey","type":"fixedbytes32"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":true,"name":"root","type":"address"},
+		{"init":true,"name":"platformType","type":"uint8"},
+		{"init":true,"name":"initialData","type":"cell"}
 	]
 }

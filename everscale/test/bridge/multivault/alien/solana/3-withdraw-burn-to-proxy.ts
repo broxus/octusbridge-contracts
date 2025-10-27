@@ -163,7 +163,7 @@ describe("Withdraw Solana alien tokens by burning in favor of proxy", async func
       expectedEventContract.eventContract,
     );
 
-    await processEvent(relays, eventContract.address, EventType.EthereumEverscale, EventAction.Confirm);
+    await processEvent(relays, eventContract.address, EventType.SolanaEverscale, EventAction.Confirm);
   });
 
   it("Check initializer token balance", async () => {

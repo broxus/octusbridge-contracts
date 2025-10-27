@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "./../../bridge/interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
 
@@ -6,6 +6,8 @@ import "./../../bridge/interfaces/proxy/INetworks.tsol";
 import "./../../bridge/interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V6.tsol";
 import "./../../bridge/interfaces/event-contracts/multivault/evm/IEVMCallback.tsol";
 
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
     function encodeMultiVaultAlienEVMEverscale(
         uint256 base_chainId,
@@ -22,7 +24,7 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
         uint256 value,
         uint256 expected_evers,
         TvmCell payload
-    ) external pure returns (TvmCell) {
+    ) externalMsg external pure returns (TvmCell) {
         return abi.encode(
             base_chainId, base_token,
             name, symbol, decimals,
@@ -40,7 +42,7 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
         uint256 value,
         uint256 expected_evers,
         TvmCell payload
-    ) external pure returns (TvmCell) {
+    ) externalMsg external pure returns (TvmCell) {
         return abi.encode(
             token_wid, token_addr,
             amount, recipient_wid, recipient_addr,
@@ -51,7 +53,7 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
     function encodeAlienBurnPayloadEthereum(
         uint160 recipient,
         EVMCallback callback
-    ) external pure returns(TvmCell) {
+    ) externalMsg external pure returns(TvmCell) {
         TvmCell burnPayload = abi.encode(recipient, callback);
 
         return abi.encode(uint32(0), Network.EVM, burnPayload);
@@ -61,7 +63,7 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
         address recipient,
         uint128 expectedGas,
         optional(TvmCell) payload
-    ) external pure returns(TvmCell) {
+    ) externalMsg external pure returns(TvmCell) {
         TvmCell burnPayload = abi.encode(recipient, expectedGas, payload);
 
         return abi.encode(uint32(0), Network.TVM, burnPayload);
@@ -73,7 +75,7 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
         bool executePayloadNeeded,
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
         bytes payload
-    ) external pure returns(TvmCell) {
+    ) externalMsg external pure returns(TvmCell) {
         TvmCell burnPayload = abi.encode(recipient, executeAccounts, executePayloadNeeded, executePayloadAccounts, payload);
 
         return abi.encode(uint32(0), Network.Solana, burnPayload);
@@ -83,7 +85,7 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
         uint160 recipient,
         uint256 chainId,
         EVMCallback callback
-    ) external pure returns (TvmCell) {
+    ) externalMsg external pure returns (TvmCell) {
         TvmCell transferPayload = abi.encode(recipient, chainId, callback);
 
         return abi.encode(uint32(0), Network.EVM, transferPayload);
@@ -97,7 +99,7 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
         uint8 decimals,
         uint128 expectedGas,
         optional(TvmCell) payload
-    ) external pure returns (TvmCell) {
+    ) externalMsg external pure returns (TvmCell) {
         TvmCell transferPayload = abi.encode(recipient, chainId, name, symbol, decimals, expectedGas, payload);
 
         return abi.encode(uint32(0), Network.TVM, transferPayload);
@@ -105,7 +107,7 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
 
     function decodeMultiVaultAlienEverscaleEthereum(
         TvmCell data
-    ) external pure returns (
+    ) externalMsg external pure returns (
         uint160 base_token,
         uint128 amount,
         uint160 recipient,
@@ -123,7 +125,7 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
 
     function decodeMultiVaultNativeEverscaleEthereum(
         TvmCell data
-    ) external pure returns(
+    ) externalMsg external pure returns(
         int8 token_wid,
         uint256 token_addr,
 
@@ -168,7 +170,7 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
         uint64 value,
         uint expected_evers,
         TvmCell payload
-    ) external pure returns (TvmCell) {
+    ) externalMsg external pure returns (TvmCell) {
         return abi.encode(
             base_token,
             name, symbol, decimals,
@@ -185,7 +187,7 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
         uint64 value,
         uint expected_evers,
         TvmCell payload
-    ) external pure returns (TvmCell) {
+    ) externalMsg external pure returns (TvmCell) {
         return abi.encode(token, amount, recipient, value, expected_evers, payload);
     }
 
@@ -195,7 +197,7 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
         bool executePayloadNeeded,
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
         bytes solanaPayload
-    ) external pure returns (TvmCell) {
+    ) externalMsg external pure returns (TvmCell) {
         TvmCell transferPayload = abi.encode(recipient, executeAccounts, executePayloadNeeded, executePayloadAccounts, solanaPayload);
 
         return abi.encode(uint32(0), Network.Solana, transferPayload);
@@ -203,7 +205,7 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
 
     function decodeMultiVaultAlienEverscaleSolana(
         TvmCell data
-    ) external pure returns (
+    ) externalMsg external pure returns (
         uint256 base_token,
         uint128 amount,
         uint256 recipient,
@@ -217,7 +219,7 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
 
     function decodeMultiVaultNativeEverscaleSolana(
         TvmCell data
-    ) external pure returns(
+    ) externalMsg external pure returns(
         address token,
         string name,
         string symbol,

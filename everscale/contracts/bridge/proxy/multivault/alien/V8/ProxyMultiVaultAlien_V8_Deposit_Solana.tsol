@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "./ProxyMultiVaultAlien_V8_Token.tsol";
 

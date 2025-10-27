@@ -1,8 +1,8 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 interface IStaking {
     function getRelayRoundAddressFromTimestamp(
         uint32 time
-    ) external responsible view returns(address roundContract, uint32 roundNum);
+    ) externalMsg internalMsg external responsible view returns(address roundContract, uint32 roundNum);
 }

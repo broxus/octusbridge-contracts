@@ -1,7 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader pubkey;
-pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.tsol";
@@ -23,6 +20,8 @@ import "./../../base/tvm/TvmTvmBaseEvent.tsol";
 import "../../../proxy/fees/BridgeTokenFee.tsol";
 
 
+#[ExternalMessage(time, pubkey, expire)]
+#[TimeReplayProt]
 contract MultiVaultTvmTvmEventAlien is
     TvmTvmBaseEvent,
     IMultiVaultTvmTvmEventAlien,
@@ -32,21 +31,21 @@ contract MultiVaultTvmTvmEventAlien is
 {
     uint128 constant POWER_BASE = 10;
 
-    TvmCell public transitionalDataCell;
+    TvmCell private transitionalDataCell;
 
     DeployStatus private _tokenDeployStatus = DeployStatus.NONE;
     DeployStatus private _routerDeployStatus = DeployStatus.NONE;
 
-    uint128 public bounty;
-    address public eventTokenWallet;
+    uint128 bounty;
+    address eventTokenWallet;
 
-    address public limitApprover;
-    bool public isLimitApproved;
+    address limitApprover_;
+    bool isLimitApproved_;
 
     bool private isWNative;
 
     modifier onlyLimitApprover() {
-        require(msg.sender == limitApprover && limitApprover.value != 0, ErrorCodes.SENDER_IS_NOT_LIMIT_APPROVER);
+        require(msg.sender == limitApprover_ && !limitApprover_.isStdZero(), ErrorCodes.SENDER_IS_NOT_LIMIT_APPROVER);
         _;
     }
 
@@ -57,6 +56,14 @@ contract MultiVaultTvmTvmEventAlien is
         TvmCell _eventBody,
         uint128 _eventInitialBalance
     ) TvmTvmBaseEvent(_initializer, _meta, _transactionChecker, _eventBody, _eventInitialBalance) {}
+
+    function isLimitApproved() externalMsg public view returns (bool) {
+        return isLimitApproved_;
+    }
+    
+    function limitApprover() externalMsg public view returns (address) {
+        return limitApprover_;
+    }
 
     function onInit() override internal {
         status = Status.Initializing;
@@ -73,7 +80,7 @@ contract MultiVaultTvmTvmEventAlien is
         EventData eventData = getEventData();
 
         // return gas in case event contract balance is less than required
-        if (address(this).balance < eventData.expected_gas + eventInitialBalance + msg.forwardFee - gasToValue(Gas.DEPLOY_TVM_TVM_EVENT_REMAINING, address(this).wid)) {
+        if (address(this).balance < eventData.expected_gas + eventInitialBalance + msg.forwardFee - gasToValue(Gas.DEPLOY_TVM_TVM_EVENT_REMAINING)) {
             initializer.transfer({
                 value: 0,
                 bounce: false,
@@ -98,7 +105,7 @@ contract MultiVaultTvmTvmEventAlien is
 
             ITrustlessVerifier(transactionChecker)
                 .verifyTx{
-                    value: gasToValue(Gas.VERIFY_TRANSACTION_GAS, address(this).wid),
+                    value: gasToValue(Gas.VERIFY_TRANSACTION_GAS),
                     flag: MsgFlag.SENDER_PAYS_FEES
                 }(_eventVoteData.txBlockProof, txProof);
         }
@@ -109,7 +116,7 @@ contract MultiVaultTvmTvmEventAlien is
         ) {
             ITvmTvmEventConfiguration(eventInitData.configuration)
                 .getDetails{
-                    value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS, address(this).wid),
+                    value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS),
                     callback: MultiVaultTvmTvmEventAlien.receiveConfigurationDetails
                 }();
 
@@ -148,7 +155,9 @@ contract MultiVaultTvmTvmEventAlien is
     function receiveConfigurationDetails(
         IBasicEventConfiguration.BasicConfiguration,
         ITvmTvmEventConfiguration.TvmTvmEventConfiguration _networkConfiguration,
-        TvmCell
+        TvmCell,
+        address,
+        address
     ) external override {
         require(msg.sender == eventInitData.configuration);
 
@@ -157,7 +166,7 @@ contract MultiVaultTvmTvmEventAlien is
         EventData eventData = getEventData();
 
         IProxyMultiVaultAlien_V9(_networkConfiguration.proxy).getPredeployedTokenData{
-            value: gasToValue(Gas.GET_TOKEN_DATA_GAS, address(this).wid),
+            value: gasToValue(Gas.GET_TOKEN_DATA_GAS),
             callback: MultiVaultTvmTvmEventAlien.receivePredeployedToken
         }(eventData.base_token);
     }
@@ -185,7 +194,7 @@ contract MultiVaultTvmTvmEventAlien is
             _set_token(data.internalToken);
 
             ITokenRoot(data.internalToken).walletOf{
-                value: gasToValue(Gas.GET_TOKEN_DATA_GAS, address(this).wid),
+                value: gasToValue(Gas.GET_TOKEN_DATA_GAS),
                 callback: MultiVaultTvmTvmEventAlien.receiveProxyTokenWallet
             }(nativeProxy);
 
@@ -193,7 +202,7 @@ contract MultiVaultTvmTvmEventAlien is
         }
 
         IProxyMultiVaultAlien_V9(transitionalData.proxy).deriveTVMAlienTokenRoot{
-            value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS, address(this).wid),
+            value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS),
             callback: MultiVaultTvmTvmEventAlien.receiveAlienTokenRoot
         }(
             eventData.base_chainId,
@@ -236,7 +245,7 @@ contract MultiVaultTvmTvmEventAlien is
         _set_token(token);
 
         ITokenRoot(token).name{
-            value: gasToValue(Gas.REQUEST_TOKEN_NAME_GAS, address(this).wid),
+            value: gasToValue(Gas.REQUEST_TOKEN_NAME_GAS),
             bounce: true,
             callback: MultiVaultTvmTvmEventAlien.receiveTokenName
         }();
@@ -260,7 +269,7 @@ contract MultiVaultTvmTvmEventAlien is
         // Token exists, no need to deploy
         // Ask the router address
         IProxyMultiVaultAlien_V9(transitionalData.proxy).deriveMergeRouter{
-            value: gasToValue(Gas.REQUEST_MERGE_ROUTER_GAS, address(this).wid),
+            value: gasToValue(Gas.REQUEST_MERGE_ROUTER_GAS),
             bounce: false,
             callback: MultiVaultTvmTvmEventAlien.receiveMergeRouter
         }(transitionalData.token);
@@ -282,7 +291,7 @@ contract MultiVaultTvmTvmEventAlien is
 
         // Request merge router pool
         IMergeRouter(router).getPool{
-            value: gasToValue(Gas.REQUEST_POOL_GAS, address(this).wid),
+            value: gasToValue(Gas.REQUEST_POOL_GAS),
             bounce: true,
             callback: MultiVaultTvmTvmEventAlien.receiveMergeRouterPool
         }();
@@ -304,13 +313,13 @@ contract MultiVaultTvmTvmEventAlien is
 
         _routerDeployStatus = DeployStatus.DEPLOYED;
 
-        if (pool.value == 0) {
+        if (pool.isStdZero()) {
             EventData eventData = getEventData();
 
             _finishSetup(transitionalData.token, eventData.amount);
         } else {
             IMergePool_V2(pool).getCanon{
-                value: gasToValue(Gas.REQUEST_CANON_GAS, address(this).wid),
+                value: gasToValue(Gas.REQUEST_CANON_GAS),
                 bounce: false,
                 callback: MultiVaultTvmTvmEventAlien.receiveMergePoolCanon
             }();
@@ -377,7 +386,7 @@ contract MultiVaultTvmTvmEventAlien is
             TransitionalData transitionalData = getTransitionalData();
 
             TvmCell metaData = abi.encode(
-                isLimitApproved,
+                isLimitApproved_,
                 transitionalData.target_token,
                 transitionalData.target_amount,
                 eventData.recipient,
@@ -388,12 +397,13 @@ contract MultiVaultTvmTvmEventAlien is
             );
 
             ITvmTvmProxyExtended(eventInitData.configuration).onTVMEventConfirmedExtended{
+                value: 0,
                 flag: MsgFlag.ALL_NOT_RESERVED
             }(eventInitData, metaData, initializer);
         }
     }
 
-    function getEventData() public override responsible returns(EventData) {
+    function getEventData() externalMsg internalMsg public override responsible returns(EventData) {
         optional(TvmCell) data = eventBody.toSlice().load(optional(TvmCell));
 
         (
@@ -447,10 +457,8 @@ contract MultiVaultTvmTvmEventAlien is
         EventData eventData = getEventData();
         TransitionalData transitionalData = getTransitionalData();
 
-        tvm.accept();
-
         if (
-            selector == tvm.functionId(TIP3TokenRoot.name) &&
+            selector == abi.functionId(TIP3TokenRoot.name) &&
             msg.sender == transitionalData.token
         ) {
             // Failed to request token meta
@@ -461,14 +469,14 @@ contract MultiVaultTvmTvmEventAlien is
 
                 // Deploy BridgeTokenFee for this Token
                 IProxyMultiVaultAlien_V9(transitionalData.proxy).deployTokenFee{
-                    value: Gas.getDeployTokenFeeValue() + gasToValue(Gas.BRIDGE_TOKEN_FEES_EXTRA_GAS, address(this).wid),
+                    value: Gas.getDeployTokenFeeValue() + gasToValue(Gas.BRIDGE_TOKEN_FEES_EXTRA_GAS),
                     bounce: false
                 }(transitionalData.token, initializer);
 
                 _requestMergeRouter();
             }
         } else if (
-            selector == tvm.functionId(IMergeRouter.getPool) &&
+            selector == abi.functionId(IMergeRouter.getPool) &&
             msg.sender == transitionalData.router
         ) {
             // Failed to request router's pool
@@ -497,7 +505,7 @@ contract MultiVaultTvmTvmEventAlien is
 
     // ==== Deploys ====
     function _deployTvmAlienToken(address _alienProxy, EventData _eventData) internal returns (bool) {
-        uint128 deployTokenValue = Gas.getDeployTokenRootValue();
+        coins deployTokenValue = Gas.getDeployTokenRootValue();
 
         if (address(this).balance < deployTokenValue) {
             _tokenDeployStatus = DeployStatus.NOT_DEPLOYED;
@@ -525,7 +533,7 @@ contract MultiVaultTvmTvmEventAlien is
     }
 
     function _deployMergeRouter(address _alienProxy, address _alienToken) internal returns (bool) {
-        uint128 deployRouterValue = gasToValue(Gas.DEPLOY_MERGE_ROUTER_GAS, address(this).wid);
+        coins deployRouterValue = gasToValue(Gas.DEPLOY_MERGE_ROUTER_GAS);
 
         if (address(this).balance < deployRouterValue) {
             _routerDeployStatus = DeployStatus.NOT_DEPLOYED;
@@ -617,8 +625,7 @@ contract MultiVaultTvmTvmEventAlien is
         _set_transitional_data(transitionalData);
     }
 
-    // ==== Legacy ====
-    function getDecodedData() external override responsible returns(
+    function getDecodedData() externalMsg internalMsg external override responsible returns(
         int32 base_chainId_,
         address base_token_,
         address base_native_proxy_wallet_,
@@ -632,7 +639,8 @@ contract MultiVaultTvmTvmEventAlien is
         optional(TvmCell) payload_,
         address proxy_,
         address token_,
-        optional(address) native_proxy_token_wallet
+        optional(address) native_proxy_token_wallet,
+        uint128 bounty_
     ) {
         EventData eventData = getEventData();
         TransitionalData transitionalData = getTransitionalData();
@@ -656,7 +664,8 @@ contract MultiVaultTvmTvmEventAlien is
             transitionalData.proxy,
             transitionalData.token,
 
-            transitionalData.native_proxy_token_wallet
+            transitionalData.native_proxy_token_wallet,
+            bounty
         );
     }
 
@@ -664,8 +673,8 @@ contract MultiVaultTvmTvmEventAlien is
         TransitionalData transitionalData = getTransitionalData();
 
         require(
-            msg.sender == transitionalData.proxy && transitionalData.proxy.value != 0 ||
-            msg.sender == transitionalData.native_proxy && transitionalData.native_proxy.value != 0,
+            msg.sender == transitionalData.proxy && !transitionalData.proxy.isStdZero() ||
+            msg.sender == transitionalData.native_proxy && !transitionalData.native_proxy.isStdZero(),
             ErrorCodes.SENDER_NOT_PROXY
         );
         require(status == Status.Confirmed, ErrorCodes.WRONG_STATUS);
@@ -674,11 +683,11 @@ contract MultiVaultTvmTvmEventAlien is
 
         emit LimitReached(_approver);
 
-        limitApprover = _approver;
+        limitApprover_ = _approver;
     }
 
     function approveLimit() external onlyLimitApprover {
-        isLimitApproved = true;
+        isLimitApproved_ = true;
 
         onConfirm();
     }
@@ -692,7 +701,7 @@ contract MultiVaultTvmTvmEventAlien is
         EventData eventData = getEventData();
         if (eventData.expected_gas > 0) {
             _expectedGasReceiver.transfer({
-                value: eventData.expected_gas,
+                value: coins(eventData.expected_gas),
                 flag: MsgFlag.SENDER_PAYS_FEES,
                 bounce: false
             });
@@ -712,10 +721,12 @@ contract MultiVaultTvmTvmEventAlien is
         require(status == Status.Confirmed, ErrorCodes.WRONG_STATUS);
 
         isWNative = _wNativeAddresses.exists(transitionalData.token);
+        isLimitApproved_ = true;
 
-        if (eventTokenWallet.value == 0) {
+        if (eventTokenWallet.isNone()) {
             ITokenRoot(transitionalData.token).walletOf{
-                value: MsgFlag.ALL_NOT_RESERVED,
+                value: 0,
+                flag: MsgFlag.REMAINING_GAS,
                 callback: MultiVaultTvmTvmEventAlien.receiveEventTokenWallet
             }(address(this));
         } else {
@@ -727,6 +738,9 @@ contract MultiVaultTvmTvmEventAlien is
     function receiveEventTokenWallet(
         address tokenWallet_
     ) external {
+        TransitionalData transitionalData = getTransitionalData();
+        require(msg.sender == transitionalData.token, ErrorCodes.SENDER_NOT_ROOT);
+
         eventTokenWallet = tokenWallet_;
 
         status = Status.LiquidityRequested;
@@ -745,7 +759,7 @@ contract MultiVaultTvmTvmEventAlien is
 
         require(
             (msg.sender == eventData.recipient || msg.sender == eventData.sender) && status == Status.LiquidityRequested ||
-            msg.sender == limitApprover && limitApprover.value != 0 && status == Status.LimitReached,
+            msg.sender == limitApprover_ && !limitApprover_.isStdZero() && status == Status.LimitReached,
             ErrorCodes.SENDER_NOT_RECIPIENT
         );
 
@@ -754,7 +768,7 @@ contract MultiVaultTvmTvmEventAlien is
 
         if (eventData.expected_gas > 0) {
             _expectedGasReceiver.transfer({
-                value: eventData.expected_gas,
+                value: coins(eventData.expected_gas),
                 flag: MsgFlag.SENDER_PAYS_FEES,
                 bounce: false
             });
@@ -858,7 +872,7 @@ contract MultiVaultTvmTvmEventAlien is
         // send tokens to original recipient
         if (isWNative && !eventData.payload.hasValue()) {
             IBurnableTokenWallet(eventTokenWallet).burn{
-                value: Gas.getTransferTokenValue() + eventData.expected_gas,
+                value: Gas.getTransferTokenValue() + coins(eventData.expected_gas),
                 bounce: false,
                 flag: MsgFlag.SENDER_PAYS_FEES
             }(
@@ -869,7 +883,7 @@ contract MultiVaultTvmTvmEventAlien is
             );
         } else {
             ITokenWallet(eventTokenWallet).transfer{
-                value: Gas.getTransferTokenValue() + eventData.expected_gas,
+                value: Gas.getTransferTokenValue() + coins(eventData.expected_gas),
                 bounce: false,
                 flag: MsgFlag.SENDER_PAYS_FEES
             }(
@@ -925,6 +939,7 @@ contract MultiVaultTvmTvmEventAlien is
 
         ITvmEventCancelled(eventInitData.configuration)
             .onTVMEventCancelled{
+                value: 0,
                 flag: MsgFlag.ALL_NOT_RESERVED
             }(eventInitData, withdrawPayload);
     }

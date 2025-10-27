@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "../structures/ActionStructure.tsol";
 import "../structures/ProposalConfigurationStructure.tsol";
@@ -39,14 +39,14 @@ interface IDaoRoot is ActionStructure, ProposalConfigurationStructure, ProposalS
     event ExecutingTonActions(uint32 proposalId, TonAction[] tonActions);
     event RootCodeUpgraded();
 
-    function getAdmin() external responsible view returns (address);
-    function getPendingAdmin() external responsible view returns (address);
-    function getProposalCount() external responsible view returns (uint32);
-    function getStakingRoot() external responsible view returns (address);
-    function getEthereumActionEventConfiguration() external responsible view returns (address, uint128);
+    function getAdmin() externalMsg internalMsg external responsible view returns (address);
+    function getPendingAdmin() externalMsg internalMsg external responsible view returns (address);
+    function getProposalCount() externalMsg internalMsg external responsible view returns (uint32);
+    function getStakingRoot() externalMsg internalMsg external responsible view returns (address);
+    function getEthereumActionEventConfiguration() externalMsg internalMsg external responsible view returns (address, coins);
 
-    function expectedProposalAddress(uint32 proposalId) external responsible view returns (address);
-    function expectedStakingAccountAddress(address accountOwner) external responsible view returns (address);
+    function expectedProposalAddress(uint32 proposalId) externalMsg internalMsg external responsible view returns (address);
+    function expectedStakingAccountAddress(address accountOwner) externalMsg internalMsg external responsible view returns (address);
 
     function propose(uint32 answerId, TonAction[] tonActions, EthAction[] ethActions, string description) external;
     function deployProposal(uint32 nonce, address accountOwner, TvmCell proposalData) external;
@@ -55,7 +55,7 @@ interface IDaoRoot is ActionStructure, ProposalConfigurationStructure, ProposalS
     function setStakingRoot(address newRoot) external;
     function transferAdmin(address newAdmin) external;
     function acceptAdmin() external;
-    function updateEthereumActionEventConfiguration(address ethereumActionEventConfiguration, uint128 newDeployEventValue) external;
+    function updateEthereumActionEventConfiguration(address ethereumActionEventConfiguration, coins newDeployEventValue) external;
     function updateProposalCode(TvmCell code) external;
     function updateProposalConfiguration(ProposalConfiguration newConfig) external;
     function updateVotingDelay(uint32 newVotingDelay) external;

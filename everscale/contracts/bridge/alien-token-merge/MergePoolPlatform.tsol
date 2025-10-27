@@ -1,10 +1,11 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 import "../../utils/ErrorCodes.tsol";
 
-
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract MergePoolPlatform is RandomNonce {
     address static proxy;
 
@@ -52,5 +53,5 @@ contract MergePoolPlatform is RandomNonce {
         onCodeUpgrade(data);
     }
 
-    function onCodeUpgrade(TvmCell data) private functionID(2) {}
+    function onCodeUpgrade(TvmCell data) private {}
 }

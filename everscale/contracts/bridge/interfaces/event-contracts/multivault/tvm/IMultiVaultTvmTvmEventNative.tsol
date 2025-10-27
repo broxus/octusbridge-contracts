@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 import "./../../../event-configuration-contracts/ITvmTvmEventConfiguration.tsol";
@@ -8,10 +8,12 @@ interface IMultiVaultTvmTvmEventNative {
     function receiveConfigurationDetails(
         IBasicEventConfiguration.BasicConfiguration,
         ITvmTvmEventConfiguration.TvmTvmEventConfiguration _networkConfiguration,
-        TvmCell
+        TvmCell,
+        address,
+        address
     ) external;
 
-    function getDecodedData() external responsible returns(
+    function getDecodedData() externalMsg internalMsg external responsible returns(
         address token_,
         string name_,
         string symbol_,

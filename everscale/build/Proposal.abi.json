@@ -1,8 +1,32 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.7",
 	"header": ["time"],
 	"functions": [
+		{
+			"name": "stakingRoot",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
+			"name": "id",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"uint32"}
+			]
+		},
+		{
+			"name": "proposalVersion",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"uint16"}
+			]
+		},
 		{
 			"name": "getOverview",
 			"inputs": [
@@ -35,7 +59,7 @@
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"components":[{"name":"value","type":"uint128"},{"name":"target","type":"address"},{"name":"payload","type":"cell"}],"name":"value0","type":"tuple[]"},
+				{"components":[{"name":"value","type":"varuint16"},{"name":"target","type":"address"},{"name":"payload","type":"cell"}],"name":"value0","type":"tuple[]"},
 				{"components":[{"name":"value","type":"uint256"},{"name":"chainId","type":"uint32"},{"name":"target","type":"uint160"},{"name":"signature","type":"string"},{"name":"callData","type":"bytes"}],"name":"value1","type":"tuple[]"}
 			]
 		},
@@ -169,145 +193,9 @@
 			],
 			"outputs": [
 			]
-		},
-		{
-			"name": "root",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"root","type":"address"}
-			]
-		},
-		{
-			"name": "platformCode",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"platformCode","type":"cell"}
-			]
-		},
-		{
-			"name": "id",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"id","type":"uint32"}
-			]
-		},
-		{
-			"name": "stakingRoot",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"stakingRoot","type":"address"}
-			]
-		},
-		{
-			"name": "proposer",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"proposer","type":"address"}
-			]
-		},
-		{
-			"name": "description",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"description","type":"string"}
-			]
-		},
-		{
-			"name": "tonActions",
-			"inputs": [
-			],
-			"outputs": [
-				{"components":[{"name":"value","type":"uint128"},{"name":"target","type":"address"},{"name":"payload","type":"cell"}],"name":"tonActions","type":"tuple[]"}
-			]
-		},
-		{
-			"name": "ethActions",
-			"inputs": [
-			],
-			"outputs": [
-				{"components":[{"name":"value","type":"uint256"},{"name":"chainId","type":"uint32"},{"name":"target","type":"uint160"},{"name":"signature","type":"string"},{"name":"callData","type":"bytes"}],"name":"ethActions","type":"tuple[]"}
-			]
-		},
-		{
-			"name": "proposalVersion",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"proposalVersion","type":"uint16"}
-			]
-		},
-		{
-			"name": "config",
-			"inputs": [
-			],
-			"outputs": [
-				{"components":[{"name":"votingDelay","type":"uint32"},{"name":"votingPeriod","type":"uint32"},{"name":"quorumVotes","type":"uint128"},{"name":"timeLock","type":"uint32"},{"name":"threshold","type":"uint128"},{"name":"gracePeriod","type":"uint32"}],"name":"config","type":"tuple"}
-			]
-		},
-		{
-			"name": "startTime",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"startTime","type":"uint32"}
-			]
-		},
-		{
-			"name": "endTime",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"endTime","type":"uint32"}
-			]
-		},
-		{
-			"name": "executionTime",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"executionTime","type":"uint32"}
-			]
-		},
-		{
-			"name": "canceled",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"canceled","type":"bool"}
-			]
-		},
-		{
-			"name": "executed",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"executed","type":"bool"}
-			]
-		},
-		{
-			"name": "forVotes",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"forVotes","type":"uint128"}
-			]
-		},
-		{
-			"name": "againstVotes",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"againstVotes","type":"uint128"}
-			]
 		}
 	],
-	"data": [
+	"getters": [
 	],
 	"events": [
 		{
@@ -361,25 +249,25 @@
 		}
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"root","type":"address"},
-		{"name":"platformCode","type":"cell"},
-		{"name":"id","type":"uint32"},
-		{"name":"stakingRoot","type":"address"},
-		{"name":"proposer","type":"address"},
-		{"name":"description","type":"string"},
-		{"components":[{"name":"value","type":"uint128"},{"name":"target","type":"address"},{"name":"payload","type":"cell"}],"name":"tonActions","type":"tuple[]"},
-		{"components":[{"name":"value","type":"uint256"},{"name":"chainId","type":"uint32"},{"name":"target","type":"uint160"},{"name":"signature","type":"string"},{"name":"callData","type":"bytes"}],"name":"ethActions","type":"tuple[]"},
-		{"name":"proposalVersion","type":"uint16"},
-		{"components":[{"name":"votingDelay","type":"uint32"},{"name":"votingPeriod","type":"uint32"},{"name":"quorumVotes","type":"uint128"},{"name":"timeLock","type":"uint32"},{"name":"threshold","type":"uint128"},{"name":"gracePeriod","type":"uint32"}],"name":"config","type":"tuple"},
-		{"name":"startTime","type":"uint32"},
-		{"name":"endTime","type":"uint32"},
-		{"name":"executionTime","type":"uint32"},
-		{"name":"canceled","type":"bool"},
-		{"name":"executed","type":"bool"},
-		{"name":"forVotes","type":"uint128"},
-		{"name":"againstVotes","type":"uint128"}
+		{"init":true,"name":"_pubkey","type":"fixedbytes32"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":false,"name":"root","type":"address"},
+		{"init":false,"name":"platformCode","type":"cell"},
+		{"init":false,"name":"_id","type":"uint32"},
+		{"init":false,"name":"_stakingRoot","type":"address"},
+		{"init":false,"name":"_proposalVersion","type":"uint16"},
+		{"init":false,"name":"proposer","type":"address"},
+		{"init":false,"name":"description","type":"string"},
+		{"components":[{"name":"value","type":"varuint16"},{"name":"target","type":"address"},{"name":"payload","type":"cell"}],"init":false,"name":"tonActions","type":"tuple[]"},
+		{"components":[{"name":"value","type":"uint256"},{"name":"chainId","type":"uint32"},{"name":"target","type":"uint160"},{"name":"signature","type":"string"},{"name":"callData","type":"bytes"}],"init":false,"name":"ethActions","type":"tuple[]"},
+		{"components":[{"name":"votingDelay","type":"uint32"},{"name":"votingPeriod","type":"uint32"},{"name":"quorumVotes","type":"uint128"},{"name":"timeLock","type":"uint32"},{"name":"threshold","type":"uint128"},{"name":"gracePeriod","type":"uint32"}],"init":false,"name":"config","type":"tuple"},
+		{"init":false,"name":"startTime","type":"uint32"},
+		{"init":false,"name":"endTime","type":"uint32"},
+		{"init":false,"name":"executionTime","type":"uint32"},
+		{"init":false,"name":"canceled","type":"bool"},
+		{"init":false,"name":"executed","type":"bool"},
+		{"init":false,"name":"forVotes","type":"uint128"},
+		{"init":false,"name":"againstVotes","type":"uint128"}
 	]
 }

@@ -1,10 +1,9 @@
-pragma ever-solidity >= 0.62.0;
-pragma AbiHeader pubkey;
-pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 import "./base/StakingRelay.tsol";
 
-
+#[ExternalMessage(time, pubkey, expire)]
+#[TimeReplayProt]
 contract StakingV1_2 is StakingPoolRelay {
     event StakingUpdated();
 
@@ -26,7 +25,7 @@ contract StakingV1_2 is StakingPoolRelay {
         base_details.rescuer = _rescuer;
         base_details.rewarder = _rewarder;
         round_details.currentRelayRound = 1;
-        bridge_event_config_ton_sol = _bridge_event_config_ton_sol;
+        bridge_event_config_ton_sol_ = _bridge_event_config_ton_sol;
         base_details.rewardRounds.push(RewardRound(0, 0, 0, block.timestamp));
         setUpTokenWallet();
     }
@@ -79,7 +78,7 @@ contract StakingV1_2 is StakingPoolRelay {
             relay_config.relayRewardPerSecond, // 128
             tonEthEventDeployValue, // 128
             tonSolEventDeployValue, // 128
-            bridge_event_config_ton_sol,
+            bridge_event_config_ton_sol_,
             deposit_nonce, // 64
             deposits // mapping
         );

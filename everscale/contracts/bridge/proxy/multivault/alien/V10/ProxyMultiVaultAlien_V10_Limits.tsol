@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "./ProxyMultiVaultAlien_V10_Fees.tsol";
 
@@ -26,6 +26,8 @@ abstract contract ProxyMultiVaultAlien_V10_Limits is ProxyMultiVaultAlien_V10_Fe
     }
 
     function getDailyLimits(address _token)
+        externalMsg
+        internalMsg
         external
         view
         override
@@ -49,6 +51,8 @@ abstract contract ProxyMultiVaultAlien_V10_Limits is ProxyMultiVaultAlien_V10_Fe
     }
 
     function getLimitApprover()
+        externalMsg
+        internalMsg
         external
         view
         override

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "../../../../alien-token-merge/MergeRouter.tsol";
 import "./ProxyMultiVaultAlien_V6_MergePool.tsol";
@@ -8,7 +8,7 @@ import "./ProxyMultiVaultAlien_V6_MergePool.tsol";
 abstract contract ProxyMultiVaultAlien_V6_MergeRouter is ProxyMultiVaultAlien_V6_MergePool {
     function deriveMergeRouter(
         address token
-    ) external override responsible returns (address router) {
+    ) externalMsg internalMsg external override responsible returns (address router) {
         TvmCell stateInit = _buildMergeRouterInitState(token);
 
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
@@ -24,13 +24,13 @@ abstract contract ProxyMultiVaultAlien_V6_MergeRouter is ProxyMultiVaultAlien_V6
             value: 0,
             bounce: false,
             flag: MsgFlag.ALL_NOT_RESERVED
-        }(owner, manager);
+        }(owner(), manager);
     }
 
     function _buildMergeRouterInitState(
         address token
     ) internal view returns (TvmCell) {
-        return tvm.buildStateInit({
+        return abi.encodeStateInit({
             contr: MergeRouter,
             varInit: {
                 token: token,

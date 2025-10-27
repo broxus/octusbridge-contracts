@@ -7,6 +7,7 @@ export const setupTvmTvmEventConfiguration = async (
   owner: Account,
   proxy: Address,
   eventCode: string,
+  eventAction: number,
   transactionChecker: Address,
   eventEmitter: Address,
 ) => {
@@ -32,6 +33,7 @@ export const setupTvmTvmEventConfiguration = async (
         startTimestamp: 0,
         endTimestamp: 0,
       },
+      eventAction,
       transactionChecker: transactionChecker,
       eventEmitter,
     },

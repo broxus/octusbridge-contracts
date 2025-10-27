@@ -22,6 +22,8 @@ import {
 } from "../event-configurations/solana";
 import { setupTvmTvmEventConfiguration } from "../event-configurations/tvm";
 
+const EVENT_ACTION_MULTIVAULT_NATIVE = 1;
+
 export const setupNativeMultiVault = async (
   owner: Account,
   staking: Contract<FactorySource["StakingMockup"]>,
@@ -67,30 +69,35 @@ export const setupNativeMultiVault = async (
     staking,
     proxy.address,
     ethereumEverscaleEvent.code,
+    EVENT_ACTION_MULTIVAULT_NATIVE
   );
   const everscaleEthereumEventConfiguration = await setupEverscaleEthereumEventConfiguration(
     owner,
     staking,
     proxy.address,
     everscaleEthereumEvent.code,
+    EVENT_ACTION_MULTIVAULT_NATIVE
   );
   const solanaEverscaleEventConfiguration = await setupSolanaEverscaleEventConfiguration(
     owner,
     staking,
     proxy.address,
     solanaEverscaleEvent.code,
+    EVENT_ACTION_MULTIVAULT_NATIVE
   );
   const everscaleSolanaEventConfiguration = await setupEverscaleSolanaEventConfiguration(
     owner,
     staking,
     proxy.address,
     everscaleSolanaEvent.code,
+    EVENT_ACTION_MULTIVAULT_NATIVE
   );
 
   const tvmTvmEventConfiguration = await setupTvmTvmEventConfiguration(
     owner,
     proxy.address,
     tvmTvmEvent.code,
+    EVENT_ACTION_MULTIVAULT_NATIVE,
     trustlessVerifier.address,
     new Address("0:92c5662b635e85eac19243888ddfa979d6d9f8de352b1b819cb4e0427ca8e4c4")
   );

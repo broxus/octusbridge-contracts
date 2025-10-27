@@ -117,15 +117,6 @@ describe("Deposit Alien token to Everscale with no merging", async function () {
         eventBlock: 444,
       };
 
-      // const tx = await locklift.tracing.trace(ethereumEverscaleEventConfiguration.methods
-      //     .deployEvent({
-      //         eventVoteData,
-      //     })
-      //     .send({
-      //         from: initializer.address,
-      //         amount: locklift.utils.toNano(8),
-      //     }));
-
       const tx = await ethereumEverscaleEventConfiguration.methods
         .deployEvent({
           eventVoteData,
@@ -134,6 +125,8 @@ describe("Deposit Alien token to Everscale with no merging", async function () {
           from: initializer.address,
           amount: locklift.utils.toNano(60),
         });
+      // const {traceTree} = await locklift.tracing.trace(tx);
+      // await traceTree?.beautyPrint();
 
       logger.log(`Event initialization tx: ${tx.id}`);
 
@@ -285,33 +278,33 @@ describe("Deposit Alien token to Everscale with no merging", async function () {
         await mergeRouter.methods
           .owner()
           .call()
-          .then(t => t.owner.toString()),
+          .then(t => t.value0.toString()),
       ).to.be.equal(
         await proxy.methods
           .owner()
           .call()
-          .then(t => t.owner.toString()),
+          .then(t => t.value0.toString()),
         "Wrong router owner",
       );
       expect(
         await mergeRouter.methods
           .manager()
           .call()
-          .then(t => t.manager.toString()),
+          .then(t => t.value0.toString()),
       ).to.be.equal(
         await proxy.methods
           .manager()
           .call()
-          .then(t => t.manager.toString()),
+          .then(t => t.value0.toString()),
         "Wrong router manager",
       );
     });
 
     it("Check event required votes", async () => {
       const requiredVotes = await eventContract.methods
-        .requiredVotes()
+        .getDetails({answerId: 0})
         .call()
-        .then(t => parseInt(t.requiredVotes, 10));
+        .then(t => parseInt(t._requiredVotes, 10));
 
       const relays = await eventContract.methods
         .getVoters({
@@ -327,7 +320,7 @@ describe("Deposit Alien token to Everscale with no merging", async function () {
     it("Check event round number", async () => {
       const roundNumber = await eventContract.methods.round_number({}).call();
 
-      expect(parseInt(roundNumber.round_number, 10)).to.be.equal(0, "Wrong round number");
+      expect(parseInt(roundNumber.value0, 10)).to.be.equal(0, "Wrong round number");
     });
 
     describe("Confirm event", async () => {
@@ -339,9 +332,9 @@ describe("Deposit Alien token to Everscale with no merging", async function () {
         const details = await eventContract.methods.getDetails({ answerId: 0 }).call({ responsible: true });
 
         const requiredVotes = await eventContract.methods
-          .requiredVotes()
+          .getDetails({answerId: 0})
           .call()
-          .then(t => parseInt(t.requiredVotes, 10));
+          .then(t => parseInt(t._requiredVotes, 10));
 
         expect(details._status).to.be.equal("2", "Wrong status");
 

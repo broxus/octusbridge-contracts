@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "../../../../interfaces/proxy/multivault/native/IProxyMultiVaultNative_V8.tsol";
 
+import "../../../../../utils/common/InternalOwner.tsol";
 import "../../../../../utils/TransferUtils.tsol";
 import "../../../../../utils/ErrorCodes.tsol";
 import "../../../.././libraries/Gas.tsol";
@@ -10,64 +11,67 @@ import "../../../.././libraries/Gas.tsol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.tsol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IBurnableTokenWallet.tsol";
 
-import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
 abstract contract ProxyMultiVaultNative_V8_Base is IProxyMultiVaultNative_V8, InternalOwner, TransferUtils {
+
+    uint32 constant FEE_DENOMINATOR = 100_000;
+
     EVMConfiguration evmConfiguration;
     SolanaConfiguration solanaConfiguration;
     TVMConfiguration tvmConfiguration;
 
     uint8 api_version;
-    address public dex_middleware;
-    address public proxyMultiVaultAlien;
+    address dexMiddleware;
+
+    address proxyMultiVaultAlien_;
 
     TvmCell eventAddressKeeperCode;
-
-    uint32 constant FEE_DENOMINATOR = 100_000;
     TvmCell platformCode;
 
     mapping(address => DailyLimits) tokenToDailyLimits;
     address limitApprover;
 
-    address public coldVault;
-    address public vaultWithdrawer;
+    address coldVault_;
+    address vaultWithdrawer_;
 
-    mapping(address => bool) public wNativeAddresses;
+    mapping(address => bool) wNativeAddresses_;
 
     modifier onlyOwnerOrWithdrawer() {
         require(
-            msg.sender.value != 0 && (msg.sender == owner || msg.sender == vaultWithdrawer),
+            !msg.sender.isStdZero() && (msg.sender == owner() || msg.sender == vaultWithdrawer_),
             ErrorCodes.SENDER_IS_NOT_OWNER_OR_WITHDRAWER
         );
         _;
     }
 
+    function proxyMultiVaultAlien() externalMsg public view returns (address) {
+        return proxyMultiVaultAlien_;
+    }
+
+    function coldVault() externalMsg public view returns (address) {
+        return coldVault_;
+    }
+
+    function vaultWithdrawer() externalMsg public view returns (address) {
+        return vaultWithdrawer_;
+    }
+
+    function wNativeAddresses() externalMsg public view returns (mapping(address => bool)) {
+        return wNativeAddresses_;
+    }
+
     /// @notice Get current contract API version.
     /// Each time contract is upgraded, API version is incremented.
     /// @return Current API version
-    function apiVersion() external override view responsible returns(uint8) {
+    function apiVersion() externalMsg internalMsg external override view responsible returns(uint8) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} api_version;
     }
 
-    function setDexMiddleware(address _dex_middleware) external onlyOwner cashBack {
-        dex_middleware = _dex_middleware;
-    }
-
-    function setProxyMultiVaultAlien(address _proxyMultiVaultAlien) external onlyOwner cashBack {
-        proxyMultiVaultAlien = _proxyMultiVaultAlien;
-    }
-
-    function setWNative(address _wNative) external onlyOwner cashBack {
-        wNativeAddresses.add(_wNative, true);
-    }
-
-    function removeWNative(address _wNative) external onlyOwner cashBack {
-        wNativeAddresses.getDel(_wNative);
-    }
-
     function getConfiguration()
+        externalMsg
+        internalMsg
         override
         external
         view
@@ -81,8 +85,24 @@ abstract contract ProxyMultiVaultNative_V8_Base is IProxyMultiVaultNative_V8, In
         } (evmConfiguration, solanaConfiguration, tvmConfiguration);
     }
 
-    function getEventAddressKeeperCode() external view responsible returns(TvmCell) {
+    function getEventAddressKeeperCode() externalMsg internalMsg external view responsible returns(TvmCell) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} eventAddressKeeperCode;
+    }
+
+    function setDexMiddleware(address _dex_middleware) external onlyOwner cashBack {
+        dexMiddleware = _dex_middleware;
+    }
+
+    function setProxyMultiVaultAlien(address _proxyMultiVaultAlien) external onlyOwner cashBack {
+        proxyMultiVaultAlien_ = _proxyMultiVaultAlien;
+    }
+
+    function setWNative(address _wNative) external onlyOwner cashBack {
+        wNativeAddresses_.add(_wNative, true);
+    }
+
+    function removeWNative(address _wNative) external onlyOwner cashBack {
+        wNativeAddresses_.getDel(_wNative);
     }
 
     function setEVMConfiguration(
@@ -119,7 +139,7 @@ abstract contract ProxyMultiVaultNative_V8_Base is IProxyMultiVaultNative_V8, In
         onlyOwner
         cashBackTo(_remainingGasTo)
     {
-        coldVault = _coldVault;
+        coldVault_ = _coldVault;
     }
 
     function setVaultWithdrawer(address _withdrawer, address _remainingGasTo)
@@ -128,7 +148,7 @@ abstract contract ProxyMultiVaultNative_V8_Base is IProxyMultiVaultNative_V8, In
         onlyOwner
         cashBackTo(_remainingGasTo)
     {
-        vaultWithdrawer = _withdrawer;
+        vaultWithdrawer_ = _withdrawer;
     }
 
     function withdrawTokenToColdVault(
@@ -136,14 +156,14 @@ abstract contract ProxyMultiVaultNative_V8_Base is IProxyMultiVaultNative_V8, In
         uint128 _amount,
         address _remainingGasTo
     ) external override reserveAtLeastTargetBalance onlyOwnerOrWithdrawer {
-        require(coldVault.value != 0, ErrorCodes.COLD_VAULT_IS_NOT_SET);
+        require(!coldVault_.isNone() && !coldVault_.isStdZero(), ErrorCodes.COLD_VAULT_IS_NOT_SET);
 
         TvmCell empty;
 
         _transferTokens(
             _tokenWallet,
             _amount,
-            coldVault,
+            coldVault_,
             _remainingGasTo,
             empty,
             false,
@@ -158,7 +178,7 @@ abstract contract ProxyMultiVaultNative_V8_Base is IProxyMultiVaultNative_V8, In
         address _remainingGasTo,
         TvmCell _payload,
         bool _bounce,
-        optional(uint128) _value
+        optional(coins) _value
     ) internal pure {
         ITokenWallet(_tokenWallet).transfer{
             value: _value.getOr(0),
@@ -181,7 +201,7 @@ abstract contract ProxyMultiVaultNative_V8_Base is IProxyMultiVaultNative_V8, In
         address _remainingGasTo,
         optional(TvmCell) _payload,
         bool _bounce,
-        optional(uint128) _value
+        optional(coins) _value
     ) internal pure {
         IBurnableTokenWallet(_tokenWallet).burn{
             value: _value.getOr(0),

@@ -11,6 +11,8 @@ const ora = require("ora");
 
 let factory: Contract<EverscaleSolanaEventConfigurationFactoryAbi>;
 
+const EVENT_ACTION_MULTIVAULT_ALIEN = 0;
+
 const main = async () => {
     const response = await prompts([
         {
@@ -123,6 +125,7 @@ const main = async () => {
             _owner: response.owner,
             basicConfiguration: everBasicConfiguration,
             networkConfiguration: everNetworkConfiguration,
+            eventAction: EVENT_ACTION_MULTIVAULT_ALIEN
         })
         .send({
             from: admin.address,
@@ -133,6 +136,7 @@ const main = async () => {
         .deriveConfigurationAddress({
             basicConfiguration: everBasicConfiguration,
             networkConfiguration: everNetworkConfiguration,
+            eventAction: EVENT_ACTION_MULTIVAULT_ALIEN
         })
         .call();
 

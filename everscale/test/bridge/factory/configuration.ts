@@ -10,6 +10,8 @@ let cellEncoder: Contract<FactorySource["CellEncoderStandalone"]>;
 let staking: Contract<FactorySource["StakingMockup"]>;
 let bridgeOwner: Account;
 
+const EVENT_ACTION_TOKEN_TRANSFER = 3;
+
 describe("Test configuration factory", async function () {
   this.timeout(10000000);
 
@@ -80,6 +82,7 @@ describe("Test configuration factory", async function () {
           _flags: 0,
           basicConfiguration,
           networkConfiguration,
+          eventAction: EVENT_ACTION_TOKEN_TRANSFER
         })
         .send({
           from: bridgeOwner.address,
@@ -90,6 +93,7 @@ describe("Test configuration factory", async function () {
         .deriveConfigurationAddress({
           basicConfiguration,
           networkConfiguration,
+          eventAction: EVENT_ACTION_TOKEN_TRANSFER
         })
         .call();
 
@@ -176,6 +180,7 @@ describe("Test configuration factory", async function () {
           _owner: bridgeOwner.address,
           basicConfiguration,
           networkConfiguration,
+          eventAction: EVENT_ACTION_TOKEN_TRANSFER
         })
         .send({
           from: bridgeOwner.address,
@@ -186,6 +191,7 @@ describe("Test configuration factory", async function () {
         .deriveConfigurationAddress({
           basicConfiguration,
           networkConfiguration,
+          eventAction: EVENT_ACTION_TOKEN_TRANSFER
         })
         .call();
 
@@ -272,6 +278,7 @@ describe("Test configuration factory", async function () {
           _owner: bridgeOwner.address,
           basicConfiguration,
           networkConfiguration,
+          eventAction: EVENT_ACTION_TOKEN_TRANSFER
         })
         .send({
           from: bridgeOwner.address,
@@ -282,6 +289,7 @@ describe("Test configuration factory", async function () {
         .deriveConfigurationAddress({
           basicConfiguration,
           networkConfiguration,
+          eventAction: EVENT_ACTION_TOKEN_TRANSFER
         })
         .call();
 

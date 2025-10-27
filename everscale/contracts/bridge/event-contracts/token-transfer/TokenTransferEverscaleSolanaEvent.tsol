@@ -1,10 +1,8 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader expire;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 import "./../../interfaces/IEventNotificationReceiver.tsol";
 import "./../../interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
+import "./../../libraries/Gas.tsol";
 
 import "./../base/solana/EverscaleSolanaBaseEvent.tsol";
 import "./../../../utils/ErrorCodes.tsol";
@@ -16,6 +14,8 @@ import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
     @title Everscale Solana event
     @dev This implementation is used for cross chain token transfers
 */
+#[ExternalMessage(time, pubkey, expire)]
+#[CustomReplayProt]
 contract TokenTransferEverscaleSolanaEvent is EverscaleSolanaBaseEvent, ProxyTokenTransferCellEncoder {
     constructor(
         address _initializer,
@@ -61,7 +61,7 @@ contract TokenTransferEverscaleSolanaEvent is EverscaleSolanaBaseEvent, ProxyTok
         @returns tokens How much tokens to burn
         @returns solanaOwnerAddress Receiver solana address
     */
-    function getDecodedData() public view responsible returns (
+    function getDecodedData() externalMsg internalMsg public view responsible returns (
         address senderAddress,
         uint128 tokens,
         uint256 solanaOwnerAddress
@@ -87,8 +87,9 @@ contract TokenTransferEverscaleSolanaEvent is EverscaleSolanaBaseEvent, ProxyTok
     function notifyEventStatusChanged() internal view {
         address owner = getOwner();
 
-        if (owner.value != 0) {
+        if (!owner.isStdZero()) {
             IEventNotificationReceiver(owner).notifyEventStatusChanged{
+                value: gasToValue(Gas.NOTIFICATION_GAS),
                 flag: 0,
                 bounce: false
             }(status());

@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "./IDaoRoot.tsol";
 import "../structures/ActionStructure.tsol";
@@ -23,7 +23,7 @@ interface IProposal is ActionStructure, ProposalConfigurationStructure, Proposal
         string reason
     ) external;
 
-    function getOverview() external view responsible returns (
+    function getOverview() externalMsg internalMsg external view responsible returns (
         address proposer,
         string description,
         uint32 startTime,
@@ -34,18 +34,18 @@ interface IProposal is ActionStructure, ProposalConfigurationStructure, Proposal
         uint128 quorumVotes,
         ProposalState state
     );
-    function getProposer() external view responsible returns (address);
-    function getActions() external view responsible returns (TonAction[], EthAction[]);
-    function getConfig() external view responsible returns (ProposalConfiguration);
-    function getTimings() external view responsible returns (uint32 startTime, uint32 endTime, uint32 executionTime);
-    function getVotes() external view responsible returns (uint128 forVotes, uint128 againstVotes, uint128 quorumVotes);
-    function getStatuses() external view responsible returns (bool canceled, bool executed);
-    function getState() external view responsible returns (ProposalState);
+    function getProposer() externalMsg internalMsg external view responsible returns (address);
+    function getActions() externalMsg internalMsg external view responsible returns (TonAction[], EthAction[]);
+    function getConfig() externalMsg internalMsg external view responsible returns (ProposalConfiguration);
+    function getTimings() externalMsg internalMsg external view responsible returns (uint32 startTime, uint32 endTime, uint32 executionTime);
+    function getVotes() externalMsg internalMsg external view responsible returns (uint128 forVotes, uint128 againstVotes, uint128 quorumVotes);
+    function getStatuses() externalMsg internalMsg external view responsible returns (bool canceled, bool executed);
+    function getState() externalMsg internalMsg external view responsible returns (ProposalState);
 
     function onActionsExecuted() external;
 
-    function execute() external;
-    function queue() external;
+    function execute() externalMsg external;
+    function queue() externalMsg external;
     function cancel() external;
 
     function unlockCastedVote(address accountOwner) external view;

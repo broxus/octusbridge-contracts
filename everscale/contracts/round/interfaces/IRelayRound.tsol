@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 interface IRelayRound {
@@ -11,7 +11,7 @@ interface IRelayRound {
         uint32 code_version;
     }
     function destroy() external;
-    function getDetails() external view responsible returns (RelayRoundDetails);
+    function getDetails() externalMsg internalMsg external view responsible returns (RelayRoundDetails);
     function setRelays(
         uint256[] _ton_keys,
         uint160[] _eth_keys

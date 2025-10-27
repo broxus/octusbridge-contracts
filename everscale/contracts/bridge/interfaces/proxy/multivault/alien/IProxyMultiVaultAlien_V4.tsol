@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "./../../../event-contracts/multivault/evm/IEVMCallback.tsol";
 import "./IProxyMultiVaultAlien_V1.tsol";
@@ -25,7 +25,7 @@ interface IProxyMultiVaultAlien_V4 is IProxyMultiVaultAlien_V1, IEVMCallback {
 
     function deriveMergeRouter(
         address token
-    ) external responsible returns (address);
+    ) externalMsg internalMsg external responsible returns (address);
 
     function deployMergeRouter(
         address token
@@ -33,7 +33,7 @@ interface IProxyMultiVaultAlien_V4 is IProxyMultiVaultAlien_V1, IEVMCallback {
 
     function deriveMergePool(
         uint256 nonce
-    ) external responsible returns (address);
+    ) externalMsg internalMsg external responsible returns (address);
 
     function deployMergePool(
         uint256 nonce,

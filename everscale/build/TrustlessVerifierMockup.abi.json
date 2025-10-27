@@ -1,8 +1,15 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.7",
 	"header": ["time"],
 	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
 		{
 			"name": "setApprove",
 			"inputs": [
@@ -20,33 +27,17 @@
 			],
 			"outputs": [
 			]
-		},
-		{
-			"name": "constructor",
-			"inputs": [
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "_randomNonce",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"_randomNonce","type":"uint256"}
-			]
 		}
 	],
-	"data": [
-		{"key":1,"name":"_randomNonce","type":"uint256"}
+	"getters": [
 	],
 	"events": [
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"_randomNonce","type":"uint256"},
-		{"name":"approve","type":"bool"}
+		{"init":true,"name":"_pubkey","type":"fixedbytes32"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":true,"name":"_randomNonce","type":"uint256"},
+		{"init":false,"name":"approve","type":"bool"}
 	]
 }

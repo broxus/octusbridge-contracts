@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "../../../event-contracts/multivault/evm/IEVMCallback.tsol";
 import "../../../event-contracts/IEverscaleSolanaEvent.tsol";
@@ -24,10 +24,10 @@ interface IProxyMultiVaultAlien_V6 is IEVMCallback, INetworks {
         TvmCell alienTokenWalletPlatformCode;
     }
 
-    function apiVersion() external view responsible returns(uint8);
+    function apiVersion() externalMsg internalMsg external view responsible returns(uint8);
 
     // Settings
-    function getConfiguration() external view responsible returns (EVMConfiguration, SolanaConfiguration);
+    function getConfiguration() externalMsg internalMsg external view responsible returns (EVMConfiguration, SolanaConfiguration);
     function setEVMConfiguration(EVMConfiguration _config, address gasBackAddress) external;
     function setSolanaConfiguration(SolanaConfiguration _config, address gasBackAddress) external;
 
@@ -43,7 +43,7 @@ interface IProxyMultiVaultAlien_V6 is IEVMCallback, INetworks {
 
     function deriveMergeRouter(
         address token
-    ) external responsible returns (address);
+    ) externalMsg internalMsg external responsible returns (address);
 
     function deployMergeRouter(
         address token
@@ -51,7 +51,7 @@ interface IProxyMultiVaultAlien_V6 is IEVMCallback, INetworks {
 
     function deriveMergePool(
         uint256 nonce
-    ) external responsible returns (address);
+    ) externalMsg internalMsg external responsible returns (address);
 
     function deployMergePool(
         uint256 nonce,
@@ -108,7 +108,7 @@ interface IProxyMultiVaultAlien_V6 is IEVMCallback, INetworks {
         string name,
         string symbol,
         uint8 decimals
-    ) external responsible returns (address);
+    ) externalMsg internalMsg external responsible returns (address);
 
     function deriveEVMAlienTokenRoot(
         uint256 base_chainId,
@@ -116,7 +116,7 @@ interface IProxyMultiVaultAlien_V6 is IEVMCallback, INetworks {
         string name,
         string symbol,
         uint8 decimals
-    ) external responsible returns (address);
+    ) externalMsg internalMsg external responsible returns (address);
 
     // Deploy token root
     function deployEVMAlienToken(

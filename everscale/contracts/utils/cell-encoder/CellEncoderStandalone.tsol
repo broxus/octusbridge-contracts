@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "./ProxyTokenTransferCellEncoder.tsol";
 import "./ProxyMultiVaultCellEncoder.tsol";
@@ -12,6 +12,8 @@ import "./MediatorCellEncoder.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 
 
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract CellEncoderStandalone is
     ProxyTokenTransferCellEncoder,
     ProxyMultiVaultCellEncoder,
@@ -23,5 +25,7 @@ contract CellEncoderStandalone is
     MultiVaultEventCellEncoder,
     RandomNonce
 {
-
+    constructor() externalMsg {
+        tvm.accept();
+    }
 }

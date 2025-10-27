@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 interface IMergePool_V2 {
@@ -46,9 +46,9 @@ interface IMergePool_V2 {
         uint8 version
     ) external;
 
-    function getCanon() external responsible returns (address, Token);
+    function getCanon() externalMsg internalMsg external responsible returns (address, Token);
 
-    function getTokens() external responsible returns(
+    function getTokens() externalMsg internalMsg external responsible returns(
         mapping(address => Token) _tokens,
         address _canon
     );

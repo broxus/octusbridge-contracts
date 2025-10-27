@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.7",
 	"header": ["time"],
 	"functions": [
 		{
@@ -299,6 +299,14 @@
 			]
 		},
 		{
+			"name": "owner",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
 			"name": "transferOwnership",
 			"inputs": [
 				{"name":"newOwner","type":"address"}
@@ -312,34 +320,9 @@
 			],
 			"outputs": [
 			]
-		},
-		{
-			"name": "owner",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"owner","type":"address"}
-			]
-		},
-		{
-			"name": "dex_middleware",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"dex_middleware","type":"address"}
-			]
-		},
-		{
-			"name": "_randomNonce",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"_randomNonce","type":"uint256"}
-			]
 		}
 	],
-	"data": [
-		{"key":1,"name":"_randomNonce","type":"uint256"}
+	"getters": [
 	],
 	"events": [
 		{
@@ -392,17 +375,17 @@
 		}
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"owner","type":"address"},
-		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"}],"name":"evmConfiguration","type":"tuple"},
-		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"solanaConfiguration","type":"address"}],"name":"solanaConfiguration","type":"tuple"},
-		{"components":[{"name":"incomingConfigurations","type":"address[]"},{"name":"eventAddressKeeperCode","type":"cell"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"defaultFee","type":"tuple"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"fees","type":"map(address,tuple)"},{"name":"tokenFeeCode","type":"cell"}],"name":"tvmConfiguration","type":"tuple"},
-		{"name":"api_version","type":"uint8"},
-		{"name":"dex_middleware","type":"address"},
-		{"name":"proxyMultiVaultAlien","type":"address"},
-		{"name":"platformCode","type":"cell"},
-		{"name":"_randomNonce","type":"uint256"}
+		{"init":true,"name":"_pubkey","type":"fixedbytes32"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":false,"name":"_owner","type":"address"},
+		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"}],"init":false,"name":"evmConfiguration","type":"tuple"},
+		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"solanaConfiguration","type":"address"}],"init":false,"name":"solanaConfiguration","type":"tuple"},
+		{"components":[{"name":"incomingConfigurations","type":"address[]"},{"name":"eventAddressKeeperCode","type":"cell"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"defaultFee","type":"tuple"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"fees","type":"map(address,tuple)"},{"name":"tokenFeeCode","type":"cell"}],"init":false,"name":"tvmConfiguration","type":"tuple"},
+		{"init":false,"name":"api_version","type":"uint8"},
+		{"init":false,"name":"dex_middleware","type":"address"},
+		{"init":false,"name":"proxyMultiVaultAlien","type":"address"},
+		{"init":false,"name":"platformCode","type":"cell"},
+		{"init":true,"name":"_randomNonce","type":"uint256"}
 	]
 }

@@ -1,12 +1,10 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
-import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 
+import "../../../utils/common/InternalOwner.tsol";
 import "./../../../utils/TransferUtils.tsol";
 import "./../../interfaces/proxy/INetworks.tsol";
 import "./../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.tsol";
@@ -27,6 +25,8 @@ import "./../EventCreditGas.tsol";
 /// 1.1 Mediator accepts EVER USDT mint and decodes the payload
 /// 1.2 Payload says "Burn tokens in favour of proxy with some payload"
 /// 1.3 Burn initiates creating an ever-evm event contract with BNB USDT withdrawal
+#[ExternalMessage(time, expire)]
+#[TimeReplayProt]
 contract Mediator is
     IAcceptTokensTransferCallback,
     IAcceptTokensMintCallback,
@@ -51,7 +51,7 @@ contract Mediator is
         address _owner,
         address _nativeProxy,
         TvmCell _alienTokenWalletPlatformCode
-    ) checkPubKey {
+    ) externalMsg checkPubKey {
         require(_owner != address(0), ErrorCodes.ZERO_ADDRESS);
         require(_nativeProxy != address(0), ErrorCodes.ZERO_ADDRESS);
         tvm.accept();
@@ -193,7 +193,7 @@ contract Mediator is
     function _deriveAlienTokenWallet(
         address root
     ) internal view returns(address) {
-        TvmCell stateInit = tvm.buildStateInit({
+        TvmCell stateInit = abi.encodeStateInit({
             contr: TokenWalletPlatform,
             varInit: {
                 root: root,
@@ -240,11 +240,14 @@ contract Mediator is
     ) private {
         tvm.resetStorage();
 
+        address _owner;
         (
-            owner,
+            _owner,
             nativeProxy,
             alienTokenWalletPlatformCode,
             _randomNonce
         ) = abi.decode(data, (address, address, TvmCell, uint));
+
+        setOwnership(_owner);
     }
 }

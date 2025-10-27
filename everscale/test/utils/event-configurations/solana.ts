@@ -8,7 +8,8 @@ export const setupSolanaEverscaleEventConfiguration = async (
     owner: Account,
     staking: Contract<FactorySource["StakingMockup"]>,
     proxy: Address,
-    eventCode: string
+    eventCode: string,
+    eventAction: number
 ) => {
     const signer = (await locklift.keystore.getSigner("1"))!;
 
@@ -47,6 +48,7 @@ export const setupSolanaEverscaleEventConfiguration = async (
             _owner: owner.address,
             basicConfiguration,
             networkConfiguration,
+            eventAction
         })
         .send({
             from: owner.address,
@@ -57,6 +59,7 @@ export const setupSolanaEverscaleEventConfiguration = async (
         .deriveConfigurationAddress({
             basicConfiguration,
             networkConfiguration,
+            eventAction
         })
         .call();
 
@@ -79,7 +82,8 @@ export const setupEverscaleSolanaEventConfiguration = async (
     owner: Account,
     staking: Contract<FactorySource["StakingMockup"]>,
     eventEmitter: Address,
-    eventCode: string
+    eventCode: string,
+    eventAction: number
 ) => {
     const signer = (await locklift.keystore.getSigner("1"))!;
 
@@ -122,6 +126,7 @@ export const setupEverscaleSolanaEventConfiguration = async (
             _owner: owner.address,
             basicConfiguration: everBasicConfiguration,
             networkConfiguration: everNetworkConfiguration,
+            eventAction
         })
         .send({
             from: owner.address,
@@ -132,6 +137,7 @@ export const setupEverscaleSolanaEventConfiguration = async (
         .deriveConfigurationAddress({
             basicConfiguration: everBasicConfiguration,
             networkConfiguration: everNetworkConfiguration,
+            eventAction
         })
         .call();
 

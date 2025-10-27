@@ -1,0 +1,127 @@
+pragma tvm-solidity >= 0.79.0;
+
+import "./abstract/TokenWalletBurnableByRootBase.tsol";
+import "./abstract/TokenWalletBurnableBase.tsol";
+import "./abstract/TokenWalletDestroyableBase.tsol";
+
+import "./libraries/TokenErrors.tsol";
+import "./libraries/TokenGas.tsol";
+import "./Options.tsol";
+
+
+/**
+ * @title Fungible token wallet contract.
+ *
+ * @dev This is an implementation of TokenWallet that implements all the
+ * required methods of the TIP-3 standard.
+ * As well as optional ones: burn and collections.
+ *
+ * Each token holder has its own instance of token wallet contract.
+ * Transfer happens in a decentralized fashion - sender token wallet SHOULD
+ * send the specific message to the receiver token wallet. Since token wallets
+ * have the same code, it's easy for receiver token wallet to check the
+ * correctness of sender token wallet.
+ */
+#[ExternalMessage(time, expire, pubkey)]
+#[TimeReplayProt]
+contract TokenWallet is
+    TokenWalletBurnableBase,
+    TokenWalletBurnableByRootBase,
+    TokenWalletDestroyableBase
+{
+
+    /**
+     * @dev Creates new token wallet
+     *
+     * @dev Nothing is passed to the constructor, but during the deployment
+     * of the contract, the following parameters are passed to `StateInit`:
+     *
+     *   `root_` - address of the root token contract
+     *   `owner_` - address of the owner of the wallet
+     *
+     * Preconditions:
+     *
+     * - `msg.pubkey()` MUST be equal to zero. This means that the owner of
+     *   the TokenWallet can only smart contract.
+     * - `owner_` MUST be a non-zero address.
+    */
+    constructor() {
+        require(tvm.pubkey() == 0, TokenErrors.NON_ZERO_PUBLIC_KEY);
+        require(!owner_.isStdZero(), TokenErrors.WRONG_WALLET_OWNER);
+    }
+
+    /**
+     * @dev Implementation of {SID} interface.
+     */
+    function supportsInterface(uint32 interfaceID) internalMsg externalMsg override external view responsible returns (bool) {
+        return { value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false } (
+            interfaceID == uint32(0x3204ec29) ||    // SID
+            interfaceID == uint32(0x4f479fa3) ||    // TIP3TokenWallet
+            interfaceID == uint32(0x2a4ac43e) ||    // TokenWallet
+            interfaceID == uint32(0x562548ad) ||    // BurnableTokenWallet
+            interfaceID == uint32(0x0c2ff20d) ||    // BurnableByRootTokenWallet
+            interfaceID == uint32(0x0f0258aa) ||    // Destroyable
+            interfaceID == uint32(0x41583c00)       // JettonWallet
+        );
+    }
+
+    /**
+     * @dev See {TokenWalletBase-_targetBalance}.
+     */
+    function _targetBalance() override internal pure returns (uint128) {
+        return TokenGas.TARGET_WALLET_BALANCE * Options.STORAGE_FEE_K;
+    }
+
+    /**
+     * @dev See {TokenRootBase-_buildWalletInitData}.
+     *
+     * We need this to deploy new wallets, as well as to
+     * check incoming messages from other wallets.
+     *
+     * The `InitData` consists of:
+     *  - `contr` (contract) - defines the contract whose `StateInit` will be created.
+     *      Mandatory to be set if the `varInit` option is specified.
+     *
+     *  - `varInit` (initialization list) - used to set static variables of the
+     *      contract, see {TokenWalletBase}.
+     *      Conflicts with data and must be set contr.
+     *
+     *      `root_` - the address of the TokenRoot contract.
+     *      `owner_` - the address of the owner of the wallet.
+     *
+     *  - pubkey` - the public key of the contract.
+     *      The value 0 means that the wallet can be owned only by another contract.
+     *      contract, the most common example is {Wallet}.
+     *
+     *  - `code` - the code of the TokenWallet, see {TokenRootBase}.
+     */
+    function _buildWalletInitData(address walletOwner) override internal view returns (TvmCell) {
+        return abi.encodeStateInit({
+            contr: TokenWallet,
+            varInit: {
+                root_: root_,
+                owner_: walletOwner
+            },
+            pubkey: 0,
+            code: tvm.code()
+        });
+    }
+
+    /**
+     * @dev Implementation of the virtual function {TokenWalletBase-_deployWallet}.
+     */
+    function _deployWallet(TvmCell initData, uint128 deployWalletValue, address)
+        override
+        internal
+        view
+        returns (address)
+    {
+        address wallet = new TokenWallet {
+            stateInit: initData,
+            value: varuint16(deployWalletValue),
+            wid: address(this).wid,
+            flag: MsgFlag.SENDER_PAYS_FEES
+        }();
+        return wallet;
+    }
+}

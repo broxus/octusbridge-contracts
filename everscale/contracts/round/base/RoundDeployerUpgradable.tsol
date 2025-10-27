@@ -1,10 +1,10 @@
-pragma ever-solidity >= 0.62.0;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 
 import "./RoundDeployerBase.tsol";
 
-
+#[ExternalMessage(time, pubkey)]
+#[TimeReplayProt]
 abstract contract RoundDeployerUpgradable is RoundDeployerBase {
     function installPlatformOnce(TvmCell code, address send_gas_to) external onlyAdmin {
         require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
@@ -44,7 +44,7 @@ abstract contract RoundDeployerUpgradable is RoundDeployerBase {
         return builder.toCell();
     }
 
-    function getRelayRoundAddress(uint32 round_num) public view responsible returns (address) {
+    function getRelayRoundAddress(uint32 round_num) externalMsg internalMsg public view responsible returns (address) {
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } address(tvm.hash(_buildInitData(
             PlatformTypes.RelayRound,
             _buildRelayRoundParams(round_num)
@@ -52,7 +52,7 @@ abstract contract RoundDeployerUpgradable is RoundDeployerBase {
     }
 
     // will fall if called with on origin round with time < origin round start time (which is impossible anyway)
-    function getRelayRoundAddressFromTimestamp(uint32 time) public view responsible returns (address, uint32) {
+    function getRelayRoundAddressFromTimestamp(uint32 time) externalMsg internalMsg public view responsible returns (address, uint32) {
         uint32 round_num = time < round_details.currentRelayRoundStartTime ? round_details.currentRelayRound - 1 : round_details.currentRelayRound;
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } (getRelayRoundAddress(round_num), round_num);
     }

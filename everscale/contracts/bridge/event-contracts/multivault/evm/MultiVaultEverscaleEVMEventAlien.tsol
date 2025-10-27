@@ -1,7 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader pubkey;
-pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 import "./../../../interfaces/event-contracts/multivault/evm/IMultiVaultEverscaleEVMEventAlien.tsol";
 import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V8.tsol";
@@ -14,31 +11,32 @@ import "./../../base/evm/EverscaleEthereumBaseEvent.tsol";
 /// Before switching into the `Pending` status, event contract must perform
 /// the following actions:
 /// - Obtain the `token` token source.
+#[ExternalMessage(time, pubkey, expire)]
+#[CustomReplayProt]
 contract MultiVaultEverscaleEVMEventAlien is
     EverscaleEthereumBaseEvent,
     IMultiVaultEverscaleEVMEventAlien
 {
-    uint32 public nonce;
-    address public proxy;
-    address public token;
-    address public remainingGasTo;
-    uint128 public amount;
-    uint160 public recipient;
+    uint32 nonce_;
+    address proxy;
+    address token;
+    address remainingGasTo;
+    uint128 amount;
+    uint160 recipient;
 
-    address public sender;
-    uint128 public initial_balance;
+    address sender_;
+    coins initial_balance_;
 
-    uint160 public callback_recipient;
-    bytes public callback_payload;
-    bool public callback_strict;
+    uint160 callback_recipient;
+    bytes callback_payload;
+    bool callback_strict;
 
     // Derived values
-    uint256 public base_chainId;
-    uint160 public base_token;
-    address public expectedToken;
+    uint256 base_chainId;
+    uint160 base_token;
 
     // Unmodified event data
-    TvmCell public unmodifiedEventData;
+    TvmCell unmodifiedEventData;
 
     constructor(
         address _initializer,
@@ -57,13 +55,25 @@ contract MultiVaultEverscaleEVMEventAlien is
         return bodyCopy;
     }
 
-    function getUnmodifiedEventData() external override responsible returns(TvmCell) {
+    function nonce() externalMsg public view returns (uint32) {
+        return nonce_;
+    }
+
+    function sender() externalMsg public view returns (address) {
+        return sender_;
+    }
+
+    function initial_balance() externalMsg public view returns (coins) {
+        return initial_balance_;
+    }
+
+    function getUnmodifiedEventData() externalMsg internalMsg external override responsible returns(TvmCell) {
         return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} unmodifiedEventData;
     }
 
     function onInit() override internal {
         (
-            nonce, proxy, token, remainingGasTo, amount, recipient, sender,
+            nonce_, proxy, token, remainingGasTo, amount, recipient, sender_,
             callback_recipient, callback_payload, callback_strict
         ) = abi.decode(
             eventInitData.voteData.eventData,
@@ -73,10 +83,10 @@ contract MultiVaultEverscaleEVMEventAlien is
             )
         );
 
-        initial_balance = address(this).balance;
+        initial_balance_ = address(this).balance;
 
         ITokenRootAlienEVM(token).meta{
-            value: gasToValue(Gas.GET_TOKEN_ROOT_META_GAS, address(this).wid),
+            value: gasToValue(Gas.GET_TOKEN_ROOT_META_GAS),
             bounce: true,
             callback: MultiVaultEverscaleEVMEventAlien.receiveTokenMeta
         }();
@@ -95,7 +105,7 @@ contract MultiVaultEverscaleEVMEventAlien is
         base_token = base_token_;
 
         IProxyMultiVaultAlien_V8(proxy).deriveEVMAlienTokenRoot{
-            value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS, address(this).wid),
+            value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS),
             bounce: true,
             callback: MultiVaultEverscaleEVMEventAlien.receiveAlienTokenRoot
         }(
@@ -112,9 +122,7 @@ contract MultiVaultEverscaleEVMEventAlien is
     ) external override {
         require(msg.sender == proxy, ErrorCodes.SENDER_NOT_ROOT);
 
-        expectedToken = token_;
-
-        if (expectedToken == token) {
+        if (token_ == token) {
             _updateEventData();
 
             loadRelays();
@@ -135,7 +143,7 @@ contract MultiVaultEverscaleEVMEventAlien is
         );
     }
 
-    function getDecodedData() external override responsible returns(
+    function getDecodedData() externalMsg internalMsg external override responsible returns(
         address proxy_,
         address token_,
         address remainingGasTo_,
@@ -169,8 +177,8 @@ contract MultiVaultEverscaleEVMEventAlien is
         uint32 selector = slice.load(uint32);
 
         if (
-            (selector == tvm.functionId(ITokenRootAlienEVM.meta) && msg.sender == token) ||
-            (selector == tvm.functionId(IProxyMultiVaultAlien_V8.deriveEVMAlienTokenRoot) && msg.sender == proxy)
+            (selector == abi.functionId(ITokenRootAlienEVM.meta) && msg.sender == token) ||
+            (selector == abi.functionId(IProxyMultiVaultAlien_V8.deriveEVMAlienTokenRoot) && msg.sender == proxy)
         ) {
             setStatusRejected(2);
         }

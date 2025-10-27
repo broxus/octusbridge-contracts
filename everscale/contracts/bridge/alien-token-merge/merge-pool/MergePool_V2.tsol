@@ -1,11 +1,10 @@
-pragma ever-solidity >= 0.62.0;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 
-import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
+import "../../../utils/common/InternalOwner.tsol";
 import "./../../../utils/TransferUtils.tsol";
 import "./../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.tsol";
 import "./../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V4.tsol";
@@ -19,6 +18,8 @@ import "../../libraries/Gas.tsol";
 /// @title Merge pool contract
 /// Basically allows to swap different alien tokens on 1:1 ratio
 /// Must be deployed by the ProxyMultiVaultAlien
+#[ExternalMessage(time, pubkey)]
+#[TimeReplayProt]
 contract MergePool_V2 is
     IMergePool_V2,
     InternalOwner,
@@ -42,7 +43,7 @@ contract MergePool_V2 is
     }
 
     modifier onlyOwnerOrManager() {
-        require(msg.sender == owner || msg.sender == manager);
+        require(msg.sender == owner() || msg.sender == manager);
 
         _;
     }
@@ -83,7 +84,7 @@ contract MergePool_V2 is
             newVersion,
             tokens_,
             canonId,
-            owner,
+            owner(),
             manager
         );
 
@@ -228,14 +229,14 @@ contract MergePool_V2 is
 
     /// @notice Get canon token
     /// @return Canon token address
-    function getCanon() external override responsible returns (address, Token) {
+    function getCanon() externalMsg internalMsg external override responsible returns (address, Token) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (canon, tokens[canon]);
     }
 
     /// @notice Get token pools, decimals and canon token
     /// @return _tokens Pool tokens, mapping token => decimals
     /// @return _canon Canon token
-    function getTokens() external override responsible returns(
+    function getTokens() externalMsg internalMsg external override responsible returns(
         mapping(address => Token) _tokens,
         address _canon
     ) {
@@ -305,7 +306,7 @@ contract MergePool_V2 is
 
     function _requestTokenDecimals(address token) internal pure {
         ITokenRoot(token).decimals{
-            value: gasToValue(Gas.REQUEST_TOKEN_DECIMALS_GAS, address(this).wid),
+            value: gasToValue(Gas.REQUEST_TOKEN_DECIMALS_GAS),
             bounce: false,
             callback: MergePool_V2.receiveTokenDecimals
         }();

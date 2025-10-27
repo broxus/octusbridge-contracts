@@ -1,7 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader expire;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 
 import "./interfaces/IBridge.tsol";
@@ -9,10 +6,10 @@ import "./interfaces/IConnector.tsol";
 
 import "./../utils/TransferUtils.tsol";
 import "./../utils/ErrorCodes.tsol";
+import "../utils/common/InternalOwner.tsol";
 
 import "./Connector.tsol";
 
-import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
@@ -22,15 +19,17 @@ import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 /// @dev Entry point for relay sync.
 /// Deploys connectors for Event Configurations.
 /// @author https://github.com/broxus
+#[ExternalMessage(time, pubkey, expire)]
+#[TimeReplayProt]
 contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUtils {
-    TvmCell public connectorCode;
-    uint64 public connectorDeployValue;
-    bool public active;
-    address public staking;
+    TvmCell private connectorCode_;
+    uint64 private connectorDeployValue_;
+    bool private active_;
+    address private staking_;
 
-    address public manager;
+    address private manager_;
 
-    uint64 public connectorCounter = 0;
+    uint64 private connectorCounter_ = 0;
 
     /// @param _owner Owner address, can pause Bridge, so new Connectors can't be deployed
     /// @param _manager Manager role - can enable connectors
@@ -43,7 +42,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         TvmCell _connectorCode,
         uint64 _connectorDeployValue,
         address _staking
-    ) checkPubKey {
+    ) externalMsg checkPubKey {
         require(_owner != address(0), ErrorCodes.ZERO_ADDRESS);
         require(_manager != address(0), ErrorCodes.ZERO_ADDRESS);
         require(_staking != address(0), ErrorCodes.ZERO_ADDRESS);
@@ -52,13 +51,37 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
 
         setOwnership(_owner);
 
-        manager = _manager;
+        manager_ = _manager;
 
-        connectorCode = _connectorCode;
-        connectorDeployValue = _connectorDeployValue;
-        staking = _staking;
+        connectorCode_ = _connectorCode;
+        connectorDeployValue_ = _connectorDeployValue;
+        staking_ = _staking;
 
-        active = true;
+        active_ = true;
+    }
+
+    function connectorCode() externalMsg public view returns (TvmCell) {
+        return connectorCode_;
+    }
+
+    function connectorDeployValue() externalMsg public view returns (uint64) {
+        return connectorDeployValue_;
+    }
+
+    function active() externalMsg public view returns (bool) {
+        return active_;
+    }
+
+    function staking() externalMsg public view returns (address) {
+        return staking_;
+    }
+
+    function manager() externalMsg public view returns (address) {
+        return manager_;
+    }
+
+    function connectorCounter() externalMsg public view returns (uint64) {
+        return connectorCounter_;
     }
 
     /// @notice Update manager address
@@ -67,9 +90,9 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         address _manager
     ) external override cashBack {
         require(_manager != address(0), ErrorCodes.ZERO_ADDRESS);
-        require(msg.sender == manager || msg.sender == owner, ErrorCodes.SENDER_NOT_MANAGER_OR_OWNER);
+        require(msg.sender == manager_ || msg.sender == owner(), ErrorCodes.SENDER_NOT_MANAGER_OR_OWNER);
 
-        manager = _manager;
+        manager_ = _manager;
     }
 
     /// @notice Update Bridge active or not
@@ -78,7 +101,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
     function updateActive(
         bool _active
     ) external override cashBack onlyOwner {
-        active = _active;
+        active_ = _active;
     }
 
     /**
@@ -88,7 +111,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
     function updateConnectorDeployValue(
         uint64 _connectorDeployValue
     ) external override cashBack onlyOwner {
-        connectorDeployValue = _connectorDeployValue;
+        connectorDeployValue_ = _connectorDeployValue;
     }
 
     function _deriveConnectorAddress(
@@ -99,14 +122,14 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
     returns (
         address
     ) {
-        TvmCell stateInit = tvm.buildStateInit({
+        TvmCell stateInit = abi.encodeStateInit({
             contr: Connector,
             varInit: {
                 id: id,
                 bridge: address(this)
             },
             pubkey: 0,
-            code: connectorCode
+            code: connectorCode_
         });
 
         return address(tvm.hash(stateInit));
@@ -134,26 +157,26 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         public
         reserveAtLeastTargetBalance()
     {
-        require(active, ErrorCodes.BRIDGE_PAUSED);
-        require(msg.value >= connectorDeployValue, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
+        require(active_, ErrorCodes.BRIDGE_PAUSED);
+        require(msg.value >= connectorDeployValue_, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
         require(_eventConfiguration.wid == 0, ErrorCodes.IS_NOT_BASE_CHAIN);
 
-        address connector = _deriveConnectorAddress(connectorCounter);
+        address connector = _deriveConnectorAddress(connectorCounter_);
 
-        emit ConnectorDeployed(connectorCounter, connector, _eventConfiguration);
+        emit ConnectorDeployed(connectorCounter_, connector, _eventConfiguration);
 
         new Connector{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
-            code: connectorCode,
+            code: connectorCode_,
             pubkey: 0,
             varInit: {
-                id: connectorCounter,
+                id: connectorCounter_,
                 bridge: address(this)
             }
-        }(_eventConfiguration, manager);
+        }(_eventConfiguration, manager_);
 
-        connectorCounter++;
+        connectorCounter_++;
     }
 
     /**
@@ -164,7 +187,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         @return _staking Staking address
         @return _active Bridge status
     */
-    function getDetails() external view responsible returns(
+    function getDetails() externalMsg internalMsg external view responsible returns(
         TvmCell _connectorCode,
         uint64 _connectorDeployValue,
         uint64 _connectorCounter,
@@ -172,11 +195,11 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         bool _active
     ) {
         return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS}(
-            connectorCode,
-            connectorDeployValue,
-            connectorCounter,
-            staking,
-            active
+            connectorCode_,
+            connectorDeployValue_,
+            connectorCounter_,
+            staking_,
+            active_
         );
     }
 }

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "../../../../interfaces/event-contracts/IEverscaleEthereumEvent.tsol";
 import "../../../../interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
@@ -134,7 +134,7 @@ abstract contract ProxyMultiVaultNative_V7_Withdraw is
         TvmCell withdrawPayload
     ) external override reserveAtLeastTargetBalance {
         require(
-            (proxyMultiVaultAlien.value != 0 && msg.sender == proxyMultiVaultAlien) ||
+            (!proxyMultiVaultAlien.isStdZero() && msg.sender == proxyMultiVaultAlien) ||
             _isArrayContainsAddress(tvmConfiguration.incomingConfigurations, msg.sender),
             ErrorCodes.NOT_TVM_CONFIG_OR_ALIEN_PROXY
         );

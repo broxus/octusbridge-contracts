@@ -3,7 +3,7 @@ import {tryIncreaseTime} from "../utils/time";
 export {};
 
 import {FactorySource, StakingV1_2Abi} from "../../build/factorySource";
-import {Contract} from "locklift";
+import {Contract, toNano} from "locklift";
 import {Account} from "everscale-standalone-client/nodejs";
 
 import {deployAccount} from "../utils/account";

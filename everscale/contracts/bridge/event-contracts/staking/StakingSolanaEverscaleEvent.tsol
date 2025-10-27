@@ -1,7 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader expire;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 import "../base/solana/SolanaEverscaleBaseEvent.tsol";
 import "../../interfaces/IEventNotificationReceiver.tsol";
@@ -12,7 +9,8 @@ import "../../../utils/cell-encoder/StakingCellEncoder.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
-
+#[ExternalMessage(time, pubkey, expire)]
+#[CustomReplayProt]
 contract StakingSolanaEverscaleEvent is SolanaEverscaleBaseEvent, StakingCellEncoder {
 
     constructor(
@@ -32,6 +30,7 @@ contract StakingSolanaEverscaleEvent is SolanaEverscaleBaseEvent, StakingCellEnc
 
     function onConfirm() override internal {
         ISolanaEverscaleProxy(eventInitData.configuration).onSolanaEventConfirmed{
+            value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, initializer);
     }
@@ -40,7 +39,7 @@ contract StakingSolanaEverscaleEvent is SolanaEverscaleBaseEvent, StakingCellEnc
         transferAll(initializer);
     }
 
-    function getDecodedData() public view responsible returns (
+    function getDecodedData() externalMsg internalMsg public view responsible returns (
         uint256 sol_addr,
         int8 wk_id,
         uint256 ever_addr_body,

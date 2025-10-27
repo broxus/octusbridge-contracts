@@ -39,6 +39,7 @@ describe("Test setting configuration end", async function () {
         staking,
         proxy,
         "",
+        0
       );
     });
 
@@ -58,7 +59,7 @@ describe("Test setting configuration end", async function () {
         await bridge.methods
           .active()
           .call()
-          .then(t => t.active),
+          .then(t => t.value0),
       ).to.be.equal(true, "Wrong active status");
 
       const details = await ethereumEverscaleEventConfiguration.methods
@@ -97,6 +98,7 @@ describe("Test setting configuration end", async function () {
         staking,
         proxy,
         "",
+        0
       );
     });
 
@@ -143,7 +145,7 @@ describe("Test setting configuration end", async function () {
     let solanaEverscaleEventConfiguration: Contract<FactorySource["SolanaEverscaleEventConfiguration"]>;
 
     it("Setup Solana Everscale event configuration", async () => {
-      solanaEverscaleEventConfiguration = await setupSolanaEverscaleEventConfiguration(bridgeOwner, staking, proxy, "");
+      solanaEverscaleEventConfiguration = await setupSolanaEverscaleEventConfiguration(bridgeOwner, staking, proxy, "", 0);
     });
 
     it("Set Solana Everscale end timestamp", async () => {
@@ -189,7 +191,7 @@ describe("Test setting configuration end", async function () {
     let everscaleSolanaEventConfiguration: Contract<FactorySource["EverscaleSolanaEventConfiguration"]>;
 
     it("Setup Everscale Solana event configuration", async () => {
-      everscaleSolanaEventConfiguration = await setupEverscaleSolanaEventConfiguration(bridgeOwner, staking, proxy, "");
+      everscaleSolanaEventConfiguration = await setupEverscaleSolanaEventConfiguration(bridgeOwner, staking, proxy, "", 0);
     });
 
     it("Set Everscale Solana end timestamp", async () => {
@@ -239,6 +241,7 @@ describe("Test setting configuration end", async function () {
         bridgeOwner,
         proxy,
         "",
+        0,
         zeroAddress,
         zeroAddress
       );
@@ -260,7 +263,7 @@ describe("Test setting configuration end", async function () {
         await bridge.methods
           .active()
           .call()
-          .then(t => t.active),
+          .then(t => t.value0),
       ).to.be.equal(true, "Wrong active status");
 
       const details = await tvmTvmEventConfiguration.methods.getDetails({ answerId: 0 }).call({ responsible: true });

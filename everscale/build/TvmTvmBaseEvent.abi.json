@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.7",
 	"header": ["pubkey", "time", "expire"],
 	"functions": [
 		{
@@ -13,6 +13,14 @@
 				{"name":"_eventInitialBalance","type":"uint128"}
 			],
 			"outputs": [
+			]
+		},
+		{
+			"name": "nonce",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"uint32"}
 			]
 		},
 		{
@@ -33,7 +41,9 @@
 				{"components":[{"name":"msgHash","type":"uint256"},{"name":"configuration","type":"address"},{"name":"chainId","type":"int32"}],"name":"_eventInitData","type":"tuple"},
 				{"name":"_initializer","type":"address"},
 				{"name":"_meta","type":"cell"},
-				{"name":"_status","type":"uint8"}
+				{"name":"_status","type":"uint8"},
+				{"name":"_transactionChecker","type":"address"},
+				{"name":"_eventInitialBalance","type":"uint128"}
 			]
 		},
 		{
@@ -43,58 +53,9 @@
 			],
 			"outputs": [
 			]
-		},
-		{
-			"name": "status",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"status","type":"uint8"}
-			]
-		},
-		{
-			"name": "initializer",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"initializer","type":"address"}
-			]
-		},
-		{
-			"name": "meta",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"meta","type":"cell"}
-			]
-		},
-		{
-			"name": "transactionChecker",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"transactionChecker","type":"address"}
-			]
-		},
-		{
-			"name": "nonce",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"nonce","type":"uint32"}
-			]
-		},
-		{
-			"name": "eventInitialBalance",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"eventInitialBalance","type":"uint128"}
-			]
 		}
 	],
-	"data": [
-		{"components":[{"name":"msgHash","type":"uint256"},{"name":"configuration","type":"address"},{"name":"chainId","type":"int32"}],"key":1,"name":"eventInitData","type":"tuple"}
+	"getters": [
 	],
 	"events": [
 		{
@@ -144,16 +105,16 @@
 		}
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"status","type":"uint8"},
-		{"name":"initializer","type":"address"},
-		{"name":"meta","type":"cell"},
-		{"name":"transactionChecker","type":"address"},
-		{"components":[{"name":"msgHash","type":"uint256"},{"name":"configuration","type":"address"},{"name":"chainId","type":"int32"}],"name":"eventInitData","type":"tuple"},
-		{"name":"nonce","type":"uint32"},
-		{"name":"eventBody","type":"cell"},
-		{"name":"eventInitialBalance","type":"uint128"}
+		{"init":true,"name":"_pubkey","type":"fixedbytes32"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":false,"name":"status","type":"uint8"},
+		{"init":false,"name":"initializer","type":"address"},
+		{"init":false,"name":"meta","type":"cell"},
+		{"init":false,"name":"transactionChecker","type":"address"},
+		{"components":[{"name":"msgHash","type":"uint256"},{"name":"configuration","type":"address"},{"name":"chainId","type":"int32"}],"init":true,"name":"eventInitData","type":"tuple"},
+		{"init":false,"name":"nonce_","type":"uint32"},
+		{"init":false,"name":"eventBody","type":"cell"},
+		{"init":false,"name":"eventInitialBalance","type":"uint128"}
 	]
 }

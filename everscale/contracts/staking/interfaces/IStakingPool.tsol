@@ -1,5 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 
 interface IStakingPool {
@@ -59,7 +58,7 @@ interface IStakingPool {
         bool currentElectionEnded;
     }
 
-    function getRelayRoundsDetails() external view responsible returns (RelayRoundsDetails);
+    function getRelayRoundsDetails() externalMsg internalMsg external view responsible returns (RelayRoundsDetails);
 
     function finishDeposit(uint64 _nonce) external;
     function finishWithdraw(address user, uint128 withdrawAmount, address send_gas_to) external;

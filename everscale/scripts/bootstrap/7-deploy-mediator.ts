@@ -19,7 +19,7 @@ const main = async () => {
 
     const proxyMultiVaultNative = locklift.deployments.getContract<ProxyMultiVaultNative_V8Abi>('ProxyMultiVaultNative');
 
-    const AlienTokenWalletPlatform = await locklift.factory.getContractArtifacts('AlienTokenWalletPlatform');
+    const AlienTokenWalletPlatform = await locklift.factory.getContractArtifacts('TokenWalletPlatform');
     const signer = (await locklift.keystore.getSigner("0"))!;
 
     const spinner = ora("Deploying mediator").start();

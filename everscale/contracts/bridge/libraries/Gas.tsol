@@ -1,62 +1,63 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 library Gas {
-    uint128 constant TOKEN_ROOT_INITIAL_BALANCE = 6 ever;
-    uint128 constant TOKEN_WALLET_INITIAL_BALANCE = 0.6 ever;
-    uint128 constant CONFIGURATION_FACTORY_INITIAL_BALANCE = 6 ever;
-    uint128 constant TARGET_BALANCE = 6 ever; // most contracts initial balance
-    uint128 constant BRIDGE_TOKEN_FEES_INITIAL_BALANCE = 0.6 ever;
+    coins constant TOKEN_ROOT_INITIAL_BALANCE = 6 ever;
+    coins constant TOKEN_WALLET_INITIAL_BALANCE = 0.6 ever;
+    coins constant CONFIGURATION_FACTORY_INITIAL_BALANCE = 6 ever;
+    coins constant TARGET_BALANCE = 6 ever; // most contracts initial balance
+    coins constant BRIDGE_TOKEN_FEES_INITIAL_BALANCE = 0.6 ever;
 
     // mergePool
-    uint128 constant REQUEST_TOKEN_DECIMALS_GAS = 300_000;
+    coins constant REQUEST_TOKEN_DECIMALS_GAS = 300_000;
 
     // event contracts
-    uint128 constant GET_RELAY_ROUND_GAS = 100_000;
-    uint128 constant RELAY_KEYS_GAS = 150_000;
-    uint128 constant GET_TOKEN_ROOT_META_GAS = 100_000;
-    uint128 constant DERIVE_TOKEN_ROOT_GAS = 100_000;
-    uint128 constant GET_TOKEN_DATA_GAS = 100_000;
-    uint128 constant REQUEST_CONFIGURATION_DETAILS_GAS = 200_000;
-    uint128 constant REQUEST_TOKEN_NAME_GAS = 100_000;
-    uint128 constant REQUEST_MERGE_ROUTER_GAS = 100_000;
-    uint128 constant REQUEST_POOL_GAS = 100_000;
-    uint128 constant REQUEST_CANON_GAS = 100_000;
-    uint128 constant VERIFY_TRANSACTION_GAS = 500_000;
+    coins constant GET_RELAY_ROUND_GAS = 100_000;
+    coins constant RELAY_KEYS_GAS = 150_000;
+    coins constant GET_TOKEN_ROOT_META_GAS = 100_000;
+    coins constant DERIVE_TOKEN_ROOT_GAS = 100_000;
+    coins constant GET_TOKEN_DATA_GAS = 100_000;
+    coins constant REQUEST_CONFIGURATION_DETAILS_GAS = 200_000;
+    coins constant REQUEST_TOKEN_NAME_GAS = 100_000;
+    coins constant REQUEST_MERGE_ROUTER_GAS = 100_000;
+    coins constant REQUEST_POOL_GAS = 100_000;
+    coins constant REQUEST_CANON_GAS = 100_000;
+    coins constant VERIFY_TRANSACTION_GAS = 500_000;
+    coins constant NOTIFICATION_GAS = 10_000;
 
-    uint128 constant DEPLOY_TOKEN_ROOT_GAS = 200_000;
-    uint128 constant DEPLOY_MERGE_ROUTER_GAS = 200_000;
+    coins constant DEPLOY_TOKEN_ROOT_GAS = 200_000;
+    coins constant DEPLOY_MERGE_ROUTER_GAS = 200_000;
 
-    function getDeployTokenRootValue() public returns(uint128) {
-        return gasToValue(DEPLOY_TOKEN_ROOT_GAS, address(this).wid) + TOKEN_ROOT_INITIAL_BALANCE;
+    function getDeployTokenRootValue() public returns(coins) {
+        return gasToValue(DEPLOY_TOKEN_ROOT_GAS) + TOKEN_ROOT_INITIAL_BALANCE;
     }
 
-    uint128 constant DEPLOY_BRIDGE_TOKEN_FEES_GAS = 100_000;
-    uint128 constant BRIDGE_TOKEN_FEES_EXTRA_GAS = 10_000;
-    uint128 constant ACCUMULATE_FEES_GAS = 10_000;
+    coins constant DEPLOY_BRIDGE_TOKEN_FEES_GAS = 100_000;
+    coins constant BRIDGE_TOKEN_FEES_EXTRA_GAS = 10_000;
+    coins constant ACCUMULATE_FEES_GAS = 10_000;
 
-    function getDeployTokenFeeValue()  public returns(uint128) {
-        return gasToValue(DEPLOY_BRIDGE_TOKEN_FEES_GAS, address(this).wid) + BRIDGE_TOKEN_FEES_INITIAL_BALANCE;
+    function getDeployTokenFeeValue()  public returns(coins) {
+        return gasToValue(DEPLOY_BRIDGE_TOKEN_FEES_GAS) + BRIDGE_TOKEN_FEES_INITIAL_BALANCE;
     }
 
-    uint64 constant TOKEN_WALLET_DEPLOY_GAS = 30_000;
+    coins constant TOKEN_WALLET_DEPLOY_GAS = 30_000;
 
-    function getDeployTokenWalletValue() public returns(uint128) {
-        return gasToValue(TOKEN_WALLET_DEPLOY_GAS, address(this).wid) + TOKEN_WALLET_INITIAL_BALANCE;
+    function getDeployTokenWalletValue() public returns(coins) {
+        return gasToValue(TOKEN_WALLET_DEPLOY_GAS) + TOKEN_WALLET_INITIAL_BALANCE;
     }
 
-    uint128 constant MINT_TOKEN_GAS = 100_000;
+    coins constant MINT_TOKEN_GAS = 100_000;
 
-    function getMintTokenValue() public returns (uint128) {
-        return gasToValue(MINT_TOKEN_GAS, address(this).wid) + getDeployTokenWalletValue();
+    function getMintTokenValue() public returns (coins) {
+        return gasToValue(MINT_TOKEN_GAS) + getDeployTokenWalletValue();
     }
 
-    uint128 constant TRANSFER_TOKEN_GAS = 200_000;
+    coins constant TRANSFER_TOKEN_GAS = 200_000;
 
-    function getTransferTokenValue() public returns (uint128) {
-        return gasToValue(TRANSFER_TOKEN_GAS, address(this).wid) + getDeployTokenWalletValue();
+    function getTransferTokenValue() public returns (coins) {
+        return gasToValue(TRANSFER_TOKEN_GAS) + getDeployTokenWalletValue();
     }
 
-    uint128 constant DEPLOY_TVM_TVM_EVENT = 150_000;
-    uint128 constant DEPLOY_TVM_TVM_EVENT_REMAINING = 400_000;
-    uint128 constant DEPLOY_EVENT_ADDRESS_KEEPER = 20_000;
+    coins constant DEPLOY_TVM_TVM_EVENT = 150_000;
+    coins constant DEPLOY_TVM_TVM_EVENT_REMAINING = 400_000;
+    coins constant DEPLOY_EVENT_ADDRESS_KEEPER = 20_000;
 }

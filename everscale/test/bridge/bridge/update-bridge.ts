@@ -31,7 +31,7 @@ describe("Test bridge update", async function () {
         amount: locklift.utils.toNano(1),
       });
 
-    expect(await bridge.methods.active().call().then(t => t.active)).to.be.equal(
+    expect(await bridge.methods.active().call().then(t => t.value0)).to.be.equal(
       false,
       "Wrong active status"
     );
@@ -47,14 +47,14 @@ describe("Test bridge update", async function () {
         amount: locklift.utils.toNano(1),
       });
 
-    expect(await bridge.methods.connectorDeployValue().call().then(t=> t.connectorDeployValue)).to.be.equal(
+    expect(await bridge.methods.connectorDeployValue().call().then(t=> t.value0)).to.be.equal(
       "1",
       "Wrong connector deploy value"
     );
   });
 
   it("Update manager address", async () => {
-    expect(await bridge.methods.manager().call().then(t => t.manager.toString())).to.be.equal(
+    expect(await bridge.methods.manager().call().then(t => t.value0.toString())).to.be.equal(
       bridgeOwner.address.toString(),
       "Wrong manager address"
     );
@@ -71,7 +71,7 @@ describe("Test bridge update", async function () {
         amount: locklift.utils.toNano(1),
       });
 
-    expect(await bridge.methods.manager().call().then(t => t.manager.toString())).to.be.equal(
+    expect(await bridge.methods.manager().call().then(t => t.value0.toString())).to.be.equal(
       new_manager.address.toString(),
       "Wrong manager address"
     );

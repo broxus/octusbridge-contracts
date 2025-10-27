@@ -1,0 +1,119 @@
+pragma tvm-solidity >= 0.79.0;
+
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+
+/**
+ * @dev Theis contract provides an immutable foundation for a wallet
+ * token contract that can be updated.
+ * It ensures that all wallet addresses are considered to be derived
+ * from the same code, regardless of the version of the wallet.
+ *
+ * We uses the `abi.encodeStateInit` function to create a `StateInit` data cell
+ * containing the {TokenWalletPlatform} code and static data. Then
+ * use the `tvm.hash` function to compute the hash of the `StateInit` data and
+ * convert it to an address.
+ */
+#[ExternalMessage(time)]
+#[TimeReplayProt]
+contract TokenWalletPlatform {
+    address static root;
+    address static owner;
+
+    /**
+     * @dev Constructor for TokenWalletPlatform.
+     * @param walletCode Code of the upgradable token wallet.
+     * @param walletVersion Version of the upgradable token wallet.
+     * @param sender Address of the sender.
+     * @param remainingGasTo Address to send remaining gas to.
+     *
+     * Precondition:
+     *   - Caller must be root or sender must be a wallet.
+     *
+     * Postcondition:
+     *  - Deployed upgradable token wallet or remaining gas is sent
+     *    to remainingGasTo.
+     */
+    constructor(
+        TvmCell walletCode,
+        uint32 walletVersion,
+        address sender,
+        address remainingGasTo
+    ) functionID(0x15A038FB) {
+        if (msg.sender == root || (!sender.isStdZero() && _getExpectedAddress(sender) == msg.sender)) {
+           initialize(walletCode, walletVersion, remainingGasTo);
+        } else {
+            remainingGasTo.transfer({
+                value: 0,
+                flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.DESTROY_IF_ZERO,
+                bounce: false
+            });
+        }
+    }
+
+    /**
+     * @dev Derive wallet address from owner.
+     *
+     * The function uses the `tvm.hash`, that computes the representation
+     * hash of of the wallet `StateInit` data and returns it as a 256-bit unsigned
+     * integer, then converted to an address.
+     *
+     * For string and bytes it computes hash of the tree of cells that contains
+     * data but not data itself.
+     *
+     * This allows the contract to determine the expected address of a wallet
+     * based on its owner's address.  See sha256 to count hash of data.
+     *
+     * @param owner_ Token wallet owner address
+     * @return Token wallet address
+     */
+    function _getExpectedAddress(address owner_) private view returns (address) {
+        TvmCell stateInit = abi.encodeStateInit({
+            contr: TokenWalletPlatform,
+            varInit: {
+                root: root,
+                owner: owner_
+            },
+            code: tvm.code()
+        });
+
+        return address(tvm.hash(stateInit));
+    }
+
+    /**
+     * @dev Initialize the upgradable token wallet.
+     *
+     * The initialize function uses the `TvmBuilder` object to building `TvmCell`
+     * to store the `root`, `owner`, and `remainingGasTo` addresses, as well
+     * as the `walletVersion `and the contract's code.
+     * It then sets the contract's code to the provided `walletCode` and calls
+     * the {onCodeUpgrade} function with the TvmCell data.
+     *
+     * The purpose of the initialize function is to set the necessary state and
+     * code for the wallet contract. It also triggers the {onCodeUpgrade} function,
+     * which can be overridden by derived contracts to handle code upgrades.
+     *
+     * @param walletCode Code of the upgradable token wallet.
+     * @param walletVersion Version of the upgradable token wallet.
+     * @param remainingGasTo Address to send remaining gas to.
+     *
+     */
+    function initialize(TvmCell walletCode, uint32 walletVersion, address remainingGasTo) private {
+        TvmBuilder builder;
+
+        builder.store(root);
+        builder.store(owner);
+        builder.store(uint128(0));
+        builder.store(uint32(0));
+        builder.store(walletVersion);
+        builder.store(remainingGasTo);
+
+        builder.store(tvm.code());
+
+        tvm.setcode(walletCode);
+        tvm.setCurrentCode(walletCode);
+
+        onCodeUpgrade(builder.toCell());
+    }
+
+    function onCodeUpgrade(TvmCell /*data*/) private {}
+}

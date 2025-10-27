@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 import "../../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V6.tsol";
 
+import "../../../../../utils/common/InternalOwner.tsol";
 import "./../../../../../utils/TransferUtils.tsol";
 import "./../../../../../utils/ErrorCodes.tsol";
 
 
-import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
@@ -27,6 +27,8 @@ abstract contract ProxyMultivaultAlien_V6_Base is IProxyMultiVaultAlien_V6, Tran
 
 
     function getConfiguration()
+        externalMsg
+        internalMsg
         override
         external
         view

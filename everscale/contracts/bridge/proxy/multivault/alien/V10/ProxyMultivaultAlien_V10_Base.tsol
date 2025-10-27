@@ -1,40 +1,66 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 import "../../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V10.tsol";
 
+import "./../../../../../utils/common/InternalOwner.tsol";
 import "./../../../../../utils/TransferUtils.tsol";
 import "./../../../../../utils/ErrorCodes.tsol";
 
-
-import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
 abstract contract ProxyMultivaultAlien_V10_Base is IProxyMultiVaultAlien_V10, TransferUtils, InternalOwner {
+
+    uint32 constant FEE_DENOMINATOR = 100_000;
+
     SolanaConfiguration solanaConfiguration;
     EVMConfiguration evmConfiguration;
     TVMConfiguration tvmConfiguration;
 
     uint8 api_version = 0;
 
-    address public manager;
-    TvmCell public mergeRouter;
-    TvmCell public mergePool;
-    TvmCell public mergePoolPlatform;
+    address manager_;
+    TvmCell mergeRouter_;
+    TvmCell mergePool_;
+    TvmCell mergePoolPlatform_;
 
-    uint8 public mergePoolVersion;
+    uint8 mergePoolVersion_;
 
-    address public proxyMultiVaultNative;
-
-    uint32 constant FEE_DENOMINATOR = 100_000;
+    address proxyMultiVaultNative_;
     TvmCell platformCode;
 
     mapping(address => DailyLimits) tokenToDailyLimits;
     address limitApprover;
 
+    function manager() externalMsg public view returns (address) {
+        return manager_;
+    }
+
+    function mergeRouter() externalMsg public view returns (TvmCell) {
+        return mergeRouter_;
+    }
+
+    function mergePool() externalMsg public view returns (TvmCell) {
+        return mergePool_;
+    }
+
+    function mergePoolPlatform() externalMsg public view returns (TvmCell) {
+        return mergePoolPlatform_;
+    }
+
+    function mergePoolVersion() externalMsg public view returns (uint8) {
+        return mergePoolVersion_;
+    }
+
+    function proxyMultiVaultNative() externalMsg public view returns (address) {
+        return proxyMultiVaultNative_;
+    }
+
     function getConfiguration()
+        externalMsg
+        internalMsg
         override
         external
         view
@@ -49,6 +75,8 @@ abstract contract ProxyMultivaultAlien_V10_Base is IProxyMultiVaultAlien_V10, Tr
     }
 
     function getPredeployedTokenData(address token)
+        externalMsg
+        internalMsg
         override
         external
         view
@@ -59,11 +87,13 @@ abstract contract ProxyMultivaultAlien_V10_Base is IProxyMultiVaultAlien_V10, Tr
             value: 0,
             bounce: false,
             flag: MsgFlag.REMAINING_GAS
-        } (proxyMultiVaultNative, tvmConfiguration.predeployedTokens.fetch(token));
+        } (proxyMultiVaultNative_, tvmConfiguration.predeployedTokens.fetch(token));
     }
 
 
     function getPredeployedTokens()
+        externalMsg
+        internalMsg
         external
         view
         responsible
@@ -77,7 +107,7 @@ abstract contract ProxyMultivaultAlien_V10_Base is IProxyMultiVaultAlien_V10, Tr
     }
 
     function setProxyMultiVaultNative(address _proxyMultiVaultNative) external onlyOwner cashBack {
-        proxyMultiVaultNative = _proxyMultiVaultNative;
+        proxyMultiVaultNative_ = _proxyMultiVaultNative;
     }
 
     function setEVMConfiguration(
@@ -222,7 +252,7 @@ abstract contract ProxyMultivaultAlien_V10_Base is IProxyMultiVaultAlien_V10, Tr
     function setManager(
         address _manager
     ) external override onlyOwner cashBack {
-        manager = _manager;
+        manager_ = _manager;
     }
 
     function _isArrayContainsAddress(

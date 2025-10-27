@@ -1,22 +1,20 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader expire;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 import "./../BaseEvent.tsol";
 import "../../../interfaces/event-contracts/IEverscaleEthereumEvent.tsol";
 
 import "./../../../../utils/ErrorCodes.tsol";
 
-
+#[ExternalMessage(time, pubkey, expire)]
+#[TimeReplayProt]
 contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
     uint32 constant FORCE_CLOSE_TIMEOUT = 3 days;
-    uint32 public createdAt;
+    uint32 createdAt_;
 
     // Event data
     EverscaleEthereumEventInitData static eventInitData;
     // Ethereum payload signatures for confirmations
-    mapping (uint => bytes) public signatures;
+    mapping(uint => bytes) signatures_;
 
     event Confirm(uint relay, bytes signature);
 
@@ -34,14 +32,22 @@ contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
             ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION
         );
 
-        createdAt = block.timestamp;
+        createdAt_ = block.timestamp;
         initializer = _initializer;
         meta = _meta;
 
         onInit();
     }
 
-    function getEventInitData() public view responsible returns (EverscaleEthereumEventInitData) {
+    function createdAt() externalMsg public view returns (uint32) {
+        return createdAt_;
+    }
+
+    function signatures() externalMsg public view returns (mapping(uint => bytes)) {
+        return signatures_;
+    }
+
+    function getEventInitData() externalMsg internalMsg public view responsible returns (EverscaleEthereumEventInitData) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} eventInitData;
     }
 
@@ -50,7 +56,7 @@ contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
     }
 
     function isExternalVoteCall(uint32 functionId) override internal view returns (bool){
-        return functionId == tvm.functionId(confirm) || functionId == tvm.functionId(reject);
+        return functionId == abi.functionId(confirm) || functionId == abi.functionId(reject);
     }
 
     /*
@@ -71,7 +77,7 @@ contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
         uint relay = msg.pubkey();
 
         votes[relay] = Vote.Confirm;
-        signatures[relay] = signature;
+        signatures_[relay] = signature;
 
         emit Confirm(relay, signature);
         confirms++;
@@ -126,7 +132,7 @@ contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
 
     function close() external override virtual view {
         require(
-            status() != Status.Pending || block.timestamp > createdAt + FORCE_CLOSE_TIMEOUT,
+            status() != Status.Pending || block.timestamp > createdAt_ + FORCE_CLOSE_TIMEOUT,
             ErrorCodes.WRONG_STATUS
         );
 
@@ -148,7 +154,7 @@ contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
         @returns _confirmRelays List of relays who have rejected event
         @returns _eventDataSignatures List of relay's TonEvent signatures
     */
-    function getDetails() external view responsible returns (
+    function getDetails() externalMsg internalMsg external view responsible returns (
         EverscaleEthereumEventInitData _eventInitData,
         Status _status,
         uint[] _confirms,
@@ -163,7 +169,7 @@ contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
         _confirms = getVoters(Vote.Confirm);
 
         for (uint voter : _confirms) {
-            _signatures.push(signatures[voter]);
+            _signatures.push(signatures_[voter]);
         }
 
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (

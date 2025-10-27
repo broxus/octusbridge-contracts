@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
@@ -9,15 +9,21 @@ import "../event-configuration-contracts/tvm/TvmTvmEventConfiguration.tsol";
 import "../interfaces/event-configuration-contracts/ITvmTvmEventConfiguration.tsol";
 
 
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract TvmTvmEventConfigurationFactory is TransferUtils, RandomNonce, CheckPubKey {
-    TvmCell public configurationCode;
+    TvmCell private configurationCode_;
 
     constructor(
         TvmCell _configurationCode
-    ) checkPubKey {
+    ) externalMsg checkPubKey {
         tvm.accept();
 
-        configurationCode = _configurationCode;
+        configurationCode_ = _configurationCode;
+    }
+
+    function configurationCode() externalMsg public view returns (TvmCell) {
+        return configurationCode_;
     }
 
     function deploy(
@@ -25,6 +31,7 @@ contract TvmTvmEventConfigurationFactory is TransferUtils, RandomNonce, CheckPub
         uint64 _flags,
         IBasicEventConfiguration.BasicConfiguration basicConfiguration,
         ITvmTvmEventConfiguration.TvmTvmEventConfiguration networkConfiguration,
+        IBasicEventConfiguration.EventAction eventAction,
         address _eventEmitter,
         address _transactionChecker
     ) external view reserveMinBalance(Gas.CONFIGURATION_FACTORY_INITIAL_BALANCE) {
@@ -33,13 +40,14 @@ contract TvmTvmEventConfigurationFactory is TransferUtils, RandomNonce, CheckPub
         new TvmTvmEventConfiguration{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
-            code: configurationCode,
+            code: configurationCode_,
             pubkey: 0,
             varInit: {
                 eventEmitter: _eventEmitter,
                 transactionChecker: _transactionChecker,
                 basicConfiguration: basicConfiguration,
-                networkConfiguration: networkConfiguration
+                networkConfiguration: networkConfiguration,
+                eventAction: eventAction
             }
         }(_owner, _meta, _flags);
     }
@@ -47,19 +55,21 @@ contract TvmTvmEventConfigurationFactory is TransferUtils, RandomNonce, CheckPub
     function deriveConfigurationAddress(
         IBasicEventConfiguration.BasicConfiguration basicConfiguration,
         ITvmTvmEventConfiguration.TvmTvmEventConfiguration networkConfiguration,
+        IBasicEventConfiguration.EventAction eventAction,
         address _eventEmitter,
         address _transactionChecker
-    ) external view returns (address) {
-        TvmCell stateInit = tvm.buildStateInit({
+    ) externalMsg external view returns (address) {
+        TvmCell stateInit = abi.encodeStateInit({
             contr: TvmTvmEventConfiguration,
             varInit: {
                 eventEmitter: _eventEmitter,
                 transactionChecker: _transactionChecker,
                 basicConfiguration: basicConfiguration,
-                networkConfiguration: networkConfiguration
+                networkConfiguration: networkConfiguration,
+                eventAction: eventAction
             },
             pubkey: 0,
-            code: configurationCode
+            code: configurationCode_
         });
 
         return address(tvm.hash(stateInit));

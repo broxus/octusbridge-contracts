@@ -1,7 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader expire;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 import "../base/evm/EverscaleEthereumBaseEvent.tsol";
 import "../../interfaces/IEventNotificationReceiver.tsol";
@@ -11,7 +8,8 @@ import "../../../utils/cell-encoder/StakingCellEncoder.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
-
+#[ExternalMessage(time, pubkey, expire)]
+#[CustomReplayProt]
 contract StakingEverscaleEthereumEvent is EverscaleEthereumBaseEvent, StakingCellEncoder {
 
     constructor(
@@ -33,7 +31,7 @@ contract StakingEverscaleEthereumEvent is EverscaleEthereumBaseEvent, StakingCel
 
     function onReject() override internal {}
 
-    function getDecodedData() public view responsible returns (uint128 round_num, uint160[] eth_keys, uint32 round_end) {
+    function getDecodedData() externalMsg internalMsg public view responsible returns (uint128 round_num, uint160[] eth_keys, uint32 round_end) {
         (round_num, eth_keys, round_end) = decodeEverscaleEthereumStakingEventData(eventInitData.voteData.eventData);
 
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (round_num, eth_keys, round_end);

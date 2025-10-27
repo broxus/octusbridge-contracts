@@ -141,7 +141,7 @@ describe("Deposit and withdraw native TVM token", () => {
         sender: bridgeOwner.address,
         recipient: bridgeOwner.address,
         amount: (500 - 50).toString(),
-        attachedGas: "9342662000",
+        // attachedGas: "9342662000", // todo
         expectedGas: "0",
         remainingGasTo: bridgeOwner.address
       });

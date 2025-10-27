@@ -1,14 +1,15 @@
-pragma ever-solidity >= 0.62.0;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 
 import "../bridge/interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
 
 
+#[ExternalMessage(time, pubkey)]
+#[TimeReplayProt]
 contract TonConfigMockup {
     uint64 static nonce;
 
-    constructor() { tvm.accept(); }
+    constructor() externalMsg { tvm.accept(); }
 
     function deployEvent(
         IEverscaleSolanaEvent.EverscaleSolanaEventVoteData

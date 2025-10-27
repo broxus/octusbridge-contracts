@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.7",
 	"header": ["time", "expire"],
 	"functions": [
 		{
@@ -8,6 +8,30 @@
 			"inputs": [
 			],
 			"outputs": [
+			]
+		},
+		{
+			"name": "root",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
+			"name": "round_num",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"uint32"}
+			]
+		},
+		{
+			"name": "election_ended",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"bool"}
 			]
 		},
 		{
@@ -93,65 +117,9 @@
 			"outputs": [
 				{"name":"value0","type":"address"}
 			]
-		},
-		{
-			"name": "current_version",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"current_version","type":"uint32"}
-			]
-		},
-		{
-			"name": "root",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"root","type":"address"}
-			]
-		},
-		{
-			"name": "round_num",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"round_num","type":"uint32"}
-			]
-		},
-		{
-			"name": "ton_keys",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"ton_keys","type":"uint256[]"}
-			]
-		},
-		{
-			"name": "eth_addrs",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"eth_addrs","type":"uint160[]"}
-			]
-		},
-		{
-			"name": "staker_addrs",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"staker_addrs","type":"address[]"}
-			]
-		},
-		{
-			"name": "election_ended",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"election_ended","type":"bool"}
-			]
 		}
 	],
-	"data": [
+	"getters": [
 	],
 	"events": [
 		{
@@ -164,20 +132,20 @@
 		}
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"current_version","type":"uint32"},
-		{"name":"platform_code","type":"cell"},
-		{"name":"root","type":"address"},
-		{"name":"round_num","type":"uint32"},
-		{"name":"ton_keys","type":"uint256[]"},
-		{"name":"eth_addrs","type":"uint160[]"},
-		{"name":"staker_addrs","type":"address[]"},
-		{"name":"staked_tokens","type":"uint128[]"},
-		{"components":[{"name":"prev_node","type":"uint256"},{"name":"next_node","type":"uint256"}],"name":"requests_nodes","type":"tuple[]"},
-		{"name":"list_start_idx","type":"uint256"},
-		{"name":"election_ended","type":"bool"},
-		{"name":"relay_transfer_start_idx","type":"uint256"}
+		{"init":true,"name":"_pubkey","type":"fixedbytes32"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":false,"name":"current_version","type":"uint32"},
+		{"init":false,"name":"platform_code","type":"cell"},
+		{"init":false,"name":"_root","type":"address"},
+		{"init":false,"name":"_round_num","type":"uint32"},
+		{"init":false,"name":"ton_keys","type":"uint256[]"},
+		{"init":false,"name":"eth_addrs","type":"uint160[]"},
+		{"init":false,"name":"staker_addrs","type":"address[]"},
+		{"init":false,"name":"staked_tokens","type":"uint128[]"},
+		{"components":[{"name":"prev_node","type":"uint256"},{"name":"next_node","type":"uint256"}],"init":false,"name":"requests_nodes","type":"tuple[]"},
+		{"init":false,"name":"list_start_idx","type":"uint256"},
+		{"init":false,"name":"_election_ended","type":"bool"},
+		{"init":false,"name":"relay_transfer_start_idx","type":"uint256"}
 	]
 }

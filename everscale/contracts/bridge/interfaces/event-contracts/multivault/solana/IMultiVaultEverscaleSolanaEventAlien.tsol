@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 interface IMultiVaultEverscaleSolanaEventAlien {
@@ -13,7 +13,7 @@ interface IMultiVaultEverscaleSolanaEventAlien {
         address token_
     ) external;
 
-    function getDecodedData() external responsible returns(
+    function getDecodedData() externalMsg internalMsg external responsible returns(
         address proxy_,
         address token_,
         address tokenWallet_,

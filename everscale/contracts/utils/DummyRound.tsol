@@ -1,9 +1,7 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
-pragma AbiHeader pubkey;
-pragma AbiHeader expire;
-
-
+#[ExternalMessage(time, pubkey, expire)]
+#[TimeReplayProt]
 contract DummyRound {
     struct Relay {
         address staker_addr;
@@ -16,11 +14,11 @@ contract DummyRound {
     uint256[] public ton_keys;
 
 
-    constructor() {
+    constructor() externalMsg {
         tvm.accept();
     }
 
-    function addRelays(uint count) external {
+    function addRelays(uint count) external externalMsg {
         tvm.accept();
         for (uint i = 0; i < count; i++) {
             address q = address.makeAddrStd(1, 1);
@@ -30,7 +28,7 @@ contract DummyRound {
         }
     }
 
-    function relayKeys() public view responsible returns (uint256[]) {
+    function relayKeys() externalMsg internalMsg public view responsible returns (uint256[]) {
         uint256[] _keys = new uint256[](relays.length);
         for (uint256 i = 0; i < _keys.length; i++) {
             _keys[i] = relays[i].ton_pubkey;
@@ -38,7 +36,7 @@ contract DummyRound {
         return { value: 0, bounce: false, flag: 64 } _keys;
     }
 
-    function relayKeysSimple() public view responsible returns (uint256[]) {
+    function relayKeysSimple() externalMsg internalMsg public view responsible returns (uint256[]) {
         return { value: 0, bounce: false, flag: 64 } ton_keys;
     }
 

@@ -1,14 +1,11 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
-pragma AbiHeader expire;
-pragma AbiHeader pubkey;
-
-import "@broxus/contracts/contracts/access/ExternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 
 import "./../../utils/TransferUtils.tsol";
+import "./../../utils/common/ExternalOwner.tsol";
 
 import "./../event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol";
 
@@ -19,16 +16,18 @@ import './EventCreditGas.tsol';
 /// @dev Used as part of credit-transfer pipeline, specifically for ever-evm transfers
 /// Allows credit backend to call .close on the event contracts, where remainingGasTo = EventCloser
 /// Receives the EVERs and immediately transfers them to the EventDeployer contract
+#[ExternalMessage(time, pubkey, expire)]
+#[TimeReplayProt]
 contract EventCloser is ExternalOwner, RandomNonce, TransferUtils, CheckPubKey {
     address static factory;
 
-    address[] public deployers;
-    uint8 public deployerIndex;
+    address[] _deployers;
+    uint8 _deployerIndex;
 
     constructor(
         uint owner_,
         address[] deployers_
-    ) checkPubKey {
+    ) externalMsg checkPubKey {
         require(msg.sender == factory, ErrorCodes.ZERO_ADDRESS);
         for (address deployer: deployers_) {
             require(deployer != address(0), ErrorCodes.ZERO_ADDRESS);
@@ -38,8 +37,16 @@ contract EventCloser is ExternalOwner, RandomNonce, TransferUtils, CheckPubKey {
 
         setOwnership(owner_);
 
-        deployers = deployers_;
-        deployerIndex = uint8(rnd.next() % deployers.length);
+        _deployers = deployers_;
+        _deployerIndex = uint8(rnd.next() % _deployers.length);
+    }
+
+    function deployers() externalMsg public view returns (address[]) {
+        return _deployers;
+    }
+
+    function deployerIndex() externalMsg public view returns (uint8) {
+        return _deployerIndex;
     }
 
     function _targetBalance() internal pure override returns (uint128) {
@@ -51,25 +58,25 @@ contract EventCloser is ExternalOwner, RandomNonce, TransferUtils, CheckPubKey {
     /// @param events List of event-contracts addresses
     function close(
         address[] events
-    ) external view onlyOwner {
+    ) externalMsg external view onlyOwner {
         tvm.accept();
 
         for (address e: events) {
             EverscaleEthereumBaseEvent(e).close{
                 bounce: true,
                 flag: MsgFlag.IGNORE_ERRORS,
-                value: gasToValue(EventCreditGas.CLOSE_EVENT_GAS, address(this).wid)
+                value: gasToValue(EventCreditGas.CLOSE_EVENT_GAS)
             }();
         }
     }
 
     receive() external reserveTargetBalance {
-        deployers[deployerIndex].transfer({
+        _deployers[_deployerIndex].transfer({
             bounce: false,
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS
         });
 
-        deployerIndex = (deployerIndex + 1) % uint8(deployers.length);
+        _deployerIndex = (_deployerIndex + 1) % uint8(_deployers.length);
     }
 }

@@ -1,14 +1,15 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "../../bridge/interfaces/event-contracts/multivault/evm/IEVMCallback.tsol";
 import "../../bridge/interfaces/proxy/INetworks.tsol";
 import "../../bridge/interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
 
-
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract MergePoolCellEncoder is IEVMCallback, INetworks {
     function encodeMergePoolBurnSwapPayload(
         address targetToken
-    ) public pure returns (TvmCell) {
+    ) externalMsg public pure returns (TvmCell) {
         TvmCell empty;
 
         return abi.encode(
@@ -22,7 +23,7 @@ contract MergePoolCellEncoder is IEVMCallback, INetworks {
         address targetToken,
         uint160 recipient,
         EVMCallback callback
-    ) public pure returns (TvmCell) {
+    ) externalMsg public pure returns (TvmCell) {
         TvmCell withdrawPayload = abi.encode(recipient, callback);
 
         TvmCell operationPayload = abi.encode(Network.EVM, withdrawPayload);
@@ -42,7 +43,7 @@ contract MergePoolCellEncoder is IEVMCallback, INetworks {
         bool executePayloadNeeded,
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
         bytes payload
-    ) public pure returns (TvmCell) {
+    ) externalMsg public pure returns (TvmCell) {
         TvmCell withdrawPayload = abi.encode(recipient, executeAccounts, executePayloadNeeded, executePayloadAccounts, payload);
 
         TvmCell operationPayload = abi.encode(Network.Solana, withdrawPayload);
@@ -60,7 +61,7 @@ contract MergePoolCellEncoder is IEVMCallback, INetworks {
         address recipient,
         uint128 expectedGas,
         optional(TvmCell) payload
-    ) public pure returns (TvmCell) {
+    ) externalMsg public pure returns (TvmCell) {
         TvmCell withdrawPayload = abi.encode(recipient, expectedGas, payload);
 
         TvmCell operationPayload = abi.encode(Network.TVM, withdrawPayload);

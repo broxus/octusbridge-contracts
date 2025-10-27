@@ -1,16 +1,18 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 /*
     Ad hoc contract, used to perform encode / decode TvmCell.
     Not implemented in the Everscale-SDK at the moment of creation.
     @important Not strictly connected to the ERC20<->TIP3 token transfers, just an example.
 */
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract ProxyTokenTransferCellEncoder {
     function encodeEthereumEverscaleEventData(
         uint256 tokens,
         int128 wid,
         uint256 owner_addr
-    ) public pure returns(
+    ) externalMsg public pure returns(
         TvmCell data
     ) {
         TvmBuilder builder;
@@ -24,7 +26,7 @@ contract ProxyTokenTransferCellEncoder {
         uint256 sender_addr,
         uint128 tokens,
         address receiver_addr
-    ) public pure returns(
+    ) externalMsg public pure returns(
         TvmCell data
     ) {
         TvmBuilder builder;
@@ -36,7 +38,7 @@ contract ProxyTokenTransferCellEncoder {
 
     function decodeEthereumEverscaleEventData(
         TvmCell data
-    ) public pure returns(
+    ) externalMsg public pure returns(
         uint128 tokens,
         int8 wid,
         uint256 owner_addr
@@ -51,7 +53,7 @@ contract ProxyTokenTransferCellEncoder {
 
     function decodeSolanaEverscaleEventData(
         TvmCell data
-    ) public pure returns(
+    ) externalMsg public pure returns(
         uint256 sender_addr,
         uint128 tokens,
         address receiver_addr
@@ -69,7 +71,7 @@ contract ProxyTokenTransferCellEncoder {
         uint128 tokens,
         uint160 ethereum_address,
         uint32 chainId
-    ) public pure returns(
+    ) externalMsg public pure returns(
         TvmCell data
     ) {
         TvmBuilder builder;
@@ -83,7 +85,7 @@ contract ProxyTokenTransferCellEncoder {
         address senderAddress,
         uint128 tokens,
         uint256 solanaOwnerAddress
-    ) public pure returns(
+    ) externalMsg public pure returns(
         TvmCell data
     ) {
         TvmBuilder builder;
@@ -95,7 +97,7 @@ contract ProxyTokenTransferCellEncoder {
 
     function decodeEverscaleEthereumEventData(
         TvmCell data
-    ) public pure returns(
+    ) externalMsg public pure returns(
         int8 wid,
         uint addr,
         uint128 tokens,
@@ -113,7 +115,7 @@ contract ProxyTokenTransferCellEncoder {
 
     function decodeEverscaleSolanaEventData(
         TvmCell data
-    ) public pure returns(
+    ) externalMsg public pure returns(
         address senderAddress,
         uint128 tokens,
         uint256 solanaOwnerAddress

@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.7",
 	"header": ["time"],
 	"functions": [
 		{
@@ -10,6 +10,22 @@
 				{"name":"_owner","type":"address"}
 			],
 			"outputs": [
+			]
+		},
+		{
+			"name": "eventConfiguration",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
+			"name": "enabled",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"bool"}
 			]
 		},
 		{
@@ -30,6 +46,14 @@
 			]
 		},
 		{
+			"name": "owner",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
 			"name": "transferOwnership",
 			"inputs": [
 				{"name":"newOwner","type":"address"}
@@ -43,35 +67,9 @@
 			],
 			"outputs": [
 			]
-		},
-		{
-			"name": "owner",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"owner","type":"address"}
-			]
-		},
-		{
-			"name": "eventConfiguration",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"eventConfiguration","type":"address"}
-			]
-		},
-		{
-			"name": "enabled",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"enabled","type":"bool"}
-			]
 		}
 	],
-	"data": [
-		{"key":1,"name":"bridge","type":"address"},
-		{"key":2,"name":"id","type":"uint64"}
+	"getters": [
 	],
 	"events": [
 		{
@@ -92,13 +90,13 @@
 		}
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"owner","type":"address"},
-		{"name":"bridge","type":"address"},
-		{"name":"id","type":"uint64"},
-		{"name":"eventConfiguration","type":"address"},
-		{"name":"enabled","type":"bool"}
+		{"init":true,"name":"_pubkey","type":"fixedbytes32"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":false,"name":"_owner","type":"address"},
+		{"init":true,"name":"bridge","type":"address"},
+		{"init":true,"name":"id","type":"uint64"},
+		{"init":false,"name":"eventConfiguration_","type":"address"},
+		{"init":false,"name":"enabled_","type":"bool"}
 	]
 }

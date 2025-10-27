@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
@@ -8,8 +8,16 @@ import "../interfaces/trustless-verifier/IOnTrustlessVerify.tsol";
 
 import "../../utils/TransferUtils.tsol";
 
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract TrustlessVerifierMockup is ITrustlessVerifier, RandomNonce, TransferUtils {
-    bool approve = false;
+
+    bool approve;
+
+    constructor() externalMsg {
+        tvm.accept();
+        approve = false;
+    }
 
     function setApprove(bool _approve) external cashBack {
         approve = _approve;

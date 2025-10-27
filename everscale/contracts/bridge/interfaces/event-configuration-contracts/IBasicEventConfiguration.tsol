@@ -1,7 +1,15 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 interface IBasicEventConfiguration {
+    enum EventAction {
+        MultivaultAlien,
+        MultivaultNative,
+        TokenTransfer,
+        Staking,
+        Dao
+    }
+
     enum EventType {
         EthereumEverscale,
         EverscaleEthereum,
@@ -19,8 +27,9 @@ interface IBasicEventConfiguration {
 
     event NewEventContract(address eventContract);
 
-    function getType() external pure responsible returns(EventType _type);
-    function getFlags() external view responsible returns(uint64 _flags);
+    function getType() externalMsg internalMsg external pure responsible returns(EventType _type);
+    function getFlags() externalMsg internalMsg external view responsible returns(uint64 _flags);
+    function getEventAction() externalMsg internalMsg external view responsible returns(EventAction _eventAction);
 
     function setFlags(uint64 _flags) external;
     function setEventInitialBalance(uint64 eventInitialBalance) external;

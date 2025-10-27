@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "../../../../interfaces/event-contracts/ITvmTvmEvent.tsol";
 import "../../../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
@@ -52,6 +52,7 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
             );
 
             ITvmTvmProxyExtended(proxyMultiVaultNative).onTVMEventConfirmedExtended{
+                value: 0,
                 flag: MsgFlag.ALL_NOT_RESERVED
             }(eventInitData, _meta, remainingGasTo);
 
@@ -72,7 +73,7 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
             recipient,
             recipient,
             abi.encode(BridgeOpCodes.BridgeDeposit, nonce, payload),
-            Gas.getMintTokenValue() + expectedGas
+            Gas.getMintTokenValue() + coins(expectedGas)
         );
 
         // Refund remaining gas to event deployer

@@ -1,6 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-//pragma AbiHeader expire;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.tsol";
@@ -17,15 +15,17 @@ import "./../UserData.tsol";
 import "./../Election.tsol";
 import "./../StakingRelayRound.tsol";
 
+import "./../libraries/Gas.tsol";
 import "./../libraries/PlatformTypes.tsol";
 import "./../../utils/ErrorCodes.tsol";
-import "./../libraries/Gas.tsol";
+import "./../../utils/common/Platform.tsol";
 
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
-import "@broxus/contracts/contracts/platform/Platform.tsol";
 import "../../utils/Delegate.tsol";
 
 
+#[ExternalMessage(time, pubkey)]
+#[TimeReplayProt]
 abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool, IStakingDao, Delegate {
     // Events
     event RewardDeposit(uint128 amount, uint32 reward_round_num);
@@ -56,8 +56,8 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     event BridgeEventTonEthConfigUpdated(address new_bridge_event_config_ton_eth);
     event BridgeEventTonSolConfigUpdated(address new_bridge_event_config_ton_sol);
 
-    event TonEthEventDeployValueUpdated(uint128 new_value);
-    event TonSolEventDeployValueUpdated(uint128 new_value);
+    event TonEthEventDeployValueUpdated(coins new_value);
+    event TonSolEventDeployValueUpdated(coins new_value);
 
     event AdminUpdated(address new_admin);
     event RewarderUpdated(address new_rewarder);
@@ -88,7 +88,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
 
     BaseDetails base_details;
 
-    address public bridge_event_config_ton_sol;
+    address bridge_event_config_ton_sol_;
 
     uint32 constant RELAY_LOCK_TIME = 30 days;
     uint32 constant RELAY_ROUND_TIME = 7 days;
@@ -116,8 +116,8 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         USER_REWARD_PER_SECOND
     );
 
-    uint128 tonEthEventDeployValue = 2.5 ton;
-    uint128 tonSolEventDeployValue = 2.5 ton;
+    coins tonEthEventDeployValue = 2.5 ever;
+    coins tonSolEventDeployValue = 2.5 ever;
 
     // payloads for token receive callback
     uint8 constant STAKE_DEPOSIT = 0;
@@ -140,19 +140,23 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     // this is used to prevent data loss on bounced messages during deposit
     mapping (uint64 => PendingDeposit) deposits;
 
-    function getDetails() public view responsible returns (BaseDetails) {
+    function bridge_event_config_ton_sol() externalMsg public view returns (address) {
+        return bridge_event_config_ton_sol_;
+    }
+
+    function getDetails() externalMsg internalMsg public view responsible returns (BaseDetails) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false }base_details;
     }
 
-    function getCodeData() external view responsible returns (CodeData) {
+    function getCodeData() externalMsg internalMsg external view responsible returns (CodeData) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false }code_data;
     }
 
-    function getRelayRoundsDetails() external override view responsible returns (RelayRoundsDetails) {
+    function getRelayRoundsDetails() externalMsg internalMsg external override view responsible returns (RelayRoundsDetails) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false }round_details;
     }
 
-    function getRelayConfig() external view responsible returns (RelayConfigDetails) {
+    function getRelayConfig() externalMsg internalMsg external view responsible returns (RelayConfigDetails) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false }relay_config;
     }
 
@@ -180,7 +184,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-    function setEventDeployValues(uint128 ton_eth_event_value, uint128 ton_sol_event_value, address send_gas_to) external onlyAdmin {
+    function setEventDeployValues(coins ton_eth_event_value, coins ton_sol_event_value, address send_gas_to) external onlyAdmin {
         require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
 
@@ -213,7 +217,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
         emit BridgeEventTonSolConfigUpdated(new_bridge_event_config_ton_sol);
-        bridge_event_config_ton_sol = new_bridge_event_config_ton_sol;
+        bridge_event_config_ton_sol_ = new_bridge_event_config_ton_sol;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
@@ -263,7 +267,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-    function isActive() external view responsible returns (bool) {
+    function isActive() externalMsg internalMsg external view responsible returns (bool) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false } active;
     }
 
@@ -285,7 +289,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     */
     function setUpTokenWallet() internal view {
         ITokenRoot(base_details.tokenRoot).deployWallet{
-            value: gasToValue(Gas.TOKEN_WALLET_EXTRA_GAS, address(this).wid) + Gas.getDeployTokenWalletValue(),
+            value: gasToValue(Gas.TOKEN_WALLET_EXTRA_GAS) + Gas.getDeployTokenWalletValue(),
             callback: StakingPoolBase.receiveTokenWalletAddress
         }(
             address(this), // owner
@@ -493,7 +497,14 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
 
 
     // user_amount and user_reward_debt should be fetched from UserData at first
-    function pendingReward(uint256 user_token_balance, IUserData.RewardRoundData[] user_reward_data) external view responsible returns (uint256) {
+    function pendingReward(uint256 user_token_balance, IUserData.RewardRoundData[] user_reward_data)
+        externalMsg
+        internalMsg
+        external
+        view
+        responsible
+        returns (uint256)
+    {
         RewardRound[] _reward_rounds = base_details.rewardRounds;
         // sync rewards up to this moment
         if (block.timestamp > base_details.lastRewardTime && base_details.tokenBalance > 0) {
@@ -552,7 +563,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     }
 
     function _buildInitData(uint8 type_id, TvmCell _initialData) internal view returns (TvmCell) {
-        return tvm.buildStateInit({
+        return abi.encodeStateInit({
             contr: Platform,
             varInit: {
                 root: address(this),
@@ -577,7 +588,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         }(code_data.user_data_code, constructor_params.toCell(), user_data_owner);
     }
 
-    function getUserDataAddress(address user) public view responsible returns (address) {
+    function getUserDataAddress(address user) externalMsg internalMsg public view responsible returns (address) {
         return { value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false } address(tvm.hash(_buildInitData(
             PlatformTypes.UserData,
             _buildUserDataParams(user)
@@ -644,7 +655,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         }();
     }
 
-    function withdrawTonsEmergency(uint128 amount, address receiver, bool all, address send_gas_to) external view onlyRescuer {
+    function withdrawTonsEmergency(coins amount, address receiver, bool all, address send_gas_to) external view onlyRescuer {
         require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
         require (base_details.emergency, ErrorCodes.EMERGENCY);
         require (address(this).balance - msg.value > amount, ErrorCodes.VALUE_TOO_LOW);
@@ -704,11 +715,9 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     }
 
     onBounce(TvmSlice slice) external view {
-        tvm.accept();
-
         uint32 functionId = slice.load(uint32);
         // if processing failed - contract was not deployed. Deploy and try again
-        if (functionId == tvm.functionId(UserData.processDeposit)) {
+        if (functionId == abi.functionId(UserData.processDeposit)) {
             tvm.rawReserve(_reserve(), 0);
 
             uint64 _deposit_nonce = slice.load(uint64);

@@ -1,6 +1,6 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 interface IEventAddressKeeper {
-    function getEventContract() external responsible returns(address, uint32);
+    function getEventContract() externalMsg internalMsg external responsible returns(address, uint32);
 }

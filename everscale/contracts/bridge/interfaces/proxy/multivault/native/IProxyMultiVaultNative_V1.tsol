@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 interface IProxyMultiVaultNative_V1 {
@@ -8,9 +8,9 @@ interface IProxyMultiVaultNative_V1 {
         uint128 deployWalletValue;
     }
 
-    function apiVersion() external view responsible returns(uint8);
+    function apiVersion() externalMsg internalMsg external view responsible returns(uint8);
 
-    function getConfiguration() external view responsible returns (Configuration);
+    function getConfiguration() externalMsg internalMsg external view responsible returns (Configuration);
     function setConfiguration(Configuration _config, address gasBackAddress) external;
 
     event NativeTransfer(

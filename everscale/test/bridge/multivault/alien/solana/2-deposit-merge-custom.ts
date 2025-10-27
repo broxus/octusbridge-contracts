@@ -273,7 +273,7 @@ describe("Deposit Alien token with merging with custom token", async function ()
   });
 
   it("Confirm event", async () => {
-    await processEvent(relays, eventContract.address, EventType.EthereumEverscale, EventAction.Confirm);
+    await processEvent(relays, eventContract.address, EventType.SolanaEverscale, EventAction.Confirm);
   });
 
   it("Check alien total supply is zero", async () => {

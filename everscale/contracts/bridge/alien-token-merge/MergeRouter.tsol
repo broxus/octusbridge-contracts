@@ -1,23 +1,22 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
-pragma AbiHeader pubkey;
-pragma AbiHeader expire;
-
-import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 import "./../../utils/TransferUtils.tsol";
+import "../../utils/common/InternalOwner.tsol";
 import "../interfaces/alien-token-merge/IMergeRouter.tsol";
 import "../../utils/ErrorCodes.tsol";
 
+#[ExternalMessage(time, pubkey, expire)]
+#[TimeReplayProt]
 contract MergeRouter is IMergeRouter, InternalOwner, TransferUtils {
     address static proxy;
     address static token;
 
     address pool;
-    address public manager;
+    address manager_;
 
     modifier onlyOwnerOrManager() {
-        require(msg.sender == owner || msg.sender == manager, ErrorCodes.ONLY_OWNER_OR_MANAGER);
+        require(msg.sender == owner() || msg.sender == manager_, ErrorCodes.ONLY_OWNER_OR_MANAGER);
 
         _;
     }
@@ -28,9 +27,14 @@ contract MergeRouter is IMergeRouter, InternalOwner, TransferUtils {
     ) {
         require(msg.sender == proxy, ErrorCodes.WRONG_PROXY);
 
-        manager = _manager;
+        pool = address.makeAddrStd(0, 0);
+        manager_ = _manager;
 
         setOwnership(_owner);
+    }
+
+    function manager() externalMsg public view returns (address) {
+        return manager_;
     }
 
     /// @notice Set pool address. Cant be zero address.
@@ -39,7 +43,7 @@ contract MergeRouter is IMergeRouter, InternalOwner, TransferUtils {
     function setPool(
         address pool_
     ) external override cashBack onlyOwnerOrManager {
-        require(pool_.value != 0, ErrorCodes.MERGE_POOL_IS_ZERO_ADDRESS);
+        require(!pool_.isStdZero(), ErrorCodes.MERGE_POOL_IS_ZERO_ADDRESS);
 
         pool = pool_;
     }
@@ -47,7 +51,7 @@ contract MergeRouter is IMergeRouter, InternalOwner, TransferUtils {
     function setManager(
         address _manager
     ) external override cashBack onlyOwner {
-        manager = _manager;
+        manager_ = _manager;
     }
 
     /// @notice Set pool address to zero address
@@ -58,12 +62,12 @@ contract MergeRouter is IMergeRouter, InternalOwner, TransferUtils {
 
     /// @notice Get pool address
     /// @return Pool address. Zero address if no pool was set.
-    function getPool() external override responsible returns (address) {
+    function getPool() externalMsg internalMsg external override responsible returns (address) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} pool;
     }
 
     /// @notice Get router details
-    function getDetails() external override responsible returns (
+    function getDetails() externalMsg internalMsg external override responsible returns (
         address _proxy,
         address _token,
         address _pool

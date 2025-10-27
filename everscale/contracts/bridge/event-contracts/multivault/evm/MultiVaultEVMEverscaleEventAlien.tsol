@@ -1,7 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader pubkey;
-pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 
 import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V8.tsol";
@@ -19,18 +16,21 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.tsol';
 import "ton-eth-bridge-token-contracts/contracts/interfaces/TIP3TokenRoot.tsol";
 
 
+#[ExternalMessage(time, pubkey, expire)]
+#[CustomReplayProt]
 contract MultiVaultEVMEverscaleEventAlien is
     EthereumEverscaleBaseEvent,
     IMultiVaultEVMEverscaleEventAlien
 {
     uint128 constant POWER_BASE = 10;
 
-    TvmCell public transitionalDataCell;
-    address public limitApprover;
-    bool public isLimitApproved;
+    TvmCell private transitionalDataCell;
 
-    modifier onlyLimitApprover() {
-        require(msg.sender == limitApprover && limitApprover.value != 0, ErrorCodes.SENDER_IS_NOT_LIMIT_APPROVER);
+    address limitApprover_;
+    bool isLimitApproved_;
+
+    modifier onlylimitApprover() {
+        require(msg.sender == limitApprover_ && !limitApprover_.isStdZero(), ErrorCodes.SENDER_IS_NOT_LIMIT_APPROVER);
         _;
     }
 
@@ -38,6 +38,14 @@ contract MultiVaultEVMEverscaleEventAlien is
         address _initializer,
         TvmCell _meta
     ) EthereumEverscaleBaseEvent(_initializer, _meta) {}
+
+    function isLimitApproved() externalMsg public view returns (bool) {
+        return isLimitApproved_;
+    }
+
+    function limitApprover() externalMsg public view returns (address) {
+        return limitApprover_;
+    }
 
     function onReject() virtual override internal {
         transferAll(initializer);
@@ -75,7 +83,7 @@ contract MultiVaultEVMEverscaleEventAlien is
         }
 
         IEthereumEverscaleEventConfiguration(eventInitData.configuration).getDetails{
-            value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS, address(this).wid),
+            value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS),
             callback: MultiVaultEVMEverscaleEventAlien.receiveConfigurationDetails
         }();
     }
@@ -92,7 +100,7 @@ contract MultiVaultEVMEverscaleEventAlien is
         EventData eventData = getEventData();
 
         IProxyMultiVaultAlien_V8(_networkConfiguration.proxy).deriveEVMAlienTokenRoot{
-            value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS, address(this).wid),
+            value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS),
             callback: MultiVaultEVMEverscaleEventAlien.receiveAlienTokenRoot
         }(
             eventData.base_chainId,
@@ -117,7 +125,7 @@ contract MultiVaultEVMEverscaleEventAlien is
         _set_token(token);
 
         TIP3TokenRoot(token).name{
-            value: gasToValue(Gas.REQUEST_TOKEN_NAME_GAS, address(this).wid),
+            value: gasToValue(Gas.REQUEST_TOKEN_NAME_GAS),
             bounce: true,
             callback: MultiVaultEVMEverscaleEventAlien.receiveTokenName
         }();
@@ -139,7 +147,7 @@ contract MultiVaultEVMEverscaleEventAlien is
         // Token exists, no need to deploy
         // Ask the router address
         IProxyMultiVaultAlien_V8(transitionalData.proxy).deriveMergeRouter{
-            value: gasToValue(Gas.REQUEST_MERGE_ROUTER_GAS, address(this).wid),
+            value: gasToValue(Gas.REQUEST_MERGE_ROUTER_GAS),
             bounce: false,
             callback: MultiVaultEVMEverscaleEventAlien.receiveMergeRouter
         }(transitionalData.token);
@@ -161,7 +169,7 @@ contract MultiVaultEVMEverscaleEventAlien is
 
         // Request merge router pool
         IMergeRouter(router).getPool{
-            value: gasToValue(Gas.REQUEST_POOL_GAS, address(this).wid),
+            value: gasToValue(Gas.REQUEST_POOL_GAS),
             bounce: true,
             callback: MultiVaultEVMEverscaleEventAlien.receiveMergeRouterPool
         }();
@@ -181,13 +189,13 @@ contract MultiVaultEVMEverscaleEventAlien is
 
         _set_pool(pool);
 
-        if (pool.value == 0) {
+        if (pool.isStdZero()) {
             EventData eventData = getEventData();
 
             _finishSetup(transitionalData.token, eventData.amount);
         } else {
             IMergePool_V2(pool).getCanon{
-                value: gasToValue(Gas.REQUEST_CANON_GAS, address(this).wid),
+                value: gasToValue(Gas.REQUEST_CANON_GAS),
                 bounce: false,
                 callback: MultiVaultEVMEverscaleEventAlien.receiveMergePoolCanon
             }();
@@ -245,7 +253,7 @@ contract MultiVaultEVMEverscaleEventAlien is
 
         TvmCell metaData = abi.encode(
             address(this),
-            isLimitApproved,
+            isLimitApproved_,
             transitionalData.target_token,
             transitionalData.target_amount,
             eventData.recipient,
@@ -253,11 +261,12 @@ contract MultiVaultEVMEverscaleEventAlien is
         );
 
         IEthereumEverscaleProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
+            value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, metaData, initializer);
     }
 
-    function getEventData() public override responsible returns(EventData) {
+    function getEventData() externalMsg internalMsg public override responsible returns(EventData) {
         (
             uint256 base_chainId,
             uint160 base_token,
@@ -309,7 +318,7 @@ contract MultiVaultEVMEverscaleEventAlien is
         TransitionalData transitionalData = getTransitionalData();
 
         if (
-            selector == tvm.functionId(TIP3TokenRoot.name) &&
+            selector == abi.functionId(TIP3TokenRoot.name) &&
             msg.sender == transitionalData.token
         ) {
             // Failed to request token meta
@@ -328,13 +337,13 @@ contract MultiVaultEVMEverscaleEventAlien is
 
             _requestMergeRouter();
         } else if (
-            selector == tvm.functionId(IMergeRouter.getPool) &&
+            selector == abi.functionId(IMergeRouter.getPool) &&
             msg.sender == transitionalData.router
         ) {
             // Failed to request router's pool
             // Seems like corresponding router not deployed so deploy it
             IProxyMultiVaultAlien_V8(transitionalData.proxy).deployMergeRouter{
-                value: gasToValue(Gas.DEPLOY_MERGE_ROUTER_GAS, address(this).wid),
+                value: gasToValue(Gas.DEPLOY_MERGE_ROUTER_GAS),
                 bounce: false
             }(transitionalData.token);
 
@@ -413,8 +422,7 @@ contract MultiVaultEVMEverscaleEventAlien is
         _set_transitional_data(transitionalData);
     }
 
-    // ==== Legacy ====
-    function getDecodedData() external override responsible returns(
+    function getDecodedData() externalMsg internalMsg external override responsible returns(
         uint256 base_chainId_,
         uint160 base_token_,
         string name_,
@@ -454,15 +462,15 @@ contract MultiVaultEVMEverscaleEventAlien is
     function dailyLimitReached(address _approver) external override {
         TransitionalData transitionalData = getTransitionalData();
 
-        require(msg.sender.value != 0 && msg.sender == transitionalData.proxy, ErrorCodes.SENDER_NOT_PROXY);
+        require(!msg.sender.isStdZero() && msg.sender == transitionalData.proxy, ErrorCodes.SENDER_NOT_PROXY);
 
         _setStatusLimitReached(_approver);
 
-        limitApprover = _approver;
+        limitApprover_ = _approver;
     }
 
-    function approveLimit() external onlyLimitApprover {
-        isLimitApproved = true;
+    function approveLimit() external onlylimitApprover {
+        isLimitApproved_ = true;
 
         setStatusConfirmed();
         onConfirm();
@@ -473,7 +481,7 @@ contract MultiVaultEVMEverscaleEventAlien is
         address _remainingGasTo,
         IEVMCallback.EVMCallback _callback,
         address _expectedGasReceiver
-    ) external onlyLimitApprover {
+    ) external onlylimitApprover {
         _setStatusCancelled();
 
         EventData eventData = getEventData();
@@ -500,7 +508,7 @@ contract MultiVaultEVMEverscaleEventAlien is
         });
     }
 
-    function rejectLimit(address _expectedGasReceiver) external onlyLimitApprover {
+    function rejectLimit(address _expectedGasReceiver) external onlylimitApprover {
         require(status() == Status.LimitReached, ErrorCodes.WRONG_STATUS);
 
         setStatusRejected(3);

@@ -1,17 +1,15 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader expire;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 import "./../BaseEvent.tsol";
 import "../../../interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
 
 import "./../../../../utils/ErrorCodes.tsol";
 
-
+#[ExternalMessage(time, pubkey, expire)]
+#[TimeReplayProt]
 contract EverscaleSolanaBaseEvent is BaseEvent, IEverscaleSolanaEvent {
     uint32 constant FORCE_CLOSE_TIMEOUT = 1 days;
-    uint32 public createdAt;
+    uint32 createdAt_;
 
     // Event data
     EverscaleSolanaEventInitData static eventInitData;
@@ -32,14 +30,18 @@ contract EverscaleSolanaBaseEvent is BaseEvent, IEverscaleSolanaEvent {
             ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION
         );
 
-        createdAt = block.timestamp;
+        createdAt_ = block.timestamp;
         initializer = _initializer;
         meta = _meta;
 
         onInit();
     }
 
-    function getEventInitData() public view responsible returns (EverscaleSolanaEventInitData) {
+    function createdAt() externalMsg public view returns (uint32) {
+        return createdAt_;
+    }
+
+    function getEventInitData() externalMsg internalMsg public view responsible returns (EverscaleSolanaEventInitData) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} eventInitData;
     }
 
@@ -48,7 +50,7 @@ contract EverscaleSolanaBaseEvent is BaseEvent, IEverscaleSolanaEvent {
     }
 
     function isExternalVoteCall(uint32 functionId) override internal view returns (bool){
-        return functionId == tvm.functionId(confirm) || functionId == tvm.functionId(reject);
+        return functionId == abi.functionId(confirm) || functionId == abi.functionId(reject);
     }
 
     /*
@@ -122,7 +124,7 @@ contract EverscaleSolanaBaseEvent is BaseEvent, IEverscaleSolanaEvent {
 
     function close() external override virtual view {
         require(
-            status() != Status.Pending || block.timestamp > createdAt + FORCE_CLOSE_TIMEOUT,
+            status() != Status.Pending || block.timestamp > createdAt_ + FORCE_CLOSE_TIMEOUT,
             ErrorCodes.WRONG_STATUS
         );
 
@@ -143,7 +145,7 @@ contract EverscaleSolanaBaseEvent is BaseEvent, IEverscaleSolanaEvent {
         @returns _confirmRelays List of relays who have confirmed event
         @returns _confirmRelays List of relays who have rejected event
     */
-    function getDetails() external view responsible returns (
+    function getDetails() externalMsg internalMsg external view responsible returns (
         EverscaleSolanaEventInitData _eventInitData,
         Status _status,
         uint[] _confirms,

@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 interface IStakingRelayRound {
@@ -13,7 +13,7 @@ interface IStakingRelayRound {
         uint32 code_version;
     }
     function destroy() external;
-    function getDetails() external view responsible returns (RelayRoundDetails);
+    function getDetails() externalMsg internalMsg external view responsible returns (RelayRoundDetails);
     function sendRelaysToRelayRound(address relay_round_addr, uint32 relays_count) external;
     function setRelays(
         uint256[] _ton_keys,

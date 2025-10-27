@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.7",
 	"header": ["pubkey", "time", "expire"],
 	"functions": [
 		{
@@ -93,6 +93,14 @@
 			]
 		},
 		{
+			"name": "bridge_event_config_ton_sol",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
 			"name": "getDetails",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}
@@ -140,8 +148,8 @@
 		{
 			"name": "setEventDeployValues",
 			"inputs": [
-				{"name":"ton_eth_event_value","type":"uint128"},
-				{"name":"ton_sol_event_value","type":"uint128"},
+				{"name":"ton_eth_event_value","type":"varuint16"},
+				{"name":"ton_sol_event_value","type":"varuint16"},
 				{"name":"send_gas_to","type":"address"}
 			],
 			"outputs": [
@@ -209,26 +217,9 @@
 			],
 			"outputs": [
 			]
-		},
-		{
-			"name": "delegators",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"delegators","type":"map(address,uint256[])"}
-			]
-		},
-		{
-			"name": "bridge_event_config_ton_sol",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"bridge_event_config_ton_sol","type":"address"}
-			]
 		}
 	],
-	"data": [
-		{"key":1,"name":"deploy_nonce","type":"uint32"}
+	"getters": [
 	],
 	"events": [
 		{
@@ -297,7 +288,7 @@
 		{
 			"name": "TonEthEventDeployValueUpdated",
 			"inputs": [
-				{"name":"new_value","type":"uint128"}
+				{"name":"new_value","type":"varuint16"}
 			],
 			"outputs": [
 			]
@@ -305,7 +296,7 @@
 		{
 			"name": "TonSolEventDeployValueUpdated",
 			"inputs": [
-				{"name":"new_value","type":"uint128"}
+				{"name":"new_value","type":"varuint16"}
 			],
 			"outputs": [
 			]
@@ -360,19 +351,19 @@
 		}
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"delegators","type":"map(address,uint256[])"},
-		{"name":"deploy_nonce","type":"uint32"},
-		{"name":"active","type":"bool"},
-		{"components":[{"name":"platform_code","type":"cell"},{"name":"has_platform_code","type":"bool"},{"name":"user_data_code","type":"cell"},{"name":"user_data_version","type":"uint32"},{"name":"relay_round_code","type":"cell"},{"name":"relay_round_version","type":"uint32"}],"name":"code_data","type":"tuple"},
-		{"components":[{"name":"currentRelayRound","type":"uint32"},{"name":"currentRelayRoundStartTime","type":"uint32"},{"name":"currentRelayRoundEndTime","type":"uint32"}],"name":"round_details","type":"tuple"},
-		{"components":[{"name":"bridge_event_config_ton_eth","type":"address"},{"name":"admin","type":"address"}],"name":"base_details","type":"tuple"},
-		{"name":"bridge_event_config_ton_sol","type":"address"},
-		{"name":"manager","type":"address"},
-		{"components":[{"name":"relayRoundTime","type":"uint32"},{"name":"timeBeforeSetRelays","type":"uint32"},{"name":"minRoundGapTime","type":"uint32"},{"name":"minRelaysCount","type":"uint16"}],"name":"relay_config","type":"tuple"},
-		{"name":"tonEthEventDeployValue","type":"uint128"},
-		{"name":"tonSolEventDeployValue","type":"uint128"}
+		{"init":true,"name":"_pubkey","type":"fixedbytes32"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":false,"name":"delegators","type":"map(address,uint256[])"},
+		{"init":true,"name":"deploy_nonce","type":"uint32"},
+		{"init":false,"name":"active","type":"bool"},
+		{"components":[{"name":"platform_code","type":"cell"},{"name":"has_platform_code","type":"bool"},{"name":"user_data_code","type":"cell"},{"name":"user_data_version","type":"uint32"},{"name":"relay_round_code","type":"cell"},{"name":"relay_round_version","type":"uint32"}],"init":false,"name":"code_data","type":"tuple"},
+		{"components":[{"name":"currentRelayRound","type":"uint32"},{"name":"currentRelayRoundStartTime","type":"uint32"},{"name":"currentRelayRoundEndTime","type":"uint32"}],"init":false,"name":"round_details","type":"tuple"},
+		{"components":[{"name":"bridge_event_config_ton_eth","type":"address"},{"name":"admin","type":"address"}],"init":false,"name":"base_details","type":"tuple"},
+		{"init":false,"name":"bridge_event_config_ton_sol_","type":"address"},
+		{"init":false,"name":"manager","type":"address"},
+		{"components":[{"name":"relayRoundTime","type":"uint32"},{"name":"timeBeforeSetRelays","type":"uint32"},{"name":"minRoundGapTime","type":"uint32"},{"name":"minRelaysCount","type":"uint16"}],"init":false,"name":"relay_config","type":"tuple"},
+		{"init":false,"name":"tonEthEventDeployValue","type":"varuint16"},
+		{"init":false,"name":"tonSolEventDeployValue","type":"varuint16"}
 	]
 }

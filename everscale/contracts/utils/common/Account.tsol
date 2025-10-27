@@ -1,0 +1,49 @@
+pragma tvm-solidity >= 0.79.0;
+
+import "./ExternalOwner.tsol";
+import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
+
+/*
+    @title Simple externally owned contract
+    @dev Allows to interact with any smart contract by sending an internal messages
+    or simply transfer TONs
+*/
+#[ExternalMessage(time, pubkey, expire)]
+#[TimeReplayProt]
+contract Account is
+    ExternalOwner,
+    RandomNonce,
+    CheckPubKey
+{
+    constructor() externalMsg checkPubKey {
+        tvm.accept();
+
+        setOwnership(msg.pubkey());
+    }
+
+    /*
+        @notice Send transaction to another contract
+        @param dest Destination address
+        @param value Amount of attached TONs
+        @param bounce Message bounce
+        @param flags Message flags
+        @param payload Tvm cell encoded payload, such as method call
+    */
+    function sendTransaction(
+        address dest,
+        coins value,
+        bool bounce,
+        uint8 flags,
+        TvmCell payload
+    )
+        externalMsg
+        public
+        view
+        onlyOwner
+    {
+        tvm.accept();
+
+        dest.transfer(value, bounce, flags, payload);
+    }
+}

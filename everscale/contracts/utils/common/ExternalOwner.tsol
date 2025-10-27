@@ -1,0 +1,43 @@
+pragma tvm-solidity >= 0.79.0;
+
+import "@broxus/contracts/contracts/libraries/UtilityErrors.tsol";
+
+#[ExternalMessage(time, pubkey, expire)]
+#[TimeReplayProt]
+contract ExternalOwner {
+    uint private _owner;
+
+    event OwnershipTransferred(uint previousOwner, uint newOwner);
+
+    modifier onlyOwner() {
+        require(msg.pubkey() == _owner, UtilityErrors.CALLER_IS_NOT_OWNER);
+        _;
+    }
+
+    function owner() externalMsg public view returns (uint) {
+        return _owner;
+    }
+
+    /*
+        @dev Internal function for setting owner
+        Can be used in child contracts
+    */
+    function setOwnership(uint newOwner) internal {
+        uint oldOwner = _owner;
+
+        _owner = newOwner;
+
+        emit OwnershipTransferred(oldOwner, newOwner);
+    }
+
+    /*
+        @dev Transfer ownership to the new owner
+    */
+    function transferOwnership(uint newOwner) external onlyOwner externalMsg {
+        require(newOwner != 0, UtilityErrors.INVALID_NEW_OWNER);
+
+        tvm.accept();
+
+        setOwnership(newOwner);
+    }
+}

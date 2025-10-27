@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "../../../event-contracts/multivault/evm/IEVMCallback.tsol";
 import "../../INetworks.tsol";
@@ -39,8 +39,12 @@ interface IProxyMultiVaultNative_V8 is IEVMCallback, INetworks {
     }
 
     // Settings
-    function apiVersion() external view responsible returns(uint8);
-    function getConfiguration() external view responsible returns (EVMConfiguration, SolanaConfiguration, TVMConfiguration);
+    function apiVersion() externalMsg internalMsg external view responsible returns(uint8);
+    function getConfiguration() externalMsg internalMsg external view responsible returns (
+        EVMConfiguration,
+        SolanaConfiguration,
+        TVMConfiguration
+    );
     function setEVMConfiguration(EVMConfiguration _config, address gasBackAddress) external;
     function setSolanaConfiguration(SolanaConfiguration _config, address gasBackAddress) external;
     function setTVMConfiguration(address[] _incomingConfigurations, address gasBackAddress) external;
@@ -51,16 +55,24 @@ interface IProxyMultiVaultNative_V8 is IEVMCallback, INetworks {
         optional(uint128) _outgoingLimit,
         address _remainingGasTo
     ) external;
-    function getDailyLimits(address _token) external view responsible returns (DailyLimits);
+    function getDailyLimits(address _token) externalMsg internalMsg external view responsible returns (DailyLimits);
     function setLimitApprover(address _approver, address _remainingGasTo) external;
-    function getLimitApprover() external view responsible returns (address);
+    function getLimitApprover() externalMsg internalMsg external view responsible returns (address);
 
     // fee
-    function getTvmDefaultFee() external view responsible returns(uint32 incomingNumerator,uint32 outgoingNumerator, uint32 denominator);
-    function getTvmTokenFee(address _token) external view responsible returns(uint32 incomingNumerator, uint32 outgoingNumerator, uint32 denominator);
-    function getExpectedTokenFeeAddress(address _token)external responsible view returns(address);
-    function getPlatformCode() external view responsible returns(TvmCell);
-    function getTokenFeeCode() external view responsible returns(TvmCell);
+    function getTvmDefaultFee() externalMsg internalMsg external view responsible returns(
+        uint32 incomingNumerator,
+        uint32 outgoingNumerator,
+        uint32 denominator
+    );
+    function getTvmTokenFee(address _token) externalMsg internalMsg external view responsible returns(
+        uint32 incomingNumerator,
+        uint32 outgoingNumerator,
+        uint32 denominator
+    );
+    function getExpectedTokenFeeAddress(address _token) externalMsg internalMsg external responsible view returns(address);
+    function getPlatformCode() externalMsg internalMsg external view responsible returns(TvmCell);
+    function getTokenFeeCode() externalMsg internalMsg external view responsible returns(TvmCell);
 
     function setTvmDefaultFeeNumerator(uint32 _incoming, uint32 _outgoing) external;
     function setPlatformCode(TvmCell _code) external;

@@ -1,7 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader pubkey;
-pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 import "./../../../interfaces/event-contracts/multivault/evm/IMultiVaultEverscaleEVMEventNative.tsol";
 
@@ -17,33 +14,34 @@ import "ton-eth-bridge-token-contracts/contracts/interfaces/TIP3TokenRoot.tsol";
 /// - Verify that the `tokenWallet` is a correct token wallet for `token`, owned by the proxy
 /// - Obtain the `token` metadata (name, symbol, decimals)
 /// - Rewrite the `eventData` with the correct value
+#[ExternalMessage(time, pubkey, expire)]
+#[CustomReplayProt]
 contract MultiVaultEverscaleEVMEventNative is
     EverscaleEthereumBaseEvent,
     IMultiVaultEverscaleEVMEventNative
 {
-    uint32 public nonce;
-    address public proxy;
-    address public tokenWallet;
-    address public token;
-    address public remainingGasTo;
-    uint128 public amount;
-    uint160 public recipient;
-    uint256 public chainId;
+    uint32 nonce_;
+    address proxy;
+    address tokenWallet;
+    address token;
+    address remainingGasTo;
+    uint128 amount;
+    uint160 recipient;
+    uint256 chainId;
 
-    address public sender;
-    uint128 public initial_balance;
+    address sender_;
+    coins initial_balance_;
 
-    uint160 public callback_recipient;
-    bytes public callback_payload;
-    bool public callback_strict;
+    uint160 callback_recipient;
+    bytes callback_payload;
+    bool callback_strict;
 
-    string public name;
-    string public symbol;
-    uint8 public decimals;
-    address public expectedTokenWallet;
+    string name;
+    string symbol;
+    uint8 decimals;
 
     // Unmodified event data
-    TvmCell public unmodifiedEventData;
+    TvmCell unmodifiedEventData;
 
     constructor(
         address _initializer,
@@ -62,13 +60,25 @@ contract MultiVaultEverscaleEVMEventNative is
         return bodyCopy;
     }
 
-    function getUnmodifiedEventData() external override responsible returns(TvmCell) {
+    function nonce() externalMsg public view returns (uint32) {
+        return nonce_;
+    }
+
+    function sender() externalMsg public view returns (address) {
+        return sender_;
+    }
+
+    function initial_balance() externalMsg public view returns (coins) {
+        return initial_balance_;
+    }
+
+    function getUnmodifiedEventData() externalMsg internalMsg external override responsible returns(TvmCell) {
         return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} unmodifiedEventData;
     }
 
     function onInit() override internal {
         (
-            nonce,
+            nonce_,
             proxy,
             tokenWallet,
             token,
@@ -76,7 +86,7 @@ contract MultiVaultEverscaleEVMEventNative is
             amount,
             recipient,
             chainId,
-            sender,
+            sender_,
             callback_recipient, callback_payload, callback_strict
         ) = abi.decode(
             eventInitData.voteData.eventData,
@@ -86,9 +96,9 @@ contract MultiVaultEverscaleEVMEventNative is
             )
         );
 
-        initial_balance = address(this).balance;
+        initial_balance_ = address(this).balance;
 
-        uint128 value = gasToValue(Gas.GET_TOKEN_DATA_GAS, address(this).wid);
+        coins value = gasToValue(Gas.GET_TOKEN_DATA_GAS);
 
         ITokenRoot(token).name{
             value: value,
@@ -144,9 +154,7 @@ contract MultiVaultEverscaleEVMEventNative is
     ) external override {
         require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
-        expectedTokenWallet = tokenWallet_;
-
-        if (tokenWallet == expectedTokenWallet) {
+        if (tokenWallet == tokenWallet_) {
             _updateEventData();
 
             loadRelays();
@@ -155,7 +163,7 @@ contract MultiVaultEverscaleEVMEventNative is
         }
     }
 
-    function getDecodedData() external override responsible returns(
+    function getDecodedData() externalMsg internalMsg external override responsible returns(
         address proxy_,
         address tokenWallet_,
         address token_,
@@ -214,10 +222,10 @@ contract MultiVaultEverscaleEVMEventNative is
         uint32 selector = slice.load(uint32);
 
         if (
-            (selector == tvm.functionId(TIP3TokenRoot.name) && msg.sender == token )||
-            (selector == tvm.functionId(TIP3TokenRoot.symbol) && msg.sender == token) ||
-            (selector == tvm.functionId(TIP3TokenRoot.decimals) && msg.sender == token) ||
-            (selector == tvm.functionId(ITokenRoot.walletOf) && msg.sender == token)
+            (selector == abi.functionId(TIP3TokenRoot.name) && msg.sender == token )||
+            (selector == abi.functionId(TIP3TokenRoot.symbol) && msg.sender == token) ||
+            (selector == abi.functionId(TIP3TokenRoot.decimals) && msg.sender == token) ||
+            (selector == abi.functionId(ITokenRoot.walletOf) && msg.sender == token)
         ) {
             setStatusRejected(2);
         }

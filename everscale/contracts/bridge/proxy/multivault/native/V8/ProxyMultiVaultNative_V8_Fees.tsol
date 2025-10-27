@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "../../../../../utils/TokenFeePlatform.tsol";
 import "../../../../interfaces/proxy/IBridgeTokenFee.tsol";
@@ -8,6 +8,8 @@ import "./ProxyMultiVaultNative_V8_Limits.tsol";
 abstract contract ProxyMultiVaultNative_V8_Fees is ProxyMultiVaultNative_V8_Limits {
 
     function getTvmDefaultFee()
+        externalMsg
+        internalMsg
         external
         view
         responsible
@@ -23,19 +25,21 @@ abstract contract ProxyMultiVaultNative_V8_Fees is ProxyMultiVaultNative_V8_Limi
         } (tvmConfiguration.defaultFee.incoming, tvmConfiguration.defaultFee.outgoing, FEE_DENOMINATOR);
     }
 
-    function getPlatformCode() external view responsible returns(TvmCell) {
+    function getPlatformCode() externalMsg internalMsg external view responsible returns(TvmCell) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} platformCode;
     }
 
-    function getTokenFeeCode() external view responsible returns(TvmCell) {
+    function getTokenFeeCode() externalMsg internalMsg external view responsible returns(TvmCell) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} tvmConfiguration.tokenFeeCode;
     }
 
-    function getTvmFees() external view responsible returns(mapping(address => Fees)) {
+    function getTvmFees() externalMsg internalMsg external view responsible returns(mapping(address => Fees)) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} tvmConfiguration.fees;
     }
 
     function getTvmTokenFee(address _token)
+        externalMsg
+        internalMsg
         external
         view
         responsible
@@ -103,6 +107,8 @@ abstract contract ProxyMultiVaultNative_V8_Fees is ProxyMultiVaultNative_V8_Limi
     }
 
     function getExpectedTokenFeeAddress(address _token)
+        externalMsg
+        internalMsg
         external
         responsible
         view
@@ -125,7 +131,7 @@ abstract contract ProxyMultiVaultNative_V8_Fees is ProxyMultiVaultNative_V8_Limi
         view
         returns(TvmCell)
     {
-        return tvm.buildStateInit({
+        return abi.encodeStateInit({
             contr: TokenFeePlatform,
             varInit: {
                 root: address(this),
@@ -177,7 +183,7 @@ abstract contract ProxyMultiVaultNative_V8_Fees is ProxyMultiVaultNative_V8_Limi
     function _accumulateFee(uint128 _fee, address _token) internal view {
         if(_fee > 0) {
             IBridgeTokenFee(_getExpectedTokenFeeAddress(_token)).accumulateFee{
-                value: gasToValue(Gas.ACCUMULATE_FEES_GAS, address(this).wid),
+                value: gasToValue(Gas.ACCUMULATE_FEES_GAS),
                 flag: MsgFlag.SENDER_PAYS_FEES,
                 bounce: false
             }(_fee);
@@ -201,6 +207,8 @@ abstract contract ProxyMultiVaultNative_V8_Fees is ProxyMultiVaultNative_V8_Limi
             uint128 accumulatedFees,
             address tokenWallet
         ) = abi.decode(_payload, (address, uint128, address));
+
+        address owner = owner();
 
         if (accumulatedFees > 0) {
             TvmCell emptyPayload;

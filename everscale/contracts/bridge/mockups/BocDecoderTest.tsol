@@ -1,12 +1,19 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 import "../libraries/BocDecoder.tsol";
 
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract BocDecoderTest is RandomNonce {
-    function decodeBlockProof(TvmCell _proof) external pure responsible returns (int32 chainId) {
+
+    constructor() externalMsg {
+        tvm.accept();
+    }
+
+    function decodeBlockProof(TvmCell _proof) externalMsg internalMsg external pure responsible returns (int32 chainId) {
         return {
             value: 0,
             flag: MsgFlag.REMAINING_GAS,
@@ -14,7 +21,7 @@ contract BocDecoderTest is RandomNonce {
         } BocDecoder.decodeBlockProof(_proof);
     }
 
-    function decodeTransactionShort(TvmCell _txBoc, optional(uint15) _msgIndex) external pure responsible returns (
+    function decodeTransactionShort(TvmCell _txBoc, optional(uint15) _msgIndex) externalMsg internalMsg external pure responsible returns (
         uint256 accountAddr,
         uint64 lt,
         uint32 nowTimestamp,
@@ -44,7 +51,7 @@ contract BocDecoderTest is RandomNonce {
         } (accountAddr, lt, nowTimestamp, outMessages, hash);
     }
 
-    function decodeTransaction(TvmCell _txBoc) external pure responsible returns (
+    function decodeTransaction(TvmCell _txBoc) externalMsg internalMsg external pure responsible returns (
         uint256 accountAddr,
         uint64 lt,
         uint256 prevTransHash,
@@ -63,7 +70,7 @@ contract BocDecoderTest is RandomNonce {
         } BocDecoder.decodeTransaction(_txBoc);
     }
 
-    function findMessageAndDecode(TvmCell _txBoc, uint256 _msgHash) external pure responsible returns (
+    function findMessageAndDecode(TvmCell _txBoc, uint256 _msgHash) externalMsg internalMsg external pure responsible returns (
         BocDecoder.MessageInfo info,
         optional(TvmCell) init,
         TvmCell body
@@ -83,7 +90,7 @@ contract BocDecoderTest is RandomNonce {
     function decodeMessages(
         TvmCell _msgBoc,
         optional(BocDecoder.MessageDirection) _direction
-    ) external pure responsible returns (
+    ) externalMsg internalMsg external pure responsible returns (
         BocDecoder.MessageInfo info,
         optional(TvmCell) init,
         TvmCell body

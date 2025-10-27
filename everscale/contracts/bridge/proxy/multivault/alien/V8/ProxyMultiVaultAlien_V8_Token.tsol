@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
-import "../../../../alien-token/TokenRootAlienEVM.tsol";
-import "../../../../alien-token/TokenRootAlienSolana.tsol";
+import "ton-eth-bridge-token-contracts/contracts/bridge/TokenRootAlienEVM.tsol";
+import "ton-eth-bridge-token-contracts/contracts/bridge/TokenRootAlienSolana.tsol";
 
 import "./ProxyMultivaultAlien_V8_Base.tsol";
 
@@ -116,7 +116,7 @@ abstract contract ProxyMultiVaultAlien_V8_Token is ProxyMultivaultAlien_V8_Base 
         string name,
         string symbol,
         uint8 decimals
-    ) public override responsible returns (address) {
+    ) externalMsg internalMsg public override responsible returns (address) {
         TvmCell stateInit = _buildEVMAlienTokenRootInitState(
             chainId,
             token,
@@ -138,7 +138,7 @@ abstract contract ProxyMultiVaultAlien_V8_Token is ProxyMultivaultAlien_V8_Base 
         string name,
         string symbol,
         uint8 decimals
-    ) public override responsible returns (address) {
+    ) externalMsg internalMsg public override responsible returns (address) {
         TvmCell stateInit = _buildSolanaAlienTokenRootInitState(
             token,
             name,
@@ -156,7 +156,7 @@ abstract contract ProxyMultiVaultAlien_V8_Token is ProxyMultivaultAlien_V8_Base 
         string symbol,
         uint8 decimals
     ) internal view returns (TvmCell) {
-        return tvm.buildStateInit({
+        return abi.encodeStateInit({
             contr: TokenRootAlienEVM,
             varInit: {
                 randomNonce_: 0,
@@ -184,7 +184,7 @@ abstract contract ProxyMultiVaultAlien_V8_Token is ProxyMultivaultAlien_V8_Base 
         string symbol,
         uint8 decimals
     ) internal view returns (TvmCell) {
-        return tvm.buildStateInit({
+        return abi.encodeStateInit({
             contr: TokenRootAlienSolana,
             varInit: {
                 randomNonce_: 0,

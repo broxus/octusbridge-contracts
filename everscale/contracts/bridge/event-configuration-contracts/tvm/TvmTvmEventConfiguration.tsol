@@ -1,5 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 
 import "./../../interfaces/event-configuration-contracts/ITvmTvmEventConfiguration.tsol";
@@ -7,20 +6,23 @@ import "./../../interfaces/proxy/ITvmEventCancelled.tsol";
 import "./../../interfaces/proxy/ITvmTvmProxy.tsol";
 import "./../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
 
-import "./../../event-contracts/base/tvm/TvmTvmBaseEvent.tsol";
+import "./../../event-contracts/multivault/tvm/MultiVaultTvmTvmEventAlien.tsol";
+import "./../../event-contracts/multivault/tvm/MultiVaultTvmTvmEventNative.tsol";
 
+import "../../../utils/common/InternalOwner.tsol";
 import "./../../../utils/TransferUtils.tsol";
 import "./../../../utils/ErrorCodes.tsol";
 
 import "./../../libraries/BocDecoder.tsol";
 
-import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
 /// @title Basic TVM-TVM event configuration contract
 /// @author https://github.com/broxus
+#[ExternalMessage(time, expire)]
+#[TimeReplayProt]
 contract TvmTvmEventConfiguration is
     ITvmTvmEventConfiguration,
     ITvmTvmProxy,
@@ -30,21 +32,22 @@ contract TvmTvmEventConfiguration is
     InternalOwner,
     CheckPubKey
 {
-    BasicConfiguration public static basicConfiguration;
-    TvmTvmEventConfiguration public static networkConfiguration;
+    BasicConfiguration static basicConfiguration;
+    TvmTvmEventConfiguration static networkConfiguration;
+    EventAction static eventAction;
 
-    uint64 public flags;
-    TvmCell public meta;
+    address static transactionChecker;
+    address static eventEmitter;
 
-    address public static transactionChecker;
-    address public static eventEmitter;
+    uint64 flags;
+    TvmCell meta;
 
     /// @param _owner Event configuration owner
     constructor(
         address _owner,
         TvmCell _meta,
         uint64 _flags
-    ) checkPubKey reserveTargetBalance() {
+    ) externalMsg internalMsg checkPubKey reserveTargetBalance() {
         tvm.accept();
 
         setOwnership(_owner);
@@ -57,6 +60,41 @@ contract TvmTvmEventConfiguration is
             bounce: false,
             flag: MsgFlag.ALL_NOT_RESERVED
         });
+    }
+
+    /**
+        @dev Get configuration details.
+        @return _basicConfiguration Basic configuration init data
+        @return _networkConfiguration Network specific configuration init data
+    */
+    function getDetails() externalMsg internalMsg override public view responsible returns(
+        BasicConfiguration _basicConfiguration,
+        TvmTvmEventConfiguration _networkConfiguration,
+        TvmCell _meta,
+        address _transactionChecker,
+        address _eventEmitter
+    ) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
+            basicConfiguration,
+            networkConfiguration,
+            meta,
+            transactionChecker,
+            eventEmitter
+        );
+    }
+
+    /// @dev Get event configuration type
+    /// @return _type Configuration type (enum EventType)
+    function getType() externalMsg internalMsg override public pure responsible returns(EventType _type) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.TvmTvm;
+    }
+
+    function getFlags() externalMsg internalMsg override public view responsible returns(uint64 _flags) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} flags;
+    }
+
+    function getEventAction() externalMsg internalMsg override public view responsible returns(EventAction _eventAction) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} eventAction;
     }
 
     /// @notice Set new configuration meta.
@@ -136,7 +174,7 @@ contract TvmTvmEventConfiguration is
 
     function deployEvents(
         ITvmTvmEvent.TvmTvmEventVoteData[] eventsVoteData,
-        uint128[] values
+        coins[] values
     ) external override reserveAtLeastTargetBalance() {
         require(values.length == eventsVoteData.length && values.length > 0);
 
@@ -154,7 +192,7 @@ contract TvmTvmEventConfiguration is
     function _deployEvent(
         ITvmTvmEvent.TvmTvmEventVoteData eventVoteData,
         uint8 flag,
-        uint128 value
+        coins value
     ) internal view {
         int32 chainId = BocDecoder.decodeBlockProof(eventVoteData.txBlockProof);
         require(chainId == networkConfiguration.chainId, ErrorCodes.WRONG_DISPATCH_CHAIN_ID);
@@ -201,18 +239,11 @@ contract TvmTvmEventConfiguration is
 
         ITvmTvmEvent.TvmTvmEventInitData eventInitData = buildEventInitData(eventVoteData.msgHash);
 
-        address eventContract = new TvmTvmBaseEvent{
-            value: gasToValue(Gas.DEPLOY_TVM_TVM_EVENT, address(this).wid),
-            flag: 0,
-            bounce: false,
-            code: basicConfiguration.eventCode,
-            pubkey: 0,
-            varInit: { eventInitData: eventInitData }
-        }(msg.sender, meta, transactionChecker, eventBody, basicConfiguration.eventInitialBalance);
+        address eventContract = _createEventContract(eventInitData, eventBody, gasToValue(Gas.DEPLOY_TVM_TVM_EVENT), 0);
 
         emit NewEventContract(eventContract);
 
-        uint128 deployTvmTvmEventGas = gasToValue(Gas.DEPLOY_TVM_TVM_EVENT, address(this).wid);
+        coins deployTvmTvmEventGas = gasToValue(Gas.DEPLOY_TVM_TVM_EVENT);
 
         ITvmTvmEvent(eventContract)
             .processProof{
@@ -238,8 +269,9 @@ contract TvmTvmEventConfiguration is
         );
 
         ITvmEventCancelled(networkConfiguration.proxy).onTVMEventCancelled{
-                flag: MsgFlag.ALL_NOT_RESERVED
-            }(eventInitData, _withdrawPayload);
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(eventInitData, _withdrawPayload);
     }
 
     /// @dev Derive the Ethereum event contract address from it's init data
@@ -248,52 +280,17 @@ contract TvmTvmEventConfiguration is
     function deriveEventAddress(
         uint msgHash
     )
+        externalMsg
+        internalMsg
         override
-        public
+        external
         view
         responsible
     returns(
         address eventContract
     ) {
         ITvmTvmEvent.TvmTvmEventInitData eventInitData = buildEventInitData(msgHash);
-
-        TvmCell stateInit = tvm.buildStateInit({
-            contr: TvmTvmBaseEvent,
-            varInit: {
-                eventInitData: eventInitData
-            },
-            pubkey: 0,
-            code: basicConfiguration.eventCode
-        });
-
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address(tvm.hash(stateInit));
-    }
-
-    /**
-        @dev Get configuration details.
-        @return _basicConfiguration Basic configuration init data
-        @return _networkConfiguration Network specific configuration init data
-    */
-    function getDetails() override public view responsible returns(
-        BasicConfiguration _basicConfiguration,
-        TvmTvmEventConfiguration _networkConfiguration,
-        TvmCell _meta
-    ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
-            basicConfiguration,
-            networkConfiguration,
-            meta
-        );
-    }
-
-    /// @dev Get event configuration type
-    /// @return _type Configuration type (enum EventType)
-    function getType() override public pure responsible returns(EventType _type) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.TvmTvm;
-    }
-
-    function getFlags() override public view responsible returns(uint64 _flags) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} flags;
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} _deriveEventAddress(eventInitData);
     }
 
     /// @dev Proxy V1 callback.
@@ -318,6 +315,7 @@ contract TvmTvmEventConfiguration is
         );
 
         ITvmTvmProxy(networkConfiguration.proxy).onTVMEventConfirmed{
+            value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, gasBackAddress);
 
@@ -347,21 +345,68 @@ contract TvmTvmEventConfiguration is
         );
 
         ITvmTvmProxyExtended(networkConfiguration.proxy).onTVMEventConfirmedExtended{
+            value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, _meta, gasBackAddress);
+    }
+
+    function _createEventContract(
+        ITvmTvmEvent.TvmTvmEventInitData _eventInitData,
+        TvmCell _eventBody,
+        coins _value,
+        uint8 _flag
+    ) internal view returns(address) {
+        address newEvent;
+        if (eventAction == EventAction.MultivaultAlien) {
+            newEvent = new MultiVaultTvmTvmEventAlien{
+                value: _value,
+                flag: _flag,
+                code: basicConfiguration.eventCode,
+                pubkey: 0,
+                varInit: {
+                    eventInitData: _eventInitData
+                }
+            }(msg.sender, meta, transactionChecker, _eventBody, basicConfiguration.eventInitialBalance);
+        } else if (eventAction == EventAction.MultivaultNative) {
+            newEvent = new MultiVaultTvmTvmEventNative{
+                value: _value,
+                flag: _flag,
+                code: basicConfiguration.eventCode,
+                pubkey: 0,
+                varInit: {
+                    eventInitData: _eventInitData
+                }
+            }(msg.sender, meta, transactionChecker, _eventBody, basicConfiguration.eventInitialBalance);
+        }
+
+        return newEvent;
     }
 
     function _deriveEventAddress(
         ITvmTvmEvent.TvmTvmEventInitData eventInitData
     ) internal view returns (address _event) {
-        TvmCell stateInit = tvm.buildStateInit({
-            contr: TvmTvmBaseEvent,
-            varInit: {
-                eventInitData: eventInitData
-            },
-            pubkey: 0,
-            code: basicConfiguration.eventCode
-        });
+
+        TvmCell stateInit;
+
+        if (eventAction == EventAction.MultivaultAlien) {
+            stateInit = abi.encodeStateInit({
+                contr: MultiVaultTvmTvmEventAlien,
+                varInit: {
+                    eventInitData: eventInitData
+                },
+                pubkey: 0,
+                code: basicConfiguration.eventCode
+            });
+        } else if (eventAction == EventAction.MultivaultNative) {
+            stateInit = abi.encodeStateInit({
+                contr: MultiVaultTvmTvmEventNative,
+                varInit: {
+                    eventInitData: eventInitData
+                },
+                pubkey: 0,
+                code: basicConfiguration.eventCode
+            });
+        }
 
         _event = address(tvm.hash(stateInit));
     }

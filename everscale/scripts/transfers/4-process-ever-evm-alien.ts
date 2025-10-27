@@ -90,13 +90,13 @@ const main = async () => {
         event.address.toString().split(":")[0],
         `0x${event.address.toString().split(":")[1]}`,
         `0x${new BigNumber(configurationData.networkConfiguration.proxy).toString(16).padStart(40, "0")}`,
-        eventData.round_number,
+        eventData.round_number_,
       ],
     );
     const messageHashBytes = ethers.utils.arrayify(hash!);
 
     for (const [tvmRelay, evmRelay] of relays) {
-      if (eventData.signatures.find(e => new BigNumber(tvmRelay, 16).eq(e[0]))) {
+      if (eventData.signatures_.find(e => new BigNumber(tvmRelay, 16).eq(e[0]))) {
         continue;
       }
 

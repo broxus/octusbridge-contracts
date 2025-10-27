@@ -1,5 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 
 import "./../../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
@@ -8,18 +7,23 @@ import "./../../interfaces/event-configuration-contracts/ISolanaEverscaleEventCo
 import "./../../interfaces/proxy/ISolanaEverscaleProxy.tsol";
 import "./../../interfaces/proxy/ISolanaEverscaleProxyExtended.tsol";
 
-import "./../../event-contracts/base/solana/SolanaEverscaleBaseEvent.tsol";
+import "./../../event-contracts/multivault/solana/MultiVaultSolanaEverscaleEventAlien.tsol";
+import "./../../event-contracts/multivault/solana/MultiVaultSolanaEverscaleEventNative.tsol";
+import "./../../event-contracts/staking/StakingSolanaEverscaleEvent.tsol";
+import "./../../event-contracts/token-transfer/TokenTransferSolanaEverscaleEvent.tsol";
 
+import "../../../utils/common/InternalOwner.tsol";
 import "./../../../utils/TransferUtils.tsol";
 import "./../../../utils/ErrorCodes.tsol";
 
-import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
 /// @title Basic Solana-Everscale event configuration contract
 /// @author https://github.com/broxus
+#[ExternalMessage(time, expire)]
+#[TimeReplayProt]
 contract SolanaEverscaleEventConfiguration is
     ISolanaEverscaleEventConfiguration,
     ISolanaEverscaleProxy,
@@ -28,17 +32,18 @@ contract SolanaEverscaleEventConfiguration is
     InternalOwner,
     CheckPubKey
 {
-    BasicConfiguration public static basicConfiguration;
-    SolanaEverscaleEventConfiguration public static networkConfiguration;
+    BasicConfiguration static basicConfiguration;
+    SolanaEverscaleEventConfiguration static networkConfiguration;
+    EventAction static eventAction;
 
-    uint64 public flags;
-    TvmCell public meta;
+    uint64 flags;
+    TvmCell meta;
 
     /// @param _owner Event configuration owner
     constructor(
         address _owner,
         TvmCell _meta
-    ) checkPubKey reserveTargetBalance() {
+    ) externalMsg internalMsg checkPubKey reserveTargetBalance() {
         tvm.accept();
 
         setOwnership(_owner);
@@ -50,6 +55,37 @@ contract SolanaEverscaleEventConfiguration is
             bounce: false,
             flag: MsgFlag.ALL_NOT_RESERVED
         });
+    }
+
+    /**
+        @dev Get configuration details.
+        @return _basicConfiguration Basic configuration init data
+        @return _networkConfiguration Network specific configuration init data
+    */
+    function getDetails() externalMsg internalMsg override public view responsible returns(
+        BasicConfiguration _basicConfiguration,
+        SolanaEverscaleEventConfiguration _networkConfiguration,
+        TvmCell _meta
+    ) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
+            basicConfiguration,
+            networkConfiguration,
+            meta
+        );
+    }
+
+    /// @dev Get event configuration type
+    /// @return _type Configuration type - Solana or Everscale
+    function getType() externalMsg internalMsg override public pure responsible returns(EventType _type) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.SolanaEverscale;
+    }
+
+    function getFlags() externalMsg internalMsg override public view responsible returns(uint64 _flags) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} flags;
+    }
+
+    function getEventAction() externalMsg internalMsg override public view responsible returns(EventAction _eventAction) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} eventAction;
     }
 
     /// @notice Set new configuration meta.
@@ -115,7 +151,7 @@ contract SolanaEverscaleEventConfiguration is
 
     function deployEvents(
         ISolanaEverscaleEvent.SolanaEverscaleEventVoteData[] eventsVoteData,
-        uint128[] values
+        coins[] values
     ) external override reserveAtLeastTargetBalance() {
         require(values.length == eventsVoteData.length && values.length > 0);
 
@@ -132,7 +168,7 @@ contract SolanaEverscaleEventConfiguration is
     function _deployEvent(
         ISolanaEverscaleEvent.SolanaEverscaleEventVoteData eventVoteData,
         uint8 flag,
-        uint128 value
+        coins value
     ) internal view {
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
         require(
@@ -149,19 +185,11 @@ contract SolanaEverscaleEventConfiguration is
 
         ISolanaEverscaleEvent.SolanaEverscaleEventInitData eventInitData = buildEventInitData(eventVoteData);
 
-        address eventContract = deriveEventAddress(eventVoteData);
+        address eventContract = _deriveEventAddress(eventInitData);
 
         emit NewEventContract(eventContract);
 
-        new SolanaEverscaleBaseEvent{
-            value: value,
-            flag: flag,
-            code: basicConfiguration.eventCode,
-            pubkey: 0,
-            varInit: {
-                eventInitData: eventInitData
-            }
-        }(msg.sender, meta);
+        _createEventContract(eventInitData, value, flag);
     }
 
     /// @dev Derive the Solana event contract address from it's init data
@@ -170,52 +198,17 @@ contract SolanaEverscaleEventConfiguration is
     function deriveEventAddress(
         ISolanaEverscaleEvent.SolanaEverscaleEventVoteData eventVoteData
     )
+        externalMsg
+        internalMsg
         override
-        public
+        external
         view
         responsible
     returns(
         address eventContract
     ) {
         ISolanaEverscaleEvent.SolanaEverscaleEventInitData eventInitData = buildEventInitData(eventVoteData);
-
-        TvmCell stateInit = tvm.buildStateInit({
-            contr: SolanaEverscaleBaseEvent,
-            varInit: {
-                eventInitData: eventInitData
-            },
-            pubkey: 0,
-            code: basicConfiguration.eventCode
-        });
-
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address(tvm.hash(stateInit));
-    }
-
-    /**
-        @dev Get configuration details.
-        @return _basicConfiguration Basic configuration init data
-        @return _networkConfiguration Network specific configuration init data
-    */
-    function getDetails() override public view responsible returns(
-        BasicConfiguration _basicConfiguration,
-        SolanaEverscaleEventConfiguration _networkConfiguration,
-        TvmCell _meta
-    ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
-            basicConfiguration,
-            networkConfiguration,
-            meta
-        );
-    }
-
-    /// @dev Get event configuration type
-    /// @return _type Configuration type - Solana or Everscale
-    function getType() override public pure responsible returns(EventType _type) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.SolanaEverscale;
-    }
-
-    function getFlags() override public view responsible returns(uint64 _flags) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} flags;
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} _deriveEventAddress(eventInitData);
     }
 
     /// @dev Proxy V1 callback.
@@ -240,6 +233,7 @@ contract SolanaEverscaleEventConfiguration is
         );
 
         ISolanaEverscaleProxy(networkConfiguration.proxy).onSolanaEventConfirmed{
+            value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, gasBackAddress);
 
@@ -269,21 +263,114 @@ contract SolanaEverscaleEventConfiguration is
         );
 
         ISolanaEverscaleProxyExtended(networkConfiguration.proxy).onSolanaEventConfirmedExtended{
+            value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, _meta, gasBackAddress);
+    }
+
+    function _createEventContract(
+        ISolanaEverscaleEvent.SolanaEverscaleEventInitData _eventInitData,
+        coins _value,
+        uint8 _flag
+    ) internal view {
+        if (eventAction == EventAction.MultivaultAlien) {
+            new MultiVaultSolanaEverscaleEventAlien{
+                value: _value,
+                flag: _flag,
+                code: basicConfiguration.eventCode,
+                pubkey: 0,
+                varInit: {
+                    eventInitData: _eventInitData
+                }
+            }(msg.sender, meta);
+
+            return;
+        }
+
+        if (eventAction == EventAction.MultivaultNative) {
+            new MultiVaultSolanaEverscaleEventNative{
+                value: _value,
+                flag: _flag,
+                code: basicConfiguration.eventCode,
+                pubkey: 0,
+                varInit: {
+                    eventInitData: _eventInitData
+                }
+            }(msg.sender, meta);
+
+            return;
+        }
+
+        if (eventAction == EventAction.TokenTransfer) {
+            new TokenTransferSolanaEverscaleEvent{
+                value: _value,
+                flag: _flag,
+                code: basicConfiguration.eventCode,
+                pubkey: 0,
+                varInit: {
+                    eventInitData: _eventInitData
+                }
+            }(msg.sender, meta);
+
+            return;
+        }
+
+        if (eventAction == EventAction.Staking) {
+            new StakingSolanaEverscaleEvent{
+                value: _value,
+                flag: _flag,
+                code: basicConfiguration.eventCode,
+                pubkey: 0,
+                varInit: {
+                    eventInitData: _eventInitData
+                }
+            }(msg.sender, meta);
+        }
     }
 
     function _deriveEventAddress(
         ISolanaEverscaleEvent.SolanaEverscaleEventInitData eventInitData
     ) internal view returns (address _event) {
-        TvmCell stateInit = tvm.buildStateInit({
-            contr: SolanaEverscaleBaseEvent,
-            varInit: {
-                eventInitData: eventInitData
-            },
-            pubkey: 0,
-            code: basicConfiguration.eventCode
-        });
+
+        TvmCell stateInit;
+
+        if (eventAction == EventAction.MultivaultAlien) {
+            stateInit = abi.encodeStateInit({
+                contr: MultiVaultSolanaEverscaleEventAlien,
+                varInit: {
+                    eventInitData: eventInitData
+                },
+                pubkey: 0,
+                code: basicConfiguration.eventCode
+            });
+        } else if (eventAction == EventAction.MultivaultNative) {
+            stateInit = abi.encodeStateInit({
+                contr: MultiVaultSolanaEverscaleEventNative,
+                varInit: {
+                    eventInitData: eventInitData
+                },
+                pubkey: 0,
+                code: basicConfiguration.eventCode
+            });
+        } else if (eventAction == EventAction.TokenTransfer) {
+            stateInit = abi.encodeStateInit({
+                contr: TokenTransferSolanaEverscaleEvent,
+                varInit: {
+                    eventInitData: eventInitData
+                },
+                pubkey: 0,
+                code: basicConfiguration.eventCode
+            });
+        } else if (eventAction == EventAction.Staking) {
+            stateInit = abi.encodeStateInit({
+                contr: StakingSolanaEverscaleEvent,
+                varInit: {
+                    eventInitData: eventInitData
+                },
+                pubkey: 0,
+                code: basicConfiguration.eventCode
+            });
+        }
 
         _event = address(tvm.hash(stateInit));
     }

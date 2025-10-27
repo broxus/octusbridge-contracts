@@ -247,7 +247,7 @@ describe("Withdraw tokens by burning in favor of proxy", async function () {
   });
 
   it("Check initial balance", async () => {
-    const { initial_balance } = await eventContract.methods.initial_balance({}).call();
+    const { value0: initial_balance } = await eventContract.methods.initial_balance({}).call();
 
     expect(Number(initial_balance)).to.be.greaterThan(
       Number(locklift.utils.toNano(9)),

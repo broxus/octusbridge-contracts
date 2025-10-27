@@ -193,7 +193,7 @@ describe("Test EVM native multivault pipeline", async function () {
     });
 
     it("Check initial balance", async () => {
-      const { initial_balance } = await eventContract.methods.initial_balance({}).call();
+      const { value0: initial_balance } = await eventContract.methods.initial_balance({}).call();
 
       expect(Number(initial_balance)).to.be.greaterThan(
         Number(locklift.utils.toNano(9)),
@@ -311,9 +311,9 @@ describe("Test EVM native multivault pipeline", async function () {
 
     it("Check event required votes", async () => {
       const requiredVotes = await eventContract.methods
-        .requiredVotes()
+        .getDetails({answerId: 0})
         .call()
-        .then(t => parseInt(t.requiredVotes, 10));
+        .then(t => parseInt(t._requiredVotes, 10));
 
       const relays = await eventContract.methods
         .getVoters({
@@ -334,9 +334,9 @@ describe("Test EVM native multivault pipeline", async function () {
       const details = await eventContract.methods.getDetails({ answerId: 0 }).call({ responsible: true });
 
       const requiredVotes = await eventContract.methods
-        .requiredVotes()
+        .getDetails({answerId: 0})
         .call()
-        .then(t => parseInt(t.requiredVotes, 10));
+        .then(t => parseInt(t._requiredVotes, 10));
 
       expect(Number(details.balance)).to.be.greaterThan(0, "Wrong balance");
 
@@ -491,9 +491,9 @@ describe("Test EVM native multivault pipeline", async function () {
 
     it("Check event required votes", async () => {
       const requiredVotes = await eventContract.methods
-        .requiredVotes()
+        .getDetails({answerId: 0})
         .call()
-        .then(t => parseInt(t.requiredVotes, 10));
+        .then(t => parseInt(t._requiredVotes, 10));
 
       const relays = await eventContract.methods
         .getVoters({
@@ -509,7 +509,7 @@ describe("Test EVM native multivault pipeline", async function () {
     it("Check event round number", async () => {
       const roundNumber = await eventContract.methods.round_number({}).call();
 
-      expect(roundNumber.round_number).to.be.equal("0", "Wrong round number");
+      expect(roundNumber.value0).to.be.equal("0", "Wrong round number");
     });
 
     it("Confirm event", async () => {
@@ -520,9 +520,9 @@ describe("Test EVM native multivault pipeline", async function () {
       const details = await eventContract.methods.getDetails({ answerId: 0 }).call({ responsible: true });
 
       const requiredVotes = await eventContract.methods
-        .requiredVotes()
+        .getDetails({answerId: 0})
         .call()
-        .then(t => parseInt(t.requiredVotes, 10));
+        .then(t => parseInt(t._requiredVotes, 10));
 
       expect(details._status).to.be.equal("2", "Wrong status");
 

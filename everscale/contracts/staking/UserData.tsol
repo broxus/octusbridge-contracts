@@ -1,6 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-pragma AbiHeader expire;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 
 import "./interfaces/IStakingPool.tsol";
@@ -8,24 +6,27 @@ import "./interfaces/IUserData.tsol";
 import "./interfaces/IUpgradableByRequest.tsol";
 import "./interfaces/IElection.tsol";
 import "./interfaces/IStakingRelayRound.tsol";
-
-import "./../utils/ErrorCodes.tsol";
-import "./libraries/Gas.tsol";
 import "./interfaces/IUpgradableByRequest.tsol";
+
+import "./libraries/Gas.tsol";
 import "./libraries/PlatformTypes.tsol";
+import "./../utils/ErrorCodes.tsol";
+import "./../utils/common/Platform.tsol";
 
 import "../dao/structures/PlatformTypes.tsol";
 import "../dao/interfaces/IDaoRoot.tsol";
 import "../dao/interfaces/IProposer.tsol";
 import "../dao/interfaces/IProposal.tsol";
 import "../dao/interfaces/IVoter.tsol";
-
-import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
-import "@broxus/contracts/contracts/platform/Platform.tsol";
 import "../dao/interfaces/IStakingAccount.tsol";
 
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+
+
+#[ExternalMessage(time, pubkey, expire)]
+#[TimeReplayProt]
 contract UserData is IUserData, IUpgradableByRequest {
-    uint16 constant public MAX_REASON_LENGTH = 512;
+    uint16 constant MAX_REASON_LENGTH = 512;
 
     uint32 current_version;
     TvmCell platform_code;
@@ -55,10 +56,10 @@ contract UserData is IUserData, IUpgradableByRequest {
     // should be at least 60 in prod
     uint32 constant EXTERNAL_CALL_INTERVAL = 60;
 
-    mapping(uint32 /*proposal_id*/ => uint128 /*locked_value*/) public created_proposals;
-    mapping(uint32 /*nonce*/ => uint128 /*locked_value*/) public _tmp_proposals;
+    mapping(uint32 /*proposal_id*/ => uint128 /*locked_value*/) created_proposals;
+    mapping(uint32 /*nonce*/ => uint128 /*locked_value*/) _tmp_proposals;
 
-    mapping(uint32 /*proposal_id*/ => bool /*support*/) public casted_votes;
+    mapping(uint32 /*proposal_id*/ => bool /*support*/) casted_votes;
 
     modifier onlyDaoProposal(uint32 proposal_id) {
         require(msg.sender == getProposalAddress(proposal_id), ErrorCodes.NOT_PROPOSAL);
@@ -74,11 +75,19 @@ contract UserData is IUserData, IUpgradableByRequest {
         return math.max(address(this).balance - msg.value, Gas.USER_DATA_INITIAL_BALANCE);
     }
 
-    function lockedTokens() override public view responsible returns(uint128) {
+    function getProposalsData() externalMsg public view returns (
+        mapping(uint32 => uint128) created_proposals_,
+        mapping(uint32 => uint128) tmp_proposals_,
+        mapping(uint32 => bool) casted_votes_
+    ) {
+        return (created_proposals, _tmp_proposals, casted_votes);
+    }
+
+    function lockedTokens() externalMsg internalMsg override public view responsible returns(uint128) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} _lockedTokens();
     }
 
-    function canWithdrawVotes() override public view responsible returns (bool) {
+    function canWithdrawVotes() externalMsg internalMsg override public view responsible returns (bool) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} _canWithdrawVotes();
     }
 
@@ -123,7 +132,7 @@ contract UserData is IUserData, IUpgradableByRequest {
 
         if (slashed) error = ErrorCodes.SLASHED;
         if (code_version > current_version) error = ErrorCodes.OLD_VERSION;
-        if (msg.value < gasToValue(Gas.CAST_VOTE_GAS, address(this).wid)) error = ErrorCodes.VALUE_TOO_LOW;
+        if (msg.value < gasToValue(Gas.CAST_VOTE_GAS)) error = ErrorCodes.VALUE_TOO_LOW;
         if (casted_votes.exists(proposal_id)) error = ErrorCodes.ALREADY_VOTED;
         if (bytes(reason).length > MAX_REASON_LENGTH) error = ErrorCodes.REASON_IS_TOO_LONG;
 
@@ -160,7 +169,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         uint16 error;
 
         if (code_version > current_version) error = ErrorCodes.OLD_VERSION;
-        if (msg.value < gasToValue(Gas.UNLOCK_LOCKED_VOTE_TOKENS_GAS, address(this).wid)) error = ErrorCodes.VALUE_TOO_LOW;
+        if (msg.value < gasToValue(Gas.UNLOCK_LOCKED_VOTE_TOKENS_GAS)) error = ErrorCodes.VALUE_TOO_LOW;
         if (!created_proposals.exists(proposal_id)) error = ErrorCodes.WRONG_PROPOSAL_ID;
 
         if (error != 0){
@@ -192,8 +201,7 @@ contract UserData is IUserData, IUpgradableByRequest {
 
         if (code_version > current_version) error = ErrorCodes.OLD_VERSION;
         if (msg.value < gasToValue(
-            uint128(proposal_ids.length) * Gas.UNLOCK_CASTED_VOTE_GAS + Gas.UNLOCK_CASTED_VOTES_EXTRA_GAS,
-            address(this).wid)
+            varuint16(proposal_ids.length) * Gas.UNLOCK_CASTED_VOTE_GAS + Gas.UNLOCK_CASTED_VOTES_EXTRA_GAS)
         ) error = ErrorCodes.VALUE_TOO_LOW;
 
         if (error != 0){
@@ -204,7 +212,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         for (uint i = 0; i < proposal_ids.length; i++) {
             if (casted_votes.exists(proposal_ids[i])) {
                 IProposal(getProposalAddress(proposal_ids[i])).unlockCastedVote{
-                    value: gasToValue(Gas.UNLOCK_CASTED_VOTE_GAS, address(this).wid),
+                    value: gasToValue(Gas.UNLOCK_CASTED_VOTE_GAS),
                     flag: MsgFlag.SENDER_PAYS_FEES
                 }(user);
             }
@@ -249,7 +257,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         return locked;
     }
 
-    function getDetails() external responsible view override returns (UserDataDetails) {
+    function getDetails() externalMsg internalMsg external responsible view override returns (UserDataDetails) {
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }UserDataDetails(
             token_balance, relay_lock_until, current_version, rewardRounds, relay_eth_address,
             eth_address_confirmed, relay_ton_pubkey, ton_pubkey_confirmed, slashed,
@@ -334,7 +342,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         IStakingPool(msg.sender).finishClaimReward{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(user, rewards, send_gas_to);
     }
 
-    function getRewardForRelayRound(uint32 round_num) external onlyRelay {
+    function getRewardForRelayRound(uint32 round_num) externalMsg external onlyRelay {
         require (!slashed, ErrorCodes.SLASHED);
         require (address(this).balance > Gas.USER_DATA_INITIAL_BALANCE + Gas.getMinCallMsgValue(), ErrorCodes.LOW_BALANCE);
         require (block.timestamp >= lastExtCall + EXTERNAL_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
@@ -396,7 +404,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         }
     }
 
-    function confirmTonAccount() external {
+    function confirmTonAccount() externalMsg external {
         require (msg.pubkey() != 0, ErrorCodes.INTERNAL_ADDRESS);
         require (msg.pubkey() == relay_ton_pubkey, ErrorCodes.ACCOUNT_NOT_LINKED);
         require (ton_pubkey_confirmed == false, ErrorCodes.ACCOUNT_ALREADY_CONFIRMED);
@@ -424,7 +432,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
-    function becomeRelayNextRound() external onlyRelay {
+    function becomeRelayNextRound() externalMsg external onlyRelay {
         require (!slashed, ErrorCodes.SLASHED);
         require (address(this).balance > Gas.USER_DATA_INITIAL_BALANCE + Gas.getMinCallMsgValue(), ErrorCodes.LOW_BALANCE);
         require (block.timestamp >= lastExtCall + EXTERNAL_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
@@ -494,7 +502,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function _buildPlatformInitData(address platform_root, uint8 platform_type, TvmCell initial_data) private view returns (TvmCell) {
-        return tvm.buildStateInit({
+        return abi.encodeStateInit({
             contr: Platform,
             varInit: {
                 root: platform_root,
@@ -545,7 +553,7 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     onBounce(TvmSlice slice) external {
         uint32 functionId = slice.load(uint32);
-        if (functionId == tvm.functionId(IProposal.castVote)) {
+        if (functionId == abi.functionId(IProposal.castVote)) {
             tvm.rawReserve(_reserve(), 0);
             uint32 proposal_id = slice.load(uint32);
             if (casted_votes.exists(proposal_id)) {

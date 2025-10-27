@@ -23,6 +23,8 @@ import {
 } from "../event-configurations/solana";
 import { setupTvmTvmEventConfiguration } from "../event-configurations/tvm";
 
+const EVENT_ACTION_MULTIVAULT_ALIEN = 0;
+
 export const setupAlienMultiVault = async (
   owner: Account,
   staking: Contract<FactorySource["StakingMockup"]>,
@@ -68,29 +70,34 @@ export const setupAlienMultiVault = async (
     staking,
     proxy.address,
     ethereumEverscaleEvent.code,
+    EVENT_ACTION_MULTIVAULT_ALIEN
   );
   const everscaleEthereumEventConfiguration = await setupEverscaleEthereumEventConfiguration(
     owner,
     staking,
     proxy.address,
     everscaleEthereumEvent.code,
+    EVENT_ACTION_MULTIVAULT_ALIEN
   );
   const solanaEverscaleEventConfiguration = await setupSolanaEverscaleEventConfiguration(
     owner,
     staking,
     proxy.address,
     solanaEverscaleEvent.code,
+    EVENT_ACTION_MULTIVAULT_ALIEN
   );
   const everscaleSolanaEventConfiguration = await setupEverscaleSolanaEventConfiguration(
     owner,
     staking,
     proxy.address,
     everscaleSolanaEvent.code,
+    EVENT_ACTION_MULTIVAULT_ALIEN
   );
   const tvmTvmEventConfiguration = await setupTvmTvmEventConfiguration(
     owner,
     proxy.address,
     tvmEverscaleEvent.code,
+    EVENT_ACTION_MULTIVAULT_ALIEN,
     trustlessVerifier?.address || zeroAddress,
     new Address("0:cdba501e77087b875c91f4ddacd2f560c1043b907624d8a14126511433f79ccb")
   );
@@ -157,7 +164,7 @@ const setEvmConfiguration = async (
 ): Promise<void> => {
   const alienTokenRootEVM = locklift.factory.getContractArtifacts("TokenRootAlienEVM");
   const alienTokenWalletUpgradeableData = locklift.factory.getContractArtifacts("AlienTokenWalletUpgradeable");
-  const alienTokenWalletPlatformData = locklift.factory.getContractArtifacts("AlienTokenWalletPlatform");
+  const alienTokenWalletPlatformData = locklift.factory.getContractArtifacts("TokenWalletPlatform");
 
   await locklift.transactions.waitFinalized(
     proxy.methods
@@ -221,7 +228,7 @@ const setSolanaConfiguration = async (
 ): Promise<void> => {
   const alienTokenRootSolana = locklift.factory.getContractArtifacts("TokenRootAlienSolana");
   const alienTokenWalletUpgradeableData = locklift.factory.getContractArtifacts("AlienTokenWalletUpgradeable");
-  const alienTokenWalletPlatformData = locklift.factory.getContractArtifacts("AlienTokenWalletPlatform");
+  const alienTokenWalletPlatformData = locklift.factory.getContractArtifacts("TokenWalletPlatform");
 
   await locklift.transactions.waitFinalized(
     proxy.methods
@@ -284,7 +291,7 @@ const setTVMConfiguration = async (
 ): Promise<void> => {
   const alienTokenRootTVM = locklift.factory.getContractArtifacts("TokenRootAlienTVM");
   const alienTokenWalletUpgradeableData = locklift.factory.getContractArtifacts("AlienTokenWalletUpgradeable");
-  const alienTokenWalletPlatformData = locklift.factory.getContractArtifacts("AlienTokenWalletPlatform");
+  const alienTokenWalletPlatformData = locklift.factory.getContractArtifacts("TokenWalletPlatform");
 
   await locklift.transactions.waitFinalized(
     proxy.methods

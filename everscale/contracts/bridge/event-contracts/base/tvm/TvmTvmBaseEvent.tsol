@@ -1,7 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader expire;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 import "./../BaseEvent.tsol";
 import "../../../interfaces/event-contracts/ITvmTvmEvent.tsol";
@@ -12,23 +9,24 @@ import "../../../libraries/EventContractNonce.tsol";
 
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
-
+#[ExternalMessage(time, pubkey, expire)]
+#[TimeReplayProt]
 contract TvmTvmBaseEvent is ITvmTvmEvent, TransferUtils {
-    Status public status;
+    Status status;
     // Event contract deployer
-    address public initializer;
+    address initializer;
     // Event configuration meta
-    TvmCell public meta;
+    TvmCell meta;
 
-    address public transactionChecker;
+    address transactionChecker;
 
     // Event data
     TvmTvmEventInitData static eventInitData;
-    uint32 public nonce;
+    uint32 nonce_;
 
     TvmCell eventBody;
 
-    uint128 public eventInitialBalance;
+    uint128 eventInitialBalance;
 
     /// @dev Should be deployed only by corresponding TvmTvmEventConfiguration contract
     /// @param _initializer The address who paid for contract deployment.
@@ -45,7 +43,7 @@ contract TvmTvmBaseEvent is ITvmTvmEvent, TransferUtils {
             ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION
         );
 
-        nonce = EventContractNonce._calculateNonce(eventInitData);
+        nonce_ = EventContractNonce._calculateNonce(eventInitData);
         initializer = _initializer;
         meta = _meta;
         eventBody = _eventBody;
@@ -56,13 +54,17 @@ contract TvmTvmBaseEvent is ITvmTvmEvent, TransferUtils {
         onInit();
     }
 
+    function nonce() externalMsg public view returns (uint32) {
+        return nonce_;
+    }
+
     function onConfirm() virtual internal {}
 
     function onInit() virtual internal {
         onConfirm();
     }
 
-    function getEventInitData() public view responsible returns (TvmTvmEventInitData) {
+    function getEventInitData() externalMsg internalMsg public view responsible returns (TvmTvmEventInitData) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} eventInitData;
     }
 
@@ -70,17 +72,21 @@ contract TvmTvmBaseEvent is ITvmTvmEvent, TransferUtils {
     /// @return _eventInitData Init data
     /// @return _initializer Account who has deployed this contract
     /// @return _meta Meta data from the corresponding event configuration
-    function getDetails() external view responsible returns (
+    function getDetails() externalMsg internalMsg external view responsible returns (
         TvmTvmEventInitData _eventInitData,
         address _initializer,
         TvmCell _meta,
-        Status _status
+        Status _status,
+        address _transactionChecker,
+        uint128 _eventInitialBalance
     ) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (
             eventInitData,
             initializer,
             meta,
-            status
+            status,
+            transactionChecker,
+            eventInitialBalance
         );
     }
 

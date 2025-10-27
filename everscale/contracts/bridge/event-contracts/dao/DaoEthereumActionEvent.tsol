@@ -1,7 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader expire;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 import "./../base/evm/EverscaleEthereumBaseEvent.tsol";
 import "./../../interfaces/IEventNotificationReceiver.tsol";
@@ -14,6 +11,8 @@ import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
     @title DAO Ethereum Action event configuration
     @dev This implementation is used for executing DAO actions in EVM based networks
 */
+#[ExternalMessage(time, pubkey, expire)]
+#[CustomReplayProt]
 contract DaoEthereumActionEvent is EverscaleEthereumBaseEvent, DaoCellEncoder {
 
     constructor(
@@ -31,7 +30,7 @@ contract DaoEthereumActionEvent is EverscaleEthereumBaseEvent, DaoCellEncoder {
         return bodyCopy;
     }
 
-    function getDecodedData() public view responsible returns (
+    function getDecodedData() externalMsg internalMsg public view responsible returns (
         address _gasBackAddress,
         uint32 chainId,
         ActionStructure.EthActionStripped[] actions

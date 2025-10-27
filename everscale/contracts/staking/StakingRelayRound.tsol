@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 import "./interfaces/IStakingRelayRound.tsol";
@@ -8,23 +8,24 @@ import "./interfaces/IUserData.tsol";
 import "./libraries/Gas.tsol";
 import "./libraries/PlatformTypes.tsol";
 import "./../utils/ErrorCodes.tsol";
+import "./../utils/common/Platform.tsol";
 
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
-import "@broxus/contracts/contracts/platform/Platform.tsol";
 
-
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract StakingRelayRound is IStakingRelayRound {
     event RelayRoundCodeUpgraded(uint32 code_version);
 
     bool relays_installed;
-    uint32 public relays_count;
-    uint32 public start_time;
-    uint32 public end_time;
-    uint128 public total_tokens_staked;
-    uint32 public reward_round_num;
-    uint128 public round_reward;
-    bool public duplicate;
-    uint8 public expected_packs_num;
+    uint32 _relays_count;
+    uint32 _start_time;
+    uint32 _end_time;
+    uint128 _total_tokens_staked;
+    uint32 _reward_round_num;
+    uint128 _round_reward;
+    bool _duplicate;
+    uint8 _expected_packs_num;
     address election_addr;
     address prev_round_addr;
 
@@ -53,13 +54,45 @@ contract StakingRelayRound is IStakingRelayRound {
     // Cant be deployed directly
     constructor() { revert(); }
 
-    function getDetails() external view override responsible returns (RelayRoundDetails) {
+    function relays_count() externalMsg public view returns (uint32) {
+        return _relays_count;
+    }
+
+    function start_time() externalMsg public view returns (uint32) {
+        return _start_time;
+    }
+
+    function end_time() externalMsg public view returns (uint32) {
+        return _end_time;
+    }
+
+    function total_tokens_staked() externalMsg public view returns (uint128) {
+        return _total_tokens_staked;
+    }
+
+    function reward_round_num() externalMsg public view returns (uint32) {
+        return _reward_round_num;
+    }
+
+    function round_reward() externalMsg public view returns (uint128) {
+        return _round_reward;
+    }
+
+    function duplicate() externalMsg public view returns (bool) {
+        return _duplicate;
+    }
+
+    function expected_packs_num() externalMsg public view returns (uint8) {
+        return _expected_packs_num;
+    }
+
+    function getDetails() externalMsg internalMsg external view override responsible returns (RelayRoundDetails) {
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }RelayRoundDetails(
             root, round_num, ton_keys, eth_addrs, staker_addrs, staked_tokens, relays_installed, current_version
         );
     }
 
-    function hasUnclaimedReward(address _relay_staker_addr) external view responsible returns (bool has_reward) {
+    function hasUnclaimedReward(address _relay_staker_addr) externalMsg internalMsg external view responsible returns (bool has_reward) {
         if (!addr_to_idx.exists(_relay_staker_addr)) {
             return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} false;
         }
@@ -68,14 +101,14 @@ contract StakingRelayRound is IStakingRelayRound {
 
     function getRelayByStakerAddress(
         address _relay_staker_addr
-    ) external view responsible returns (uint256 _ton_key, uint160 _eth_addr, address _staker_addr, uint128 _staked_tokens) {
+    ) externalMsg internalMsg external view responsible returns (uint256 _ton_key, uint160 _eth_addr, address _staker_addr, uint128 _staked_tokens) {
         require (addr_to_idx.exists(_relay_staker_addr), ErrorCodes.RELAY_NOT_EXIST);
         uint256 idx = addr_to_idx[_relay_staker_addr];
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (ton_keys[idx], eth_addrs[idx], staker_addrs[idx], staked_tokens[idx]);
     }
 
     function getRewardForRound(address staker_addr, uint32 code_version) external override onlyUserData(staker_addr) {
-        require (block.timestamp >= end_time, ErrorCodes.RELAY_ROUND_NOT_ENDED);
+        require (block.timestamp >= _end_time, ErrorCodes.RELAY_ROUND_NOT_ENDED);
         require (reward_claimed[staker_addr] == false, ErrorCodes.RELAY_REWARD_CLAIMED);
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
         require (addr_to_idx.exists(staker_addr), ErrorCodes.RELAY_NOT_EXIST);
@@ -83,10 +116,10 @@ contract StakingRelayRound is IStakingRelayRound {
         tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 0);
 
         reward_claimed[staker_addr] = true;
-        uint256 staker_reward_share = (staked_tokens[addr_to_idx[staker_addr]] * SCALING_FACTOR) / total_tokens_staked;
-        uint128 relay_reward = uint128((staker_reward_share * round_reward) / SCALING_FACTOR);
+        uint256 staker_reward_share = (staked_tokens[addr_to_idx[staker_addr]] * SCALING_FACTOR) / _total_tokens_staked;
+        uint128 relay_reward = uint128((staker_reward_share * _round_reward) / SCALING_FACTOR);
 
-        IUserData(msg.sender).receiveRewardForRelayRound{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, reward_round_num, relay_reward);
+        IUserData(msg.sender).receiveRewardForRelayRound{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, _reward_round_num, relay_reward);
     }
 
     function _getRelayListFromIdx(
@@ -139,7 +172,7 @@ contract StakingRelayRound is IStakingRelayRound {
             (_ton_keys, _eth_addrs, _staker_addrs, _staked_tokens);
     }
 
-    function relayKeys() public view responsible returns (uint256[]) {
+    function relayKeys() externalMsg internalMsg public view responsible returns (uint256[]) {
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } ton_keys;
     }
 
@@ -172,8 +205,8 @@ contract StakingRelayRound is IStakingRelayRound {
                 staker_addrs.push(_staker_addrs[i]);
 
                 addr_to_idx[_staker_addrs[i]] = staker_addrs.length - 1;
-                total_tokens_staked += _staked_tokens[i];
-                relays_count += 1;
+                _total_tokens_staked += _staked_tokens[i];
+                _relays_count += 1;
             } else {
                 break;
             }
@@ -185,11 +218,11 @@ contract StakingRelayRound is IStakingRelayRound {
 
     function _checkRelaysInstalled() internal {
         // tvm.rawReserve should be called before calling this!
-        if (relay_packs_installed == expected_packs_num) {
+        if (relay_packs_installed == _expected_packs_num) {
             relays_installed = true;
 
             IStakingPool(root).onRelayRoundInitialized{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-                round_num, start_time, end_time, relays_count, round_reward, reward_round_num, duplicate, eth_addrs, ton_keys
+                round_num, _start_time, _end_time, _relays_count, _round_reward, _reward_round_num, _duplicate, eth_addrs, ton_keys
             );
             return;
         }
@@ -200,7 +233,7 @@ contract StakingRelayRound is IStakingRelayRound {
     // should be called root after +2 rounds!
     function destroy() external override onlyRoot {
         // small safety check
-        require (block.timestamp >= end_time, ErrorCodes.RELAY_ROUND_NOT_ENDED);
+        require (block.timestamp >= _end_time, ErrorCodes.RELAY_ROUND_NOT_ENDED);
 
         root.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
@@ -226,23 +259,23 @@ contract StakingRelayRound is IStakingRelayRound {
             round_num = _round_num;
             current_version = _current_version;
 
-            start_time = params.load(uint32);
-            end_time = params.load(uint32);
+            _start_time = params.load(uint32);
+            _end_time = params.load(uint32);
 
-            reward_round_num = params.load(uint32);
-            round_reward = params.load(uint128);
-            duplicate = params.load(bool);
-            expected_packs_num = params.load(uint8);
+            _reward_round_num = params.load(uint32);
+            _round_reward = params.load(uint128);
+            _duplicate = params.load(bool);
+            _expected_packs_num = params.load(uint8);
             election_addr = params.load(address);
             prev_round_addr = params.load(address);
 
-            IStakingPool(root).onRelayRoundDeployed{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, duplicate);
+            IStakingPool(root).onRelayRoundDeployed{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, _duplicate);
         } else {
             // UPGRADE from broken version
             tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 0);
 
             IStakingPool(root).onRelayRoundInitialized{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-                round_num, start_time, end_time, relays_count, round_reward, reward_round_num, duplicate, eth_addrs, ton_keys
+                round_num, _start_time, _end_time, _relays_count, _round_reward, _reward_round_num, _duplicate, eth_addrs, ton_keys
             );
         }
     }
@@ -277,14 +310,14 @@ contract StakingRelayRound is IStakingRelayRound {
 
             TvmBuilder data_builder_1;
             data_builder_1.store(relays_installed); // 1
-            data_builder_1.store(relays_count); // 32
-            data_builder_1.store(start_time); // 32
-            data_builder_1.store(end_time); // 32
-            data_builder_1.store(total_tokens_staked); // 128
-            data_builder_1.store(reward_round_num); // 32
-            data_builder_1.store(round_reward); // 128
-            data_builder_1.store(duplicate); // 1
-            data_builder_1.store(expected_packs_num); // 8
+            data_builder_1.store(_relays_count); // 32
+            data_builder_1.store(_start_time); // 32
+            data_builder_1.store(_end_time); // 32
+            data_builder_1.store(_total_tokens_staked); // 128
+            data_builder_1.store(_reward_round_num); // 32
+            data_builder_1.store(_round_reward); // 128
+            data_builder_1.store(_duplicate); // 1
+            data_builder_1.store(_expected_packs_num); // 8
             data_builder_1.store(eth_addrs); // 33 + ref1
             data_builder_1.store(staker_addrs); // 33 + ref2
             // TOTAL 460
@@ -360,7 +393,7 @@ contract StakingRelayRound is IStakingRelayRound {
     */
 
     function _buildInitData(uint8 type_id, TvmCell _initialData) internal view returns (TvmCell) {
-        return tvm.buildStateInit({
+        return abi.encodeStateInit({
             contr: Platform,
             varInit: {
                 root: root,
@@ -379,7 +412,7 @@ contract StakingRelayRound is IStakingRelayRound {
         return builder.toCell();
     }
 
-    function getUserDataAddress(address user) public view responsible returns (address) {
+    function getUserDataAddress(address user) externalMsg internalMsg public view responsible returns (address) {
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } address(tvm.hash(_buildInitData(
             PlatformTypes.UserData,
             _buildUserDataParams(user)

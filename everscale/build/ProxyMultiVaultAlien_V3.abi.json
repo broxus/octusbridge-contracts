@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.7",
 	"header": ["pubkey", "time"],
 	"functions": [
 		{
@@ -218,6 +218,14 @@
 			]
 		},
 		{
+			"name": "owner",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
 			"name": "transferOwnership",
 			"inputs": [
 				{"name":"newOwner","type":"address"}
@@ -231,34 +239,9 @@
 			],
 			"outputs": [
 			]
-		},
-		{
-			"name": "owner",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"owner","type":"address"}
-			]
-		},
-		{
-			"name": "_randomNonce",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"_randomNonce","type":"uint256"}
-			]
-		},
-		{
-			"name": "manager",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"manager","type":"address"}
-			]
 		}
 	],
-	"data": [
-		{"key":1,"name":"_randomNonce","type":"uint256"}
+	"getters": [
 	],
 	"events": [
 		{
@@ -283,17 +266,17 @@
 		}
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"owner","type":"address"},
-		{"name":"_randomNonce","type":"uint256"},
-		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"},{"name":"deployWalletValue","type":"uint128"},{"name":"alienTokenRootCode","type":"cell"},{"name":"alienTokenWalletCode","type":"cell"},{"name":"alienTokenWalletPlatformCode","type":"cell"}],"name":"config","type":"tuple"},
-		{"name":"api_version","type":"uint8"},
-		{"name":"manager","type":"address"},
-		{"name":"mergeRouter","type":"cell"},
-		{"name":"mergePool","type":"cell"},
-		{"name":"mergePoolPlatform","type":"cell"},
-		{"name":"mergePoolVersion","type":"uint8"}
+		{"init":true,"name":"_pubkey","type":"fixedbytes32"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":false,"name":"_owner","type":"address"},
+		{"init":true,"name":"_randomNonce","type":"uint256"},
+		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"},{"name":"deployWalletValue","type":"uint128"},{"name":"alienTokenRootCode","type":"cell"},{"name":"alienTokenWalletCode","type":"cell"},{"name":"alienTokenWalletPlatformCode","type":"cell"}],"init":false,"name":"config","type":"tuple"},
+		{"init":false,"name":"api_version","type":"uint8"},
+		{"init":false,"name":"manager","type":"address"},
+		{"init":false,"name":"mergeRouter","type":"cell"},
+		{"init":false,"name":"mergePool","type":"cell"},
+		{"init":false,"name":"mergePoolPlatform","type":"cell"},
+		{"init":false,"name":"mergePoolVersion","type":"uint8"}
 	]
 }

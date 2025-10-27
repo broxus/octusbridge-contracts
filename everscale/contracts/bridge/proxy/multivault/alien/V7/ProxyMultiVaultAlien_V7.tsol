@@ -1,6 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 import "../../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V1.tsol";
 import "./ProxyMultiVaultAlien_V7_MergeRouter.tsol";
@@ -8,13 +6,14 @@ import "./ProxyMultiVaultAlien_V7_MergeRouter.tsol";
 import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 
-
+#[ExternalMessage(time, pubkey)]
+#[TimeReplayProt]
 contract ProxyMultiVaultAlien_V7 is
     ProxyMultiVaultAlien_V7_MergeRouter,
     CheckPubKey,
     RandomNonce
 {
-    constructor(address owner_) checkPubKey {
+    constructor(address owner_) externalMsg checkPubKey {
         tvm.accept();
 
         _reserveTargetBalance();
@@ -31,7 +30,7 @@ contract ProxyMultiVaultAlien_V7 is
     /// @notice Get current contract API version.
     /// Each time contract is upgraded, API version is incremented.
     /// @return Current API version
-    function apiVersion() external override view responsible returns(uint8) {
+    function apiVersion() externalMsg internalMsg external override view responsible returns(uint8) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} api_version;
     }
 
@@ -43,7 +42,7 @@ contract ProxyMultiVaultAlien_V7 is
             solanaConfiguration,
             _randomNonce,
             api_version,
-            owner,
+            owner(),
             manager,
             mergeRouter,
             mergePool,
@@ -82,7 +81,7 @@ contract ProxyMultiVaultAlien_V7 is
 
         _randomNonce = _randomNonce_;
         api_version++;
-        owner = owner_;
+        setOwnership(owner_);
 
         manager = manager_;
         mergeRouter = mergeRouter_;

@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.7",
 	"header": ["time"],
 	"functions": [
 		{
@@ -28,17 +28,15 @@
 			]
 		}
 	],
-	"data": [
-		{"key":1,"name":"nonce","type":"uint256"},
-		{"key":2,"name":"stakingCode","type":"cell"}
+	"getters": [
 	],
 	"events": [
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"nonce","type":"uint256"},
-		{"name":"stakingCode","type":"cell"}
+		{"init":true,"name":"_pubkey","type":"fixedbytes32"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":true,"name":"nonce","type":"uint256"},
+		{"init":true,"name":"stakingCode","type":"cell"}
 	]
 }

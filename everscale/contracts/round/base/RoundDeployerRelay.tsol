@@ -1,12 +1,12 @@
-pragma ever-solidity >= 0.62.0;
-pragma AbiHeader pubkey;
-//pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 import "./RoundDeployerUpgradable.tsol";
 import "../../bridge/interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
 import "../../bridge/interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.tsol";
 
 
+#[ExternalMessage(time, pubkey)]
+#[TimeReplayProt]
 abstract contract RoundDeployerRelay is RoundDeployerUpgradable {
 
     function setRelaysOnNewRound(
@@ -18,7 +18,7 @@ abstract contract RoundDeployerRelay is RoundDeployerUpgradable {
         require (relays_count == eth_keys.length, ErrorCodes.BAD_INPUT_ARRAYS);
         require (relays_count >= relay_config.minRelaysCount, ErrorCodes.NOT_ENOUGH_RELAYS);
         require (
-            msg.value >= tonEthEventDeployValue + tonSolEventDeployValue + Gas.getDeployRelayRoundMinValue() + gasToValue(Gas.DESTROY_MSG_GAS + Gas.MIN_SEND_RELAYS_MSG_GAS, address(this).wid),
+            msg.value >= tonEthEventDeployValue + tonSolEventDeployValue + Gas.getDeployRelayRoundMinValue() + gasToValue(Gas.DESTROY_MSG_GAS + Gas.MIN_SEND_RELAYS_MSG_GAS),
             ErrorCodes.VALUE_TOO_LOW
         );
 
@@ -103,12 +103,12 @@ abstract contract RoundDeployerRelay is RoundDeployerUpgradable {
             event_builder2.store(round_end_time);
             IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] _empty;
             IEverscaleSolanaEvent.EverscaleSolanaEventVoteData event_data_sol = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(tx.logicaltime, block.timestamp, _empty, false, _empty, event_builder2.toCell());
-            IEverscaleSolanaEventConfiguration(bridge_event_config_ton_sol).deployEvent{value: tonSolEventDeployValue}(event_data_sol);
+            IEverscaleSolanaEventConfiguration(bridge_event_config_ton_sol_).deployEvent{value: tonSolEventDeployValue}(event_data_sol);
         }
 
         if (round_num > 3) {
             address old_relay_round = getRelayRoundAddress(round_num - 3);
-            IRelayRound(old_relay_round).destroy{value: gasToValue(Gas.DESTROY_MSG_GAS, address(this).wid)}();
+            IRelayRound(old_relay_round).destroy{value: gasToValue(Gas.DESTROY_MSG_GAS)}();
         }
         emit RelayRoundInitialized(round_num, round_start_time, round_end_time, msg.sender, relays_count);
     }

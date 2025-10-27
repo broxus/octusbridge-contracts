@@ -28,7 +28,7 @@ const config: LockliftConfig = {
     secretKey: process.env.EVERSCAN_SECRET_KEY!,
   },
   compiler: {
-    version: "0.71.0",
+    version: "0.79.0",
     externalContracts: {
       "../node_modules/ton-eth-bridge-token-contracts/contracts": [
         "TokenRoot",
@@ -36,18 +36,18 @@ const config: LockliftConfig = {
         "TokenRootUpgradeable",
         "TokenWalletUpgradeable",
         "TokenWalletPlatform",
+        'AlienTokenWalletUpgradeable',
+        'TokenRootAlienEVM',
+        'TokenRootAlienSolana',
+        'TokenRootAlienTVM',
       ],
-      build_prod: ["Bridge"],
-      "../node_modules/@broxus/contracts/contracts/platform": ["Platform"],
-    },
-    externalContractsArtifacts: {
-      // "../node_modules/ton-eth-bridge-token-contracts": ['TokenRootUpgradable', 'TokenWalletUpgradable', 'TokenWalletPlatform'],
-      //"build_prod": ['Bridge'],
-      "precompiled": ['AlienTokenWalletUpgradeable','TokenRootAlienTVM','TokenWalletPlatform']
+      "../node_modules/ton-eth-bridge-token-contracts/contracts/bridge": [
+        'AlienTokenWalletUpgradeable',
+        'TokenRootAlienEVM',
+        'TokenRootAlienSolana',
+        'TokenRootAlienTVM',
+      ],
     }
-  },
-  linker: {
-    version: "0.20.6",
   },
   networks: {
     locklift: {

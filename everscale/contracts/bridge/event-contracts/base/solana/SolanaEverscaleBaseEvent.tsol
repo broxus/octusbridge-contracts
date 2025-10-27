@@ -1,7 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader expire;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 import "./../BaseEvent.tsol";
 import "../../../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
@@ -9,11 +6,12 @@ import "../../../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
 import "./../../../../utils/ErrorCodes.tsol";
 import "../../../libraries/EventContractNonce.tsol";
 
-
+#[ExternalMessage(time, pubkey, expire)]
+#[TimeReplayProt]
 contract SolanaEverscaleBaseEvent is BaseEvent, ISolanaEverscaleEvent {
     // Event data
     SolanaEverscaleEventInitData static eventInitData;
-    uint32 public nonce;
+    uint32 nonce_;
 
     event Confirm(uint relay);
 
@@ -29,14 +27,18 @@ contract SolanaEverscaleBaseEvent is BaseEvent, ISolanaEverscaleEvent {
             ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION
         );
 
-        nonce = EventContractNonce._calculateNonce(eventInitData);
+        nonce_ = EventContractNonce._calculateNonce(eventInitData);
         initializer = _initializer;
         meta = _meta;
 
         onInit();
     }
 
-    function getEventInitData() public view responsible returns (SolanaEverscaleEventInitData) {
+    function nonce() externalMsg public view returns (uint32) {
+        return nonce_;
+    }
+
+    function getEventInitData() externalMsg internalMsg public view responsible returns (SolanaEverscaleEventInitData) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} eventInitData;
     }
 
@@ -45,7 +47,7 @@ contract SolanaEverscaleBaseEvent is BaseEvent, ISolanaEverscaleEvent {
     }
 
     function isExternalVoteCall(uint32 functionId) override internal view returns (bool){
-        return functionId == tvm.functionId(confirm) || functionId == tvm.functionId(reject);
+        return functionId == abi.functionId(confirm) || functionId == abi.functionId(reject);
     }
 
     /// @dev Confirm event. Can be called only by relay which is in charge at this round.
@@ -110,7 +112,7 @@ contract SolanaEverscaleBaseEvent is BaseEvent, ISolanaEverscaleEvent {
     /// @return _meta Meta data from the corresponding event configuration
     /// @return _requiredVotes The required amount of votes to confirm / reject event.
     /// Basically it's 2/3 + 1 relays for this round
-    function getDetails() external view responsible returns (
+    function getDetails() externalMsg internalMsg external view responsible returns (
         SolanaEverscaleEventInitData _eventInitData,
         Status _status,
         uint[] _confirms,

@@ -44,7 +44,7 @@
     "prompts": "^2.4.1",
     "simple-node-logger": "^18.12.24",
     "solidity-docgen": "^0.5.7",
-    "ton-eth-bridge-token-contracts": "https://github.com/broxus/tip3#bbdc0b8e81e6f070e1d40437e5cb15332bfc8014",
+    "ton-eth-bridge-token-contracts": "https://github.com/broxus/tip3jetton",
     "underscore": "^1.12.0"
   },
   "devDependencies": {
@@ -62,13 +62,14 @@
     "ethers": "^5.7.2",
     "everscale-standalone-client": "^2.1.27",
     "hardhat-dependency-compiler": "^1.1.3",
-    "locklift": "^2.9.7",
+    "locklift": "^2.9.10",
     "prettier": "^2.7.1",
     "ts-mocha": "^10.0.0",
     "typescript": "^4.7.4",
     "web3": "^1.9.0"
   },
   "overrides": {
-    "nekoton-wasm": "npm:nekoton-wasm-locklift@1.24.4"
+    "nekoton-wasm": "npm:nekoton-wasm-locklift@^1.25.0",
+    "@broxus/locklift-network": "2.0.0-beta-rc2"
   }
 }

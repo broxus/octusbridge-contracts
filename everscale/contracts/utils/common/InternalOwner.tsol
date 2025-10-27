@@ -1,0 +1,56 @@
+pragma tvm-solidity >= 0.79.0;
+
+import "@broxus/contracts/contracts/libraries/UtilityErrors.tsol";
+
+#[ExternalMessage(time, pubkey, expire)]
+#[TimeReplayProt]
+contract InternalOwner {
+    address private _owner;
+
+    event OwnershipTransferred(address previousOwner, address newOwner);
+
+    modifier onlyOwner() {
+        require(
+            msg.sender == _owner && msg.sender.value != 0,
+            UtilityErrors.CALLER_IS_NOT_OWNER
+        );
+        _;
+    }
+
+    function owner() externalMsg public view returns (address) {
+        return _owner;
+    }
+
+    /*
+        @dev Internal function for setting owner
+        Can be used in child contracts
+    */
+    function setOwnership(address newOwner) internal {
+        address oldOwner = _owner;
+
+        _owner = newOwner;
+
+        emit OwnershipTransferred(oldOwner, newOwner);
+    }
+
+    /*
+        @dev Transfer ownership to the new owner
+    */
+    function transferOwnership(address newOwner) external onlyOwner {
+        require(
+            newOwner != address.makeAddrStd(0, 0),
+            UtilityErrors.INVALID_NEW_OWNER
+        );
+
+        setOwnership(newOwner);
+    }
+
+    /*
+        @dev Renounce ownership. Can't be aborted!
+    */
+    function renounceOwnership() external onlyOwner {
+        address newOwner = address.makeAddrStd(0, 0);
+
+        setOwnership(newOwner);
+    }
+}

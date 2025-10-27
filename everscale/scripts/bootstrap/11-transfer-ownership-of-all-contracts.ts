@@ -76,7 +76,7 @@ const main = async (): Promise<void> => {
         await contract.methods
           .owner({})
           .call()
-          .then(a => a.owner.toString()),
+          .then(a => a.value0.toString()),
       );
     }
   }

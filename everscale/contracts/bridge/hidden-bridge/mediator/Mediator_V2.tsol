@@ -1,13 +1,11 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
-import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 
-import "./../../../utils/TransferUtils.tsol";
+import "../../../utils/common/InternalOwner.tsol";
+import "../../../utils/TransferUtils.tsol";
 import "./../../interfaces/proxy/INetworks.tsol";
 import "./../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.tsol";
 
@@ -24,6 +22,8 @@ import "./../EventCreditGas.tsol";
 /// @notice Used as part of hidden bridge for sol/evm-ever-sol/evm token transfers
 /// Difference from V1:
 /// - Support multiple event closers and event deployers
+#[ExternalMessage(time, expire)]
+#[TimeReplayProt]
 contract Mediator_V2 is
     IAcceptTokensTransferCallback,
     IAcceptTokensMintCallback,
@@ -39,30 +39,46 @@ contract Mediator_V2 is
         TransferToNativeProxy
     }
 
-    TvmCell public alienTokenWalletPlatformCode;
-    address public nativeProxy;
-    address[] public eventClosers;
-    address[] public eventDeployers;
+    TvmCell alienTokenWalletPlatformCode_;
+    address nativeProxy_;
+    address[] eventClosers_;
+    address[] eventDeployers_;
 
     constructor(
         address _owner,
         address _nativeProxy,
         TvmCell _alienTokenWalletPlatformCode
-    ) checkPubKey {
+    ) externalMsg checkPubKey {
         require(_owner != address(0), ErrorCodes.ZERO_ADDRESS);
         require(_nativeProxy != address(0), ErrorCodes.ZERO_ADDRESS);
         tvm.accept();
 
         setOwnership(_owner);
-        nativeProxy = _nativeProxy;
-        alienTokenWalletPlatformCode = _alienTokenWalletPlatformCode;
+        nativeProxy_ = _nativeProxy;
+        alienTokenWalletPlatformCode_ = _alienTokenWalletPlatformCode;
+    }
+
+    function alienTokenWalletPlatformCode() externalMsg public view returns (TvmCell) {
+        return alienTokenWalletPlatformCode_;
+    }
+
+    function nativeProxy() externalMsg public view returns (address) {
+        return nativeProxy_;
+    }
+
+    function eventClosers() externalMsg public view returns (address[]) {
+        return eventClosers_;
+    }
+
+    function eventDeployers() externalMsg public view returns (address[]) {
+        return eventDeployers_;
     }
 
     function setNativeProxy(
         address _nativeProxy
     ) external onlyOwner cashBack {
         require(_nativeProxy != address(0), ErrorCodes.ZERO_ADDRESS);
-        nativeProxy = _nativeProxy;
+        nativeProxy_ = _nativeProxy;
     }
 
     /// @notice Accept incoming mint
@@ -89,7 +105,7 @@ contract Mediator_V2 is
         address remainingGasTo,
         TvmCell payloadWithNonce
     ) external override reserveAtLeastTargetBalance {
-        require(sender == nativeProxy, ErrorCodes.NOT_NATIVE_PROXY);
+        require(sender == nativeProxy_, ErrorCodes.NOT_NATIVE_PROXY);
 
         _handleTokens(
             payloadWithNonce,
@@ -105,10 +121,10 @@ contract Mediator_V2 is
         uint128 amount,
         address remainingGasTo
     ) internal view {
-        (uint32 nonce, optional(TvmCell) payload) = abi.decode(payloadWithNonce, (uint32, optional(TvmCell)));
+        (/*uint16 opCode*/, uint32 nonce, optional(TvmCell) payload) = abi.decode(payloadWithNonce, (uint16, uint32, optional(TvmCell)));
 
-        remainingGasTo = _includes(eventDeployers, remainingGasTo)
-          ? _randomChoice(eventClosers)
+        remainingGasTo = _includes(eventDeployers_, remainingGasTo)
+          ? _randomChoice(eventClosers_)
           : remainingGasTo;
 
         (
@@ -192,14 +208,14 @@ contract Mediator_V2 is
     function _deriveAlienTokenWallet(
         address root
     ) internal view returns(address) {
-        TvmCell stateInit = tvm.buildStateInit({
+        TvmCell stateInit = abi.encodeStateInit({
             contr: TokenWalletPlatform,
             varInit: {
                 root: root,
                 owner: address(this)
             },
             pubkey: 0,
-            code: alienTokenWalletPlatformCode
+            code: alienTokenWalletPlatformCode_
         });
 
         return address(tvm.hash(stateInit));
@@ -209,23 +225,23 @@ contract Mediator_V2 is
         address[] _eventClosers,
         address[] _eventDeployers
     ) external onlyOwner {
-        require(!_includes(eventClosers, address(0)), ErrorCodes.ZERO_ADDRESS);
-        require(!_includes(eventDeployers, address(0)), ErrorCodes.ZERO_ADDRESS);
+        require(!_includes(eventClosers_, address(0)), ErrorCodes.ZERO_ADDRESS);
+        require(!_includes(eventDeployers_, address(0)), ErrorCodes.ZERO_ADDRESS);
 
-        eventClosers = _eventClosers;
-        eventDeployers = _eventDeployers;
+        eventClosers_ = _eventClosers;
+        eventDeployers_ = _eventDeployers;
     }
 
     function upgrade(
         TvmCell code
     ) external onlyOwner {
         TvmCell data = abi.encode(
-            owner,
-            nativeProxy,
-            alienTokenWalletPlatformCode,
+            owner(),
+            nativeProxy_,
+            alienTokenWalletPlatformCode_,
             _randomNonce,
-            eventClosers,
-            eventDeployers
+            eventClosers_,
+            eventDeployers_
         );
 
         tvm.setcode(code);
@@ -241,18 +257,21 @@ contract Mediator_V2 is
 
         address _eventCloser;
         address _eventDeployer;
+        address _owner;
 
         (
-            owner,
-            nativeProxy,
-            alienTokenWalletPlatformCode,
+            _owner,
+            nativeProxy_,
+            alienTokenWalletPlatformCode_,
             _randomNonce,
             _eventCloser,
             _eventDeployer
         ) = abi.decode(data, (address, address, TvmCell, uint, address, address));
 
-        eventClosers = [_eventCloser];
-        eventClosers = [_eventDeployer];
+        eventClosers_ = [_eventCloser];
+        eventClosers_ = [_eventDeployer];
+
+        setOwnership(_owner);
     }
 
     function _includes(

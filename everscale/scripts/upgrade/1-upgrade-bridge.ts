@@ -150,7 +150,7 @@ const upgradeProxies = async (
   }
 
   if (alienTvmConfiguration.alienTokenWalletPlatformCode === EMPTY_CELL) {
-    const tvmAlienPlatform = locklift.factory.getContractArtifacts('AlienTokenWalletPlatform');
+    const tvmAlienPlatform = locklift.factory.getContractArtifacts('TokenWalletPlatform');
 
     console.log(
       `Setting alien TVM platform code to alien proxy: ${tvmAlienPlatform.codeHash}`,
@@ -208,7 +208,7 @@ const upgradeProxies = async (
   const mergePoolCodeHash = await alienProxy.methods
     .mergePool()
     .call()
-    .then((r) => locklift.provider.getBocHash(r.mergePool));
+    .then((r) => locklift.provider.getBocHash(r.value0));
 
   const newMergePoolCode =
     locklift.factory.getContractArtifacts('MergePool_V7');
@@ -231,7 +231,7 @@ const upgradeProxies = async (
   const mergeRouterCodeHash = await alienProxy.methods
     .mergeRouter()
     .call()
-    .then((r) => locklift.provider.getBocHash(r.mergeRouter));
+    .then((r) => locklift.provider.getBocHash(r.value0));
 
   const newMergeRouterCode =
     locklift.factory.getContractArtifacts('MergeRouter');
@@ -251,7 +251,7 @@ const upgradeProxies = async (
   const nativeProxyInAlien = await alienProxy.methods
     .proxyMultiVaultNative()
     .call()
-    .then((r) => r.proxyMultiVaultNative);
+    .then((r) => r.value0);
 
   if (nativeProxyInAlien.equals(zeroAddress)) {
     console.log(`Setting native proxy address to alien proxy`);
@@ -350,7 +350,7 @@ const upgradeProxies = async (
   const alienProxyInNative = await nativeProxy.methods
     .proxyMultiVaultAlien()
     .call()
-    .then((r) => r.proxyMultiVaultAlien);
+    .then((r) => r.value0);
 
   if (alienProxyInNative.equals(zeroAddress)) {
     console.log(`Setting alien proxy address to native proxy`);
@@ -365,7 +365,7 @@ const upgradeProxies = async (
   const coldVaultInNative = await nativeProxy.methods
     .coldVault()
     .call()
-    .then((r) => r.coldVault);
+    .then((r) => r.value0);
 
   if (coldVaultInNative.equals(zeroAddress)) {
     console.log(`Setting cold vault address to native proxy`);
@@ -383,7 +383,7 @@ const upgradeProxies = async (
   const vaultWithdrawerInNative = await nativeProxy.methods
     .vaultWithdrawer()
     .call()
-    .then((r) => r.vaultWithdrawer);
+    .then((r) => r.value0);
 
   if (vaultWithdrawerInNative.equals(zeroAddress)) {
     console.log(`Setting vault withdrawer address to native proxy`);
@@ -479,7 +479,7 @@ const upgradeConfigFactories = async (signer: Signer): Promise<void> => {
     await oldEvmTvmEventConfigFactory?.methods
       .configurationCode()
       .call()
-      .then((r) => locklift.provider.getBocHash(r.configurationCode));
+      .then((r) => locklift.provider.getBocHash(r.value0));
   const newEvmTvmConfigurationCode = locklift.factory.getContractArtifacts(
     'EthereumEverscaleEventConfiguration',
   );
@@ -532,7 +532,7 @@ const upgradeConfigFactories = async (signer: Signer): Promise<void> => {
     await oldTvmEvmEventConfigFactory?.methods
       .configurationCode()
       .call()
-      .then((r) => locklift.provider.getBocHash(r.configurationCode));
+      .then((r) => locklift.provider.getBocHash(r.value0));
   const newTvmEvmConfigurationCode = locklift.factory.getContractArtifacts(
     'EverscaleEthereumEventConfiguration',
   );
@@ -585,7 +585,7 @@ const upgradeConfigFactories = async (signer: Signer): Promise<void> => {
     await oldTvmTvmEventConfigFactory?.methods
       .configurationCode()
       .call()
-      .then((r) => locklift.provider.getBocHash(r.configurationCode));
+      .then((r) => locklift.provider.getBocHash(r.value0));
   const newTvmTvmConfigurationCode = locklift.factory.getContractArtifacts(
     'TvmTvmEventConfiguration',
   );

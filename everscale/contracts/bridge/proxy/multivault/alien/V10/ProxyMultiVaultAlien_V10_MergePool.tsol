@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "./../../../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.tsol";
 
@@ -16,7 +16,7 @@ abstract contract ProxyMultiVaultAlien_V10_MergePool is ProxyMultiVaultAlien_V10
 
     function deriveMergePool(
         uint256 nonce
-    ) public override responsible returns (address pool) {
+    ) externalMsg internalMsg public override responsible returns (address pool) {
         TvmCell stateInit = _buildMergePoolPlatformInitState(nonce);
 
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
@@ -32,7 +32,7 @@ abstract contract ProxyMultiVaultAlien_V10_MergePool is ProxyMultiVaultAlien_V10
         address[] tokens,
         uint256 canonId
     ) external override reserveAtLeastTargetBalance {
-        require(msg.sender == owner || msg.sender == manager, ErrorCodes.ONLY_OWNER_OR_MANAGER);
+        require(msg.sender == owner() || msg.sender == manager_, ErrorCodes.ONLY_OWNER_OR_MANAGER);
 
         TvmCell stateInit = _buildMergePoolPlatformInitState(nonce);
 
@@ -42,12 +42,12 @@ abstract contract ProxyMultiVaultAlien_V10_MergePool is ProxyMultiVaultAlien_V10
             bounce: false,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(
-            mergePool,
-            mergePoolVersion,
+            mergePool_,
+            mergePoolVersion_,
             tokens,
             canonId,
-            owner,
-            manager
+            owner(),
+            manager_
         );
     }
 
@@ -225,14 +225,14 @@ abstract contract ProxyMultiVaultAlien_V10_MergePool is ProxyMultiVaultAlien_V10
     function _buildMergePoolPlatformInitState(
         uint256 mergePoolNonce
     ) internal view returns (TvmCell) {
-        return tvm.buildStateInit({
+        return abi.encodeStateInit({
             contr: MergePoolPlatform,
             varInit: {
                 proxy: address(this),
                 _randomNonce: mergePoolNonce
             },
             pubkey: 0,
-            code: mergePoolPlatform
+            code: mergePoolPlatform_
         });
     }
 
@@ -246,7 +246,7 @@ abstract contract ProxyMultiVaultAlien_V10_MergePool is ProxyMultiVaultAlien_V10
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
             bounce: false
-        }(mergePool, mergePoolVersion);
+        }(mergePool_, mergePoolVersion_);
     }
 
     /// @notice Set merge pool platform code
@@ -255,7 +255,7 @@ abstract contract ProxyMultiVaultAlien_V10_MergePool is ProxyMultiVaultAlien_V10
     function setMergePoolPlatform(
         TvmCell _mergePoolPlatform
     ) external override onlyOwner cashBack {
-        mergePoolPlatform = _mergePoolPlatform;
+        mergePoolPlatform_ = _mergePoolPlatform;
     }
 
     /// @notice Set merge pool
@@ -265,8 +265,8 @@ abstract contract ProxyMultiVaultAlien_V10_MergePool is ProxyMultiVaultAlien_V10
     function setMergePool(
         TvmCell _mergePool
     ) external override onlyOwner cashBack {
-        mergePool = _mergePool;
+        mergePool_ = _mergePool;
 
-        mergePoolVersion++;
+        mergePoolVersion_++;
     }
 }

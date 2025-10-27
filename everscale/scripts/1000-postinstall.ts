@@ -8,8 +8,8 @@ const CONFIG_PATH = resolve(__dirname, '../../', 'node_modules/@broxus/locklift-
 const main = async (): Promise<void> => {
   const originConstants = readFileSync(CONFIG_PATH, { encoding: 'utf8' });
   const modifiedConstants = originConstants.replace(
-    /^exports.MAIN_CONFIG = ".*";?$/m,
-    `exports.MAIN_CONFIG = "${CONFIG}";`
+    /^exports.TYCHO_CONFIG = ".*";?$/m,
+    `exports.TYCHO_CONFIG = "${CONFIG}";`
   );
 
   writeFileSync(CONFIG_PATH, modifiedConstants);

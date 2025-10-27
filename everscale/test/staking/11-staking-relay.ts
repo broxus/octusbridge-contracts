@@ -828,19 +828,19 @@ describe.skip("Test Staking Relay mechanic", async function () {
                 const total_tokens_staked = await round.methods
                     .total_tokens_staked()
                     .call()
-                    .then((v) => v.total_tokens_staked);
+                    .then((v) => v.value0);
                 const round_reward = await round.methods
                     .round_reward()
                     .call()
-                    .then((v) => v.round_reward);
+                    .then((v) => v.value0);
                 const relays_count = await round.methods
                     .relays_count()
                     .call()
-                    .then((v) => v.relays_count);
+                    .then((v) => v.value0);
                 const reward_round_num = await round.methods
                     .reward_round_num()
                     .call()
-                    .then((v) => v.reward_round_num);
+                    .then((v) => v.value0);
 
                 const _round_reward = RELAY_ROUND_TIME_1 * rewardPerSec;
                 expect(total_tokens_staked.toString()).to.be.equal(
@@ -1126,7 +1126,7 @@ describe.skip("Test Staking Relay mechanic", async function () {
                 const round_num = await election.methods
                     .round_num()
                     .call()
-                    .then((t) => t.round_num);
+                    .then((t) => t.value0);
                 expect(round_num.toString()).to.be.equal(
                     "1",
                     "Bad election - round num"
@@ -1497,20 +1497,20 @@ describe.skip("Test Staking Relay mechanic", async function () {
                 const stored_relays_count = await round.methods
                     .relays_count()
                     .call()
-                    .then((t) => t.relays_count);
+                    .then((t) => t.value0);
                 const stored_total_tokens_staked = await round.methods
                     .total_tokens_staked()
                     .call()
-                    .then((t) => t.total_tokens_staked);
+                    .then((t) => t.value0);
                 const stored_reward_round_num = await round.methods
                     .reward_round_num()
                     .call()
-                    .then((t) => t.reward_round_num);
+                    .then((t) => t.value0);
                 const stored_relays_installed = round_details.relays_installed;
                 const stored_duplicate = await round.methods
                     .duplicate()
                     .call()
-                    .then((t) => t.duplicate);
+                    .then((t) => t.value0);
 
                 const expected_staked_tokens = userDeposit * 6;
 
@@ -1539,7 +1539,7 @@ describe.skip("Test Staking Relay mechanic", async function () {
                     "Bad round created - duplicate"
                 );
 
-                const round_reward = (await round.methods.round_reward().call()).round_reward;
+                const round_reward = (await round.methods.round_reward().call()).value0;
 
                 const staking_details_1 = await stakingRoot.methods
                     .getDetails({answerId: 0})
@@ -1709,7 +1709,7 @@ describe.skip("Test Staking Relay mechanic", async function () {
                 const round_num = await election.methods
                     .round_num()
                     .call()
-                    .then((t) => t.round_num);
+                    .then((t) => t.value0);
                 expect(round_num.toString()).to.be.equal(
                     "2",
                     "Bad election - round num"
@@ -1892,20 +1892,20 @@ describe.skip("Test Staking Relay mechanic", async function () {
                 const stored_relays_count = await round.methods
                     .relays_count()
                     .call()
-                    .then((t) => t.relays_count);
+                    .then((t) => t.value0);
                 const stored_total_tokens_staked = await round.methods
                     .total_tokens_staked()
                     .call()
-                    .then((t) => t.total_tokens_staked);
+                    .then((t) => t.value0);
                 const stored_reward_round_num = await round.methods
                     .reward_round_num()
                     .call()
-                    .then((t) => t.reward_round_num);
+                    .then((t) => t.value0);
                 const stored_relays_installed = round_details.relays_installed;
                 const stored_duplicate = await round.methods
                     .duplicate()
                     .call()
-                    .then((t) => t.duplicate);
+                    .then((t) => t.value0);
 
                 const expected_staked_tokens = userDeposit * 6;
 
@@ -1934,7 +1934,7 @@ describe.skip("Test Staking Relay mechanic", async function () {
                     "Bad round created - duplicate"
                 );
 
-                const round_reward = (await round.methods.round_reward().call()).round_reward;
+                const round_reward = (await round.methods.round_reward().call()).value0;
                 const staking_details_1 = await stakingRoot.methods
                     .getDetails({answerId: 0})
                     .call({ responsible: true })
@@ -1986,7 +1986,7 @@ describe.skip("Test Staking Relay mechanic", async function () {
                     const staked_tokens = new BigNumber(relay._staked_tokens.toString());
                     const total_tokens_staked = (await relay_round.methods
                         .total_tokens_staked()
-                        .call()).total_tokens_staked;
+                        .call()).value0;
 
                     // deposit 1 token to sync rewards
                     await depositTokens(stakingRoot, _user, _userTokenWallet, 1);
@@ -2134,7 +2134,7 @@ describe.skip("Test Staking Relay mechanic", async function () {
                 const round_num = await election.methods
                     .round_num()
                     .call()
-                    .then((t) => t.round_num);
+                    .then((t) => t.value0);
                 expect(round_num.toString()).to.be.equal(
                     "3",
                     "Bad election - round num"
@@ -2261,20 +2261,20 @@ describe.skip("Test Staking Relay mechanic", async function () {
                 const stored_relays_count = await round.methods
                     .relays_count()
                     .call()
-                    .then((t) => t.relays_count);
+                    .then((t) => t.value0);
                 const stored_total_tokens_staked = await round.methods
                     .total_tokens_staked()
                     .call()
-                    .then((t) => t.total_tokens_staked);
+                    .then((t) => t.value0);
                 const stored_reward_round_num = await round.methods
                     .reward_round_num()
                     .call()
-                    .then((t) => t.reward_round_num);
+                    .then((t) => t.value0);
                 const stored_relays_installed = round_details.relays_installed;
                 const stored_duplicate = await round.methods
                     .duplicate()
                     .call()
-                    .then((t) => t.duplicate);
+                    .then((t) => t.value0);
 
                 const expected_staked_tokens = userDeposit * 6;
 
@@ -2303,7 +2303,7 @@ describe.skip("Test Staking Relay mechanic", async function () {
                     "Bad round created - duplicate"
                 );
 
-                const round_reward = (await round.methods.round_reward().call()).round_reward;
+                const round_reward = (await round.methods.round_reward().call()).value0;
                 const staking_details_1 = await stakingRoot.methods
                     .getDetails({answerId: 0})
                     .call({ responsible: true })
@@ -2358,7 +2358,7 @@ describe.skip("Test Staking Relay mechanic", async function () {
                 const round_num = await election.methods
                     .round_num()
                     .call()
-                    .then((t) => t.round_num);
+                    .then((t) => t.value0);
                 expect(round_num.toString()).to.be.equal(
                     "4",
                     "Bad election - round num"
@@ -2491,20 +2491,20 @@ describe.skip("Test Staking Relay mechanic", async function () {
                 const stored_relays_count = await round.methods
                     .relays_count()
                     .call()
-                    .then((t) => t.relays_count);
+                    .then((t) => t.value0);
                 const stored_total_tokens_staked = await round.methods
                     .total_tokens_staked()
                     .call()
-                    .then((t) => t.total_tokens_staked);
+                    .then((t) => t.value0);
                 const stored_reward_round_num = await round.methods
                     .reward_round_num()
                     .call()
-                    .then((t) => t.reward_round_num);
+                    .then((t) => t.value0);
                 const stored_relays_installed = round_details.relays_installed;
                 const stored_duplicate = await round.methods
                     .duplicate()
                     .call()
-                    .then((t) => t.duplicate);
+                    .then((t) => t.value0);
 
                 const expected_staked_tokens = userDeposit * 6;
 
@@ -2533,7 +2533,7 @@ describe.skip("Test Staking Relay mechanic", async function () {
                     "Bad round created - duplicate"
                 );
 
-                const round_reward = (await round.methods.round_reward().call()).round_reward;
+                const round_reward = (await round.methods.round_reward().call()).value0;
                 const staking_details_1 = await stakingRoot.methods
                     .getDetails({answerId: 0})
                     .call({ responsible: true })

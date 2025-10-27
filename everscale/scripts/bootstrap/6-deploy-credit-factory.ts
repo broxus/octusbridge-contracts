@@ -40,7 +40,7 @@ const main = async () => {
         contractName: 'EventCreditFactory'
     });
 
-    const {eventClosers} = await creditFactory.methods.eventClosers().call();
+    const {value0: eventClosers} = await creditFactory.methods.eventClosers().call();
 
     for (let i = 0; i < eventClosers.length; i++) {
         await locklift.deployments.saveContract({
@@ -51,7 +51,7 @@ const main = async () => {
         console.log(`EventCloser ${(i + 1)}: ${eventClosers[i].toString()}`);
     }
 
-    const {eventDeployers} = await creditFactory.methods.eventDeployers().call();
+    const {value0: eventDeployers} = await creditFactory.methods.eventDeployers().call();
 
     for (let i = 0; i < eventDeployers.length; i++) {
         await locklift.deployments.saveContract({

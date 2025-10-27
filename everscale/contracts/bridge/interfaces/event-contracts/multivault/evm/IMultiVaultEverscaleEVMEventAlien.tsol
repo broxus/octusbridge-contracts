@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "./IEVMCallback.tsol";
 
@@ -16,9 +16,9 @@ interface IMultiVaultEverscaleEVMEventAlien is IEVMCallback {
         address token_
     ) external;
 
-    function getUnmodifiedEventData() external responsible returns(TvmCell);
+    function getUnmodifiedEventData() externalMsg internalMsg external responsible returns(TvmCell);
     
-    function getDecodedData() external responsible returns(
+    function getDecodedData() externalMsg internalMsg external responsible returns(
         address proxy_,
         address token_,
         address remainingGasTo_,

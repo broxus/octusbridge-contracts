@@ -1,6 +1,6 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 interface IRound {
-    function relayKeys() external responsible view returns(uint[] _keys);
+    function relayKeys() externalMsg internalMsg external responsible view returns(uint[] _keys);
 }

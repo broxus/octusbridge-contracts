@@ -19,6 +19,8 @@ const config = getConfig();
 
 assert(!!config, "Config should be defined");
 
+const EVENT_ACTION_STAKING = 3;
+
 const setupRoundDeployerParams = async (roundDeployer: Contract<RoundDeployerAbi>, admin: Account): Promise<void> => {
   const platformArtifacts = locklift.factory.getContractArtifacts("Platform");
 
@@ -251,7 +253,7 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
   await locklift.tracing.trace(
     proxyAlien.methods
       .setOnceEVMAlienTokenPlatformCode({
-        _tokenPlatformCode: locklift.factory.getContractArtifacts("AlienTokenWalletPlatform").code,
+        _tokenPlatformCode: locklift.factory.getContractArtifacts("TokenWalletPlatform").code,
         _remainingGasTo: admin.address,
       })
       .send({
@@ -263,7 +265,7 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
 
   console.log(
     `Set EVM token platform to alien proxy. Code hash: ${
-      locklift.factory.getContractArtifacts("AlienTokenWalletPlatform").codeHash
+      locklift.factory.getContractArtifacts("TokenWalletPlatform").codeHash
     }`,
   );
 
@@ -308,7 +310,7 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
   await locklift.tracing.trace(
     proxyAlien.methods
       .setOnceTVMAlienTokenPlatformCode({
-        _tokenPlatformCode: locklift.factory.getContractArtifacts("AlienTokenWalletPlatform").code,
+        _tokenPlatformCode: locklift.factory.getContractArtifacts("TokenWalletPlatform").code,
         _remainingGasTo: admin.address,
       })
       .send({
@@ -320,7 +322,7 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
 
   console.log(
     `Set TVM token platform to alien proxy. Code hash: ${
-      locklift.factory.getContractArtifacts("AlienTokenWalletPlatform").codeHash
+      locklift.factory.getContractArtifacts("TokenWalletPlatform").codeHash
     }`,
   );
 
@@ -500,6 +502,7 @@ const deployStakingConfigurations = async (
         startBlockNumber: config.ETH_LAST_BLOCK[chainId],
         endBlockNumber: 0,
       },
+      eventAction: EVENT_ACTION_STAKING
     };
 
     await locklift.tracing.trace(
@@ -514,6 +517,7 @@ const deployStakingConfigurations = async (
       .deriveConfigurationAddress({
         basicConfiguration: stakingEthEverConfiguration.basicConfiguration,
         networkConfiguration: stakingEthEverConfiguration.networkConfiguration,
+        eventAction: EVENT_ACTION_STAKING
       })
       .call()
       .then(r => locklift.factory.getDeployedContract("EthereumEverscaleEventConfiguration", r.value0));
@@ -550,6 +554,7 @@ const deployStakingConfigurations = async (
       startTimestamp: config.ETH_STAKING_START_TIMESTAMP,
       endTimestamp: 0,
     },
+    eventAction: EVENT_ACTION_STAKING
   };
 
   await locklift.tracing.trace(
@@ -564,6 +569,7 @@ const deployStakingConfigurations = async (
     .deriveConfigurationAddress({
       basicConfiguration: stakingEverEthConfiguration.basicConfiguration,
       networkConfiguration: stakingEverEthConfiguration.networkConfiguration,
+      eventAction: EVENT_ACTION_STAKING
     })
     .call()
     .then(r => locklift.factory.getDeployedContract("EverscaleEthereumEventConfiguration", r.value0));

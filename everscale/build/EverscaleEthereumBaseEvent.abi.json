@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.7",
 	"header": ["pubkey", "time", "expire"],
 	"functions": [
 		{
@@ -10,6 +10,22 @@
 				{"name":"_meta","type":"cell"}
 			],
 			"outputs": [
+			]
+		},
+		{
+			"name": "createdAt",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"uint32"}
+			]
+		},
+		{
+			"name": "signatures",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"map(uint256,bytes)"}
 			]
 		},
 		{
@@ -72,6 +88,22 @@
 			]
 		},
 		{
+			"name": "relay_round",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
+			"name": "round_number",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"uint32"}
+			]
+		},
+		{
 			"name": "receiveRoundAddress",
 			"inputs": [
 				{"name":"roundContract","type":"address"},
@@ -116,90 +148,9 @@
 			"outputs": [
 				{"name":"value0","type":"uint32"}
 			]
-		},
-		{
-			"name": "votes",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"votes","type":"map(uint256,uint8)"}
-			]
-		},
-		{
-			"name": "initializer",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"initializer","type":"address"}
-			]
-		},
-		{
-			"name": "meta",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"meta","type":"cell"}
-			]
-		},
-		{
-			"name": "requiredVotes",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"requiredVotes","type":"uint32"}
-			]
-		},
-		{
-			"name": "confirms",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"confirms","type":"uint16"}
-			]
-		},
-		{
-			"name": "rejects",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"rejects","type":"uint16"}
-			]
-		},
-		{
-			"name": "relay_round",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"relay_round","type":"address"}
-			]
-		},
-		{
-			"name": "round_number",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"round_number","type":"uint32"}
-			]
-		},
-		{
-			"name": "createdAt",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"createdAt","type":"uint32"}
-			]
-		},
-		{
-			"name": "signatures",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"signatures","type":"map(uint256,bytes)"}
-			]
 		}
 	],
-	"data": [
-		{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"key":1,"name":"eventInitData","type":"tuple"}
+	"getters": [
 	],
 	"events": [
 		{
@@ -274,20 +225,20 @@
 		}
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"_status","type":"uint8"},
-		{"name":"votes","type":"map(uint256,uint8)"},
-		{"name":"initializer","type":"address"},
-		{"name":"meta","type":"cell"},
-		{"name":"requiredVotes","type":"uint32"},
-		{"name":"confirms","type":"uint16"},
-		{"name":"rejects","type":"uint16"},
-		{"name":"relay_round","type":"address"},
-		{"name":"round_number","type":"uint32"},
-		{"name":"createdAt","type":"uint32"},
-		{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
-		{"name":"signatures","type":"map(uint256,bytes)"}
+		{"init":true,"name":"_pubkey","type":"fixedbytes32"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":false,"name":"_status","type":"uint8"},
+		{"init":false,"name":"votes","type":"map(uint256,uint8)"},
+		{"init":false,"name":"initializer","type":"address"},
+		{"init":false,"name":"meta","type":"cell"},
+		{"init":false,"name":"requiredVotes","type":"uint32"},
+		{"init":false,"name":"confirms","type":"uint16"},
+		{"init":false,"name":"rejects","type":"uint16"},
+		{"init":false,"name":"relay_round_","type":"address"},
+		{"init":false,"name":"round_number_","type":"uint32"},
+		{"init":false,"name":"createdAt_","type":"uint32"},
+		{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"init":true,"name":"eventInitData","type":"tuple"},
+		{"init":false,"name":"signatures_","type":"map(uint256,bytes)"}
 	]
 }

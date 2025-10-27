@@ -8,7 +8,8 @@ export const setupEthereumEverscaleEventConfiguration = async (
     owner: Account,
     staking: Contract<FactorySource["StakingMockup"]>,
     proxy: Address,
-    eventCode: string
+    eventCode: string,
+    eventAction: number
 ) => {
     const signer = (await locklift.keystore.getSigner("10"))!;
 
@@ -36,6 +37,7 @@ export const setupEthereumEverscaleEventConfiguration = async (
                 startBlockNumber: 0,
                 endBlockNumber: 0,
             },
+            eventAction
         },
         publicKey: signer.publicKey,
         value: locklift.utils.toNano(20),
@@ -54,7 +56,8 @@ export const setupEverscaleEthereumEventConfiguration = async (
     owner: Account,
     staking: Contract<FactorySource["StakingMockup"]>,
     eventEmitter: Address,
-    eventCode: string
+    eventCode: string,
+    eventAction: number
 ) => {
     const signer = (await locklift.keystore.getSigner("1"))!;
 
@@ -80,6 +83,7 @@ export const setupEverscaleEthereumEventConfiguration = async (
                 startTimestamp: 0,
                 endTimestamp: 0,
             },
+            eventAction
         },
         publicKey: signer.publicKey,
         value: locklift.utils.toNano(20),

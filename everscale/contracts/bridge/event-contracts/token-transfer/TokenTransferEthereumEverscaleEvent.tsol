@@ -1,11 +1,9 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader expire;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 import "./../../interfaces/IEventNotificationReceiver.tsol";
 import "./../../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
 import "./../../interfaces/proxy/IEthereumEverscaleProxy.tsol";
+import "./../../libraries/Gas.tsol";
 import "./../../../utils/ErrorCodes.tsol";
 
 import "./../base/evm/EthereumEverscaleBaseEvent.tsol";
@@ -13,6 +11,8 @@ import "./../../../utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
+#[ExternalMessage(time, pubkey, expire)]
+#[CustomReplayProt]
 contract TokenTransferEthereumEverscaleEvent is EthereumEverscaleBaseEvent, ProxyTokenTransferCellEncoder {
     constructor(
         address _initializer,
@@ -39,6 +39,7 @@ contract TokenTransferEthereumEverscaleEvent is EthereumEverscaleBaseEvent, Prox
         notifyEventStatusChanged();
 
         IEthereumEverscaleProxy(eventInitData.configuration).onEventConfirmed{
+            value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, initializer);
     }
@@ -61,7 +62,7 @@ contract TokenTransferEthereumEverscaleEvent is EthereumEverscaleBaseEvent, Prox
         @returns owner_pubkey Token receiver public key
         @returns owner_address Token receiver address (derived from the wid and owner_addr)
     */
-    function getDecodedData() public view responsible returns (
+    function getDecodedData() externalMsg internalMsg public view responsible returns (
         uint128 tokens,
         int8 wid,
         uint256 owner_addr,
@@ -89,8 +90,9 @@ contract TokenTransferEthereumEverscaleEvent is EthereumEverscaleBaseEvent, Prox
     function notifyEventStatusChanged() internal view {
         address owner = getOwner();
 
-        if (owner.value != 0) {
+        if (!owner.isStdZero()) {
             IEventNotificationReceiver(owner).notifyEventStatusChanged{
+                value: gasToValue(Gas.NOTIFICATION_GAS),
                 flag: 0,
                 bounce: false
             }(status());

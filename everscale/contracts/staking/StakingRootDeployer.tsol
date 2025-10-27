@@ -1,14 +1,17 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "./StakingV1_2.tsol";
 
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract StakingRootDeployer {
     uint256 static nonce;
     TvmCell static stakingCode;
 
     uint8 constant WRONG_PUBKEY = 101;
+    coins constant DEPLOY_GAS_VALUE = 100_000;
 
-    constructor() {
+    constructor() externalMsg {
         require (tvm.pubkey() == msg.pubkey(), WRONG_PUBKEY);
         tvm.accept();
     }
@@ -23,21 +26,19 @@ contract StakingRootDeployer {
         address _bridge_event_config_ton_sol,
         address _tokenRoot,
         uint32 _deploy_nonce
-    ) public view returns(address) {
+    ) externalMsg public view returns(address) {
         require(tvm.pubkey() == msg.pubkey(), WRONG_PUBKEY);
         tvm.accept();
+
         return new StakingV1_2 {
-            stateInit: tvm.buildStateInit({
-                pubkey: tvm.pubkey(),
-                code: stakingCode,
-                contr: StakingV1_2,
-                varInit: {
-                    deploy_nonce: _deploy_nonce,
-                    deployer: address(this)
-                }
-            }),
-            value: 0,
-            flag: 128
+            value: address(this).balance - gasToValue(DEPLOY_GAS_VALUE),
+            flag: 0,
+            code: stakingCode,
+            pubkey: tvm.pubkey(),
+            varInit: {
+                deploy_nonce: _deploy_nonce,
+                deployer: address(this)
+            }
         }(_admin, _dao_root, _rewarder, _rescuer, _bridge_event_config_eth_ton, _bridge_event_config_ton_eth, _bridge_event_config_ton_sol, _tokenRoot);
     }
 }

@@ -285,9 +285,9 @@ describe("Test EVM native multivault pipeline", async function () {
 
     it("Check event required votes", async () => {
       const requiredVotes = await eventContract.methods
-        .requiredVotes()
+        .getDetails({answerId: 0})
         .call()
-        .then(t => parseInt(t.requiredVotes, 10));
+        .then(t => parseInt(t._requiredVotes, 10));
 
       const relays = await eventContract.methods
         .getVoters({
@@ -308,9 +308,9 @@ describe("Test EVM native multivault pipeline", async function () {
       const details = await eventContract.methods.getDetails({ answerId: 0 }).call({ responsible: true });
 
       const requiredVotes = await eventContract.methods
-        .requiredVotes()
+        .getDetails({answerId: 0})
         .call()
-        .then(t => parseInt(t.requiredVotes, 10));
+        .then(t => parseInt(t._requiredVotes, 10));
 
       expect(Number(details.balance)).to.be.greaterThan(0, "Wrong balance");
 

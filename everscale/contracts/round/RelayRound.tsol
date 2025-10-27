@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 import "./interfaces/IRelayRound.tsol";
@@ -7,18 +7,21 @@ import "./interfaces/IRoundDeployer.tsol";
 import "./libraries/Gas.tsol";
 import "./libraries/PlatformTypes.tsol";
 import "./../utils/ErrorCodes.tsol";
+import "./../utils/common/Platform.tsol";
 
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
-import "@broxus/contracts/contracts/platform/Platform.tsol";
 
 
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract RelayRound is IRelayRound {
     event RelayRoundCodeUpgraded(uint32 code_version);
 
     bool relays_installed;
-    uint32 public relays_count;
-    uint32 public start_time;
-    uint32 public end_time;
+
+    uint32 _relays_count;
+    uint32 public _start_time;
+    uint32 public _end_time;
 
     uint32 round_num; // setup from initialData
     uint256[] ton_keys; // array of ton pubkeys
@@ -32,13 +35,25 @@ contract RelayRound is IRelayRound {
     // Cant be deployed directly
     constructor() { revert(); }
 
-    function getDetails() external view override responsible returns (RelayRoundDetails) {
+    function relays_count() externalMsg public view returns (uint32) {
+        return _relays_count;
+    }
+
+    function start_time() externalMsg public view returns (uint32) {
+        return _start_time;
+    }
+
+    function end_time() externalMsg public view returns (uint32) {
+        return _end_time;
+    }
+
+    function getDetails() externalMsg internalMsg external view override responsible returns (RelayRoundDetails) {
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }RelayRoundDetails(
             root, round_num, ton_keys, eth_addrs, relays_installed, current_version
         );
     }
 
-    function relayKeys() public view responsible returns (uint256[]) {
+    function relayKeys() externalMsg internalMsg public view responsible returns (uint256[]) {
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } ton_keys;
     }
 
@@ -54,11 +69,11 @@ contract RelayRound is IRelayRound {
         ton_keys = _ton_keys;
         eth_addrs = _eth_keys;
 
-        relays_count = uint32(_ton_keys.length);
+        _relays_count = uint32(_ton_keys.length);
 
         relays_installed = true;
         IRoundDeployer(root).onRelayRoundInitialized{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-            round_num, start_time, end_time, relays_count, eth_addrs, ton_keys
+            round_num, _start_time, _end_time, _relays_count, eth_addrs, ton_keys
         );
     }
 
@@ -66,7 +81,7 @@ contract RelayRound is IRelayRound {
     // should be called root after +2 rounds!
     function destroy() external override onlyRoot {
         // small safety check
-        require (block.timestamp >= end_time, ErrorCodes.RELAY_ROUND_NOT_ENDED);
+        require (block.timestamp >= _end_time, ErrorCodes.RELAY_ROUND_NOT_ENDED);
 
         root.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
@@ -92,17 +107,17 @@ contract RelayRound is IRelayRound {
             round_num = _round_num;
             current_version = _current_version;
 
-            start_time = params.load(uint32);
-            end_time = params.load(uint32);
+            _start_time = params.load(uint32);
+            _end_time = params.load(uint32);
         } else {
             // UPGRADE from broken version
             tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 0);
 
             (
                 relays_installed,
-                relays_count,
-                start_time,
-                end_time,
+                _relays_count,
+                _start_time,
+                _end_time,
                 eth_addrs,
                 ton_keys
             ) = abi.decode(
@@ -147,9 +162,9 @@ contract RelayRound is IRelayRound {
 
             TvmCell other_data = abi.encode(
                 relays_installed,
-                relays_count,
-                start_time,
-                end_time,
+                _relays_count,
+                _start_time,
+                _end_time,
                 eth_addrs,
                 ton_keys
             );
@@ -184,9 +199,9 @@ contract RelayRound is IRelayRound {
                 refs:
                     1: data_1
                         bool relays_installed
-                        uint32 relays_count
-                        uint32 start_time
-                        uint32 end_time
+                        uint32 _relays_count
+                        uint32 _start_time
+                        uint32 _end_time
                         uint160[] eth_addrs
                         uint256[] ton_keys
     */

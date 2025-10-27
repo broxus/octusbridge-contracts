@@ -1,40 +1,46 @@
-pragma ever-solidity >= 0.62.0;
-pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 
 import "./../../interfaces/event-contracts/IEverscaleEthereumEvent.tsol";
 import "./../../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
 
-import "./../../event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol";
+import "./../../event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol";
+import "./../../event-contracts/multivault/evm/MultiVaultEverscaleEVMEventNative.tsol";
+import "./../../event-contracts/staking/StakingEverscaleEthereumEvent.tsol";
+import "./../../event-contracts/token-transfer/TokenTransferEverscaleEthereumEvent.tsol";
+import "./../../event-contracts/dao/DaoEthereumActionEvent.tsol";
 
 import "./../../../utils/TransferUtils.tsol";
 import "./../../../utils/ErrorCodes.tsol";
+import "../../../utils/common/InternalOwner.tsol";
 
-import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
 /// @title Basic Everscale-Ethereum event configuration contract
 /// @author https://github.com/broxus
+#[ExternalMessage(time, expire)]
+#[TimeReplayProt]
 contract EverscaleEthereumEventConfiguration is
     IEverscaleEthereumEventConfiguration,
     TransferUtils,
     InternalOwner,
     CheckPubKey
 {
-    BasicConfiguration public static basicConfiguration;
-    EverscaleEthereumEventConfiguration public static networkConfiguration;
+    BasicConfiguration static basicConfiguration;
+    EverscaleEthereumEventConfiguration static networkConfiguration;
+    EventAction static eventAction;
 
-    TvmCell public meta;
-    uint64 public flags;
+    TvmCell meta;
+    uint64 flags;
 
     /// @param _owner Event configuration owner
     constructor(
         address _owner,
         TvmCell _meta,
         uint64 _flags
-    ) checkPubKey reserveTargetBalance() {
+    ) externalMsg internalMsg checkPubKey reserveTargetBalance() {
         tvm.accept();
 
         setOwnership(_owner);
@@ -47,6 +53,35 @@ contract EverscaleEthereumEventConfiguration is
             bounce: false,
             flag: MsgFlag.ALL_NOT_RESERVED
         });
+    }
+
+    /// @dev Get configuration details.
+    /// @return _basicConfiguration Basic configuration settings
+    /// @return _networkConfiguration Network specific configuration settings
+    function getDetails() externalMsg internalMsg override public view responsible returns(
+        BasicConfiguration _basicConfiguration,
+        EverscaleEthereumEventConfiguration _networkConfiguration,
+        TvmCell _meta
+    ) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
+            basicConfiguration,
+            networkConfiguration,
+            meta
+        );
+    }
+
+    /// @dev Get event configuration type
+    /// @return _type Configuration type (enum EventType)
+    function getType() externalMsg internalMsg override public pure responsible returns(EventType _type) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.EverscaleEthereum;
+    }
+
+    function getFlags() externalMsg internalMsg override public view responsible returns(uint64 _flags) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} flags;
+    }
+
+    function getEventAction() externalMsg internalMsg override public view responsible returns(EventAction _eventAction) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} eventAction;
     }
 
     /// @notice Set new configuration meta.
@@ -129,19 +164,11 @@ contract EverscaleEthereumEventConfiguration is
 
         IEverscaleEthereumEvent.EverscaleEthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
 
-        address eventContract = deriveEventAddress(eventVoteData);
+        address eventContract = _deriveEventAddress(eventInitData);
 
         emit NewEventContract(eventContract);
 
-        new EverscaleEthereumBaseEvent{
-            value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED,
-            code: basicConfiguration.eventCode,
-            pubkey: 0,
-            varInit: {
-                eventInitData: eventInitData
-            }
-        }(msg.sender, meta);
+        _createEventContract(eventInitData, 0, MsgFlag.ALL_NOT_RESERVED);
     }
 
     /*
@@ -152,49 +179,146 @@ contract EverscaleEthereumEventConfiguration is
     function deriveEventAddress(
         IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData
     )
+        externalMsg
+        internalMsg
         override
-        public
+        external
         view
         responsible
     returns (
         address eventContract
     ) {
         IEverscaleEthereumEvent.EverscaleEthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
-
-        TvmCell stateInit = tvm.buildStateInit({
-            contr: EverscaleEthereumBaseEvent,
-            varInit: {
-                eventInitData: eventInitData
-            },
-            pubkey: 0,
-            code: basicConfiguration.eventCode
-        });
-
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address(tvm.hash(stateInit));
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} _deriveEventAddress(eventInitData);
     }
 
-    /// @dev Get configuration details.
-    /// @return _basicConfiguration Basic configuration settings
-    /// @return _networkConfiguration Network specific configuration settings
-    function getDetails() override public view responsible returns(
-        BasicConfiguration _basicConfiguration,
-        EverscaleEthereumEventConfiguration _networkConfiguration,
-        TvmCell _meta
-    ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
-            basicConfiguration,
-            networkConfiguration,
-            meta
-        );
+    function _createEventContract(
+        IEverscaleEthereumEvent.EverscaleEthereumEventInitData _eventInitData,
+        coins _value,
+        uint8 _flag
+    ) internal view {
+        if (eventAction == EventAction.MultivaultAlien) {
+            new MultiVaultEverscaleEVMEventAlien{
+                value: _value,
+                flag: _flag,
+                code: basicConfiguration.eventCode,
+                pubkey: 0,
+                varInit: {
+                    eventInitData: _eventInitData
+                }
+            }(msg.sender, meta);
+
+            return;
+        }
+
+        if (eventAction == EventAction.MultivaultNative) {
+            new MultiVaultEverscaleEVMEventNative{
+                value: _value,
+                flag: _flag,
+                code: basicConfiguration.eventCode,
+                pubkey: 0,
+                varInit: {
+                    eventInitData: _eventInitData
+                }
+            }(msg.sender, meta);
+
+            return;
+        }
+
+        if (eventAction == EventAction.TokenTransfer) {
+            new TokenTransferEverscaleEthereumEvent{
+                value: _value,
+                flag: _flag,
+                code: basicConfiguration.eventCode,
+                pubkey: 0,
+                varInit: {
+                    eventInitData: _eventInitData
+                }
+            }(msg.sender, meta);
+
+            return;
+        }
+
+        if (eventAction == EventAction.Staking) {
+            new StakingEverscaleEthereumEvent{
+                value: _value,
+                flag: _flag,
+                code: basicConfiguration.eventCode,
+                pubkey: 0,
+                varInit: {
+                    eventInitData: _eventInitData
+                }
+            }(msg.sender, meta);
+
+            return;
+        }
+
+        if (eventAction == EventAction.Dao) {
+            new DaoEthereumActionEvent{
+                value: _value,
+                flag: _flag,
+                code: basicConfiguration.eventCode,
+                pubkey: 0,
+                varInit: {
+                    eventInitData: _eventInitData
+                }
+            }(msg.sender, meta);
+        }
     }
 
-    /// @dev Get event configuration type
-    /// @return _type Configuration type (enum EventType)
-    function getType() override public pure responsible returns(EventType _type) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.EverscaleEthereum;
-    }
+    function _deriveEventAddress(
+        IEverscaleEthereumEvent.EverscaleEthereumEventInitData eventInitData
+    ) internal view returns (address _event) {
 
-    function getFlags() override public view responsible returns(uint64 _flags) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} flags;
+        TvmCell stateInit;
+
+        if (eventAction == EventAction.MultivaultAlien) {
+            stateInit = abi.encodeStateInit({
+                contr: MultiVaultEverscaleEVMEventAlien,
+                varInit: {
+                    eventInitData: eventInitData
+                },
+                pubkey: 0,
+                code: basicConfiguration.eventCode
+            });
+        } else if (eventAction == EventAction.MultivaultNative) {
+            stateInit = abi.encodeStateInit({
+                contr: MultiVaultEverscaleEVMEventNative,
+                varInit: {
+                    eventInitData: eventInitData
+                },
+                pubkey: 0,
+                code: basicConfiguration.eventCode
+            });
+        } else if (eventAction == EventAction.TokenTransfer) {
+            stateInit = abi.encodeStateInit({
+                contr: TokenTransferEverscaleEthereumEvent,
+                varInit: {
+                    eventInitData: eventInitData
+                },
+                pubkey: 0,
+                code: basicConfiguration.eventCode
+            });
+        } else if (eventAction == EventAction.Staking) {
+            stateInit = abi.encodeStateInit({
+                contr: StakingEverscaleEthereumEvent,
+                varInit: {
+                    eventInitData: eventInitData
+                },
+                pubkey: 0,
+                code: basicConfiguration.eventCode
+            });
+        } else if (eventAction == EventAction.Dao) {
+            stateInit = abi.encodeStateInit({
+                contr: DaoEthereumActionEvent,
+                varInit: {
+                    eventInitData: eventInitData
+                },
+                pubkey: 0,
+                code: basicConfiguration.eventCode
+            });
+        }
+
+        _event = address(tvm.hash(stateInit));
     }
 }

@@ -1,6 +1,6 @@
 import { TransactionId, Address } from "locklift";
 
-import { BridgeAbi } from "../../build_prod/factorySource";
+import { BridgeAbi } from "../../build/factorySource";
 
 const main = async (): Promise<void> => {
   const bridge = locklift.deployments.getContract<BridgeAbi>("Bridge");

@@ -1,24 +1,22 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
-
-pragma AbiHeader expire;
-pragma AbiHeader pubkey;
-
-import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 
+import "../../utils/common/InternalOwner.tsol";
 import './EventDeployer.tsol';
 import './EventCloser.tsol';
 
 import './EventCreditGas.tsol';
 
 
+#[ExternalMessage(time, pubkey, expire)]
+#[TimeReplayProt]
 contract EventCreditFactory is InternalOwner, RandomNonce {
     TvmCell eventCloserCode;
     TvmCell eventDeployerCode;
 
-    address[] public eventClosers;
-    address[] public eventDeployers;
+    address[] _eventClosers;
+    address[] _eventDeployers;
 
     constructor(
         address owner_,
@@ -27,7 +25,7 @@ contract EventCreditFactory is InternalOwner, RandomNonce {
         TvmCell eventDeployerCode_,
         uint8 eventClosersCount,
         uint8 eventDeployersCount
-    ) {
+    ) externalMsg {
         tvm.accept();
 
         eventCloserCode = eventCloserCode_;
@@ -49,7 +47,7 @@ contract EventCreditFactory is InternalOwner, RandomNonce {
                 }
             }(key_);
 
-            eventDeployers.push(deployer);
+            _eventDeployers.push(deployer);
         }
 
         // Deploy event closers
@@ -64,17 +62,25 @@ contract EventCreditFactory is InternalOwner, RandomNonce {
                     _randomNonce: i,
                     factory: address(this)
                 }
-            }(key_, eventDeployers);
+            }(key_, _eventDeployers);
 
-            eventClosers.push(closer);
+            _eventClosers.push(closer);
         }
+    }
+
+    function eventClosers() externalMsg public view returns (address[]) {
+        return _eventClosers;
+    }
+
+    function eventDeployers() externalMsg public view returns (address[]) {
+        return _eventDeployers;
     }
 
     receive() external view {
         if(msg.value >= 3 ever) {
-            uint128 value_per_deployer = (msg.value - 3 ever) / uint8(eventDeployers.length);
+            coins value_per_deployer = (msg.value - 3 ever) / uint8(_eventDeployers.length);
 
-            for (address deployer: eventDeployers) {
+            for (address deployer: _eventDeployers) {
                 deployer.transfer({
                     value: value_per_deployer,
                     bounce: false,
@@ -85,20 +91,20 @@ contract EventCreditFactory is InternalOwner, RandomNonce {
     }
 
     function drainDeployers() onlyOwner view external {
-        for (address deployer: eventDeployers) {
+        for (address deployer: _eventDeployers) {
             EventDeployer(deployer).drain{
-                value: gasToValue(EventCreditGas.DRAIN_EVENT_DEPLOYER_GAS, address(this).wid),
+                value: gasToValue(EventCreditGas.DRAIN_EVENT_DEPLOYER_GAS),
                 bounce: false,
                 flag: 0
-            }(owner);
+            }(owner());
         }
     }
 
     function drainDeployer(address deployer, address receiver) onlyOwner view external {
-        require(receiver.value != 0, ErrorCodes.WRONG_GAS_RECIPIENT);
+        require(!receiver.isStdZero(), ErrorCodes.WRONG_GAS_RECIPIENT);
 
         EventDeployer(deployer).drain{
-                value: gasToValue(EventCreditGas.DRAIN_EVENT_DEPLOYER_GAS, address(this).wid),
+                value: gasToValue(EventCreditGas.DRAIN_EVENT_DEPLOYER_GAS),
                 bounce: false,
                 flag: 0
             }(receiver);

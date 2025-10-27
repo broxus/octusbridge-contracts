@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.7",
 	"header": ["time"],
 	"functions": [
 		{
@@ -267,12 +267,64 @@
 			]
 		},
 		{
+			"name": "proxyMultiVaultAlien",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
+			"name": "coldVault",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
+			"name": "vaultWithdrawer",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
+			"name": "wNativeAddresses",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"map(address,bool)"}
+			]
+		},
+		{
 			"name": "apiVersion",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
 				{"name":"value0","type":"uint8"}
+			]
+		},
+		{
+			"name": "getConfiguration",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"}],"name":"value0","type":"tuple"},
+				{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"solanaConfiguration","type":"address"}],"name":"value1","type":"tuple"},
+				{"components":[{"name":"incomingConfigurations","type":"address[]"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"defaultFee","type":"tuple"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"fees","type":"map(address,tuple)"},{"name":"tokenFeeCode","type":"cell"}],"name":"value2","type":"tuple"}
+			]
+		},
+		{
+			"name": "getEventAddressKeeperCode",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
 			]
 		},
 		{
@@ -305,26 +357,6 @@
 				{"name":"_wNative","type":"address"}
 			],
 			"outputs": [
-			]
-		},
-		{
-			"name": "getConfiguration",
-			"inputs": [
-				{"name":"answerId","type":"uint32"}
-			],
-			"outputs": [
-				{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"}],"name":"value0","type":"tuple"},
-				{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"solanaConfiguration","type":"address"}],"name":"value1","type":"tuple"},
-				{"components":[{"name":"incomingConfigurations","type":"address[]"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"defaultFee","type":"tuple"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"fees","type":"map(address,tuple)"},{"name":"tokenFeeCode","type":"cell"}],"name":"value2","type":"tuple"}
-			]
-		},
-		{
-			"name": "getEventAddressKeeperCode",
-			"inputs": [
-				{"name":"answerId","type":"uint32"}
-			],
-			"outputs": [
-				{"name":"value0","type":"cell"}
 			]
 		},
 		{
@@ -392,6 +424,14 @@
 			]
 		},
 		{
+			"name": "owner",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
 			"name": "transferOwnership",
 			"inputs": [
 				{"name":"newOwner","type":"address"}
@@ -405,66 +445,9 @@
 			],
 			"outputs": [
 			]
-		},
-		{
-			"name": "owner",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"owner","type":"address"}
-			]
-		},
-		{
-			"name": "dex_middleware",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"dex_middleware","type":"address"}
-			]
-		},
-		{
-			"name": "proxyMultiVaultAlien",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"proxyMultiVaultAlien","type":"address"}
-			]
-		},
-		{
-			"name": "coldVault",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"coldVault","type":"address"}
-			]
-		},
-		{
-			"name": "vaultWithdrawer",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"vaultWithdrawer","type":"address"}
-			]
-		},
-		{
-			"name": "wNativeAddresses",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"wNativeAddresses","type":"map(address,bool)"}
-			]
-		},
-		{
-			"name": "_randomNonce",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"_randomNonce","type":"uint256"}
-			]
 		}
 	],
-	"data": [
-		{"key":1,"name":"_randomNonce","type":"uint256"}
+	"getters": [
 	],
 	"events": [
 		{
@@ -533,23 +516,23 @@
 		}
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"owner","type":"address"},
-		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"}],"name":"evmConfiguration","type":"tuple"},
-		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"solanaConfiguration","type":"address"}],"name":"solanaConfiguration","type":"tuple"},
-		{"components":[{"name":"incomingConfigurations","type":"address[]"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"defaultFee","type":"tuple"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"fees","type":"map(address,tuple)"},{"name":"tokenFeeCode","type":"cell"}],"name":"tvmConfiguration","type":"tuple"},
-		{"name":"api_version","type":"uint8"},
-		{"name":"dex_middleware","type":"address"},
-		{"name":"proxyMultiVaultAlien","type":"address"},
-		{"name":"eventAddressKeeperCode","type":"cell"},
-		{"name":"platformCode","type":"cell"},
-		{"components":[{"name":"incomingLimit","type":"optional(uint128)"},{"name":"dailyIncomingVolume","type":"uint128"},{"name":"outgoingLimit","type":"optional(uint128)"},{"name":"dailyOutgoingVolume","type":"uint128"},{"name":"dayStartTimestamp","type":"uint32"}],"name":"tokenToDailyLimits","type":"map(address,tuple)"},
-		{"name":"limitApprover","type":"address"},
-		{"name":"coldVault","type":"address"},
-		{"name":"vaultWithdrawer","type":"address"},
-		{"name":"wNativeAddresses","type":"map(address,bool)"},
-		{"name":"_randomNonce","type":"uint256"}
+		{"init":true,"name":"_pubkey","type":"fixedbytes32"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":false,"name":"_owner","type":"address"},
+		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"}],"init":false,"name":"evmConfiguration","type":"tuple"},
+		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"solanaConfiguration","type":"address"}],"init":false,"name":"solanaConfiguration","type":"tuple"},
+		{"components":[{"name":"incomingConfigurations","type":"address[]"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"defaultFee","type":"tuple"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"fees","type":"map(address,tuple)"},{"name":"tokenFeeCode","type":"cell"}],"init":false,"name":"tvmConfiguration","type":"tuple"},
+		{"init":false,"name":"api_version","type":"uint8"},
+		{"init":false,"name":"dexMiddleware","type":"address"},
+		{"init":false,"name":"proxyMultiVaultAlien_","type":"address"},
+		{"init":false,"name":"eventAddressKeeperCode","type":"cell"},
+		{"init":false,"name":"platformCode","type":"cell"},
+		{"components":[{"name":"incomingLimit","type":"optional(uint128)"},{"name":"dailyIncomingVolume","type":"uint128"},{"name":"outgoingLimit","type":"optional(uint128)"},{"name":"dailyOutgoingVolume","type":"uint128"},{"name":"dayStartTimestamp","type":"uint32"}],"init":false,"name":"tokenToDailyLimits","type":"map(address,tuple)"},
+		{"init":false,"name":"limitApprover","type":"address"},
+		{"init":false,"name":"coldVault_","type":"address"},
+		{"init":false,"name":"vaultWithdrawer_","type":"address"},
+		{"init":false,"name":"wNativeAddresses_","type":"map(address,bool)"},
+		{"init":true,"name":"_randomNonce","type":"uint256"}
 	]
 }

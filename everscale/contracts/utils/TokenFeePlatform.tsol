@@ -2,6 +2,8 @@ pragma ever-solidity >= 0.68.0;
 
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract TokenFeePlatform {
     address static root;
     uint8 static platformType;

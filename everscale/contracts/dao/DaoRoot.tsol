@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "./Proposal.tsol";
 
@@ -15,47 +15,49 @@ import "./interfaces/IProposer.tsol";
 import "./interfaces/IUpgradable.tsol";
 
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
-import "@broxus/contracts/contracts/platform/Platform.tsol";
 import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 
 import "../utils/Delegate.tsol";
 import "../utils/cell-encoder/DaoCellEncoder.tsol";
+import "../utils/common/Platform.tsol";
 import "../bridge/interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
 
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey {
 
-    uint8 public constant proposalMaxOperations = 10;
-    uint16 public constant proposalMaxDescriptionLen = 4096;
+    uint8 constant proposalMaxOperations = 10;
+    uint16 constant proposalMaxDescriptionLen = 4096;
 
-    uint128 public constant MIN_PROPOSAL_THRESHOLD = 10_000 ever;
-    uint128 public constant MAX_PROPOSAL_THRESHOLD = 7_000_000 ever;
-    uint128 public constant MIN_PROPOSAL_QUORUM = 50_000 ever;
-    uint128 public constant MAX_PROPOSAL_QUORUM = 7_000_000 ever;
-    uint32 public constant MIN_VOTING_PERIOD = 24 hours;
-    uint32 public constant MAX_VOTING_PERIOD = 30 days;
-    uint32 public constant MIN_VOTING_DELAY = 24 hours;
-    uint32 public constant MAX_VOTING_DELAY = 30 days;
-    uint32 public constant MIN_TIME_LOCK = 24 hours;
-    uint32 public constant MAX_TIME_LOCK = 30 days;
-    uint32 public constant MIN_GRACE_PERIOD = 24 hours;
-    uint32 public constant MAX_GRACE_PERIOD = 30 days;
+    uint128 constant MIN_PROPOSAL_THRESHOLD = 10_000 ever;
+    uint128 constant MAX_PROPOSAL_THRESHOLD = 7_000_000 ever;
+    uint128 constant MIN_PROPOSAL_QUORUM = 50_000 ever;
+    uint128 constant MAX_PROPOSAL_QUORUM = 7_000_000 ever;
+    uint32 constant MIN_VOTING_PERIOD = 24 hours;
+    uint32 constant MAX_VOTING_PERIOD = 30 days;
+    uint32 constant MIN_VOTING_DELAY = 24 hours;
+    uint32 constant MAX_VOTING_DELAY = 30 days;
+    uint32 constant MIN_TIME_LOCK = 24 hours;
+    uint32 constant MAX_TIME_LOCK = 30 days;
+    uint32 constant MIN_GRACE_PERIOD = 24 hours;
+    uint32 constant MAX_GRACE_PERIOD = 30 days;
 
     uint32 static _nonce;
 
-    address public stakingRoot;
-    address public ethereumActionEventConfiguration;
-    uint128 public deployEventValue;
+    address stakingRoot;
+    address ethereumActionEventConfiguration;
+    coins deployEventValue;
 
-    uint32 public proposalCount;
-    ProposalConfiguration public proposalConfiguration;
+    uint32 proposalCount;
+    ProposalConfiguration _proposalConfiguration;
 
-    TvmCell public proposalCode;
-    TvmCell public platformCode;
+    TvmCell proposalCode;
+    TvmCell platformCode;
 
-    uint16 public proposalVersion;
+    uint16 proposalVersion;
 
-    address public admin;
-    address public pendingAdmin;
+    address admin;
+    address pendingAdmin;
 
     modifier onlyAdmin() {
         if (msg.sender != admin) {
@@ -78,44 +80,47 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
         TvmCell platformCode_,
         ProposalConfiguration proposalConfiguration_,
         address admin_
-    ) checkPubKey {
+    ) externalMsg checkPubKey {
         require(admin_ != address(0), DaoErrors.ZERO_ADDRESS);
         checkProposalConfiguration(proposalConfiguration_);
         tvm.accept();
         platformCode = platformCode_;
-        proposalConfiguration = proposalConfiguration_;
+        _proposalConfiguration = proposalConfiguration_;
         admin = admin_;
     }
 
     /*******************
     * Getter functions *
     *******************/
+    function proposalConfiguration() externalMsg public view returns (ProposalConfiguration) {
+        return _proposalConfiguration;
+    }
 
-    function getAdmin() override public responsible view returns (address) {
+    function getAdmin() externalMsg internalMsg override public responsible view returns (address) {
          return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} admin;
     }
 
-    function getPendingAdmin() override public responsible view returns (address) {
+    function getPendingAdmin() externalMsg internalMsg override public responsible view returns (address) {
          return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} pendingAdmin;
     }
 
-    function getProposalCount() override public responsible view returns (uint32) {
+    function getProposalCount() externalMsg internalMsg override public responsible view returns (uint32) {
          return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} proposalCount;
     }
 
-    function getStakingRoot() override public responsible view returns (address) {
+    function getStakingRoot() externalMsg internalMsg override public responsible view returns (address) {
          return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} stakingRoot;
     }
 
-    function getEthereumActionEventConfiguration() override public responsible view returns (address, uint128) {
+    function getEthereumActionEventConfiguration() externalMsg internalMsg override public responsible view returns (address, coins) {
          return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (ethereumActionEventConfiguration, deployEventValue);
     }
 
-    function expectedProposalAddress(uint32 proposalId) override public responsible view returns (address) {
+    function expectedProposalAddress(uint32 proposalId) externalMsg internalMsg override public responsible view returns (address) {
         return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address(tvm.hash(buildProposalStateInit(proposalId)));
     }
 
-    function expectedStakingAccountAddress(address accountOwner) override public responsible view returns (address) {
+    function expectedStakingAccountAddress(address accountOwner) externalMsg internalMsg override public responsible view returns (address) {
         return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address(tvm.hash(buildStakingAccountStateInit(accountOwner)));
     }
 
@@ -148,7 +153,7 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
         IStakingAccount(expectedStakingAccountAddress(msg.sender)).propose{
             value: 0,
             flag: MsgFlag.REMAINING_GAS
-        }(proposalData.toCell(), proposalConfiguration.threshold);
+        }(proposalData.toCell(), _proposalConfiguration.threshold);
     }
 
     function deployProposal(
@@ -164,19 +169,19 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
             TonAction[] tonActions,
             EthAction[] ethActions,
             string description
-        ) = s.loadFunctionParams(propose);
+        ) = abi.decodeFunctionParams(propose, s);
 
         proposalCount++;
         emit ProposalCreated(proposalCount, accountOwner, tonActions, ethActions, description);
         IStakingAccount(msg.sender).onProposalDeployed{
-            value: gasToValue(Gas.PROPOSAL_DEPLOYED_CALLBACK_GAS, address(this).wid),
+            value: gasToValue(Gas.PROPOSAL_DEPLOYED_CALLBACK_GAS),
             flag: MsgFlag.SENDER_PAYS_FEES,
             bounce: false
         }(nonce, proposalCount, answerId);
         TvmCell params = abi.encode(
             stakingRoot, accountOwner,
             description, tonActions,
-            ethActions, proposalConfiguration,
+            ethActions, _proposalConfiguration,
             proposalVersion
         );
         new Platform{
@@ -244,13 +249,13 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
     function calcTonActionsValue(TonAction[] actions) public pure returns (uint128 totalValue) {
         totalValue = 0;
         for (uint i = 0; i < actions.length; i++) {
-            totalValue += (actions[i].value + gasToValue(Gas.EXECUTE_TON_ACTION_GAS, address(this).wid));
+            totalValue += (actions[i].value + gasToValue(Gas.EXECUTE_TON_ACTION_GAS));
         }
     }
 
     function calcEthActionsValue(
         EthAction[] actions
-    ) public view returns (uint128 totalValue) {
+    ) public view returns (coins totalValue) {
         totalValue = 0;
         mapping(uint32 => bool) chains;
         for (uint i = 0; i < actions.length; i++) {
@@ -259,7 +264,7 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
                 totalValue += deployEventValue;
                 chains[chainId] = true;
             }
-            totalValue += gasToValue(Gas.EXECUTE_ETH_ACTION_GAS, address(this).wid);
+            totalValue += gasToValue(Gas.EXECUTE_ETH_ACTION_GAS);
         }
     }
 
@@ -268,7 +273,7 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
     }
 
     function buildStakingAccountStateInit(address accountOwner) private view returns (TvmCell) {
-        return tvm.buildStateInit({
+        return abi.encodeStateInit({
             contr: Platform,
             varInit: {
                 root: stakingRoot,
@@ -282,7 +287,7 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
     }
 
     function _buildInitData(PlatformType platformType, TvmCell initialData) private view returns (TvmCell) {
-        return tvm.buildStateInit({
+        return abi.encodeStateInit({
             contr: Platform,
             varInit: {
                 root: address(this),
@@ -351,10 +356,10 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
 
     function updateEthereumActionEventConfiguration(
         address newConfiguration,
-        uint128 newDeployEventValue
+        coins newDeployEventValue
     ) override public onlyAdmin {
         require(newConfiguration != address(0), DaoErrors.ZERO_ADDRESS);
-        require(newDeployEventValue > gasToValue(Gas.DEPLOY_EVENT_MIN_GAS, address(this).wid), DaoErrors.VALUE_TOO_LOW);
+        require(newDeployEventValue > gasToValue(Gas.DEPLOY_EVENT_MIN_GAS), DaoErrors.VALUE_TOO_LOW);
 
         emit EthereumActionEventConfigurationUpdated(
             ethereumActionEventConfiguration,
@@ -379,8 +384,8 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
             newQuorumVotes >= MIN_PROPOSAL_QUORUM && newQuorumVotes <= MAX_PROPOSAL_QUORUM,
             DaoErrors.WRONG_QUORUM
         );
-        emit ProposalQuorumVotesUpdated(proposalConfiguration.quorumVotes, newQuorumVotes);
-        proposalConfiguration.quorumVotes = newQuorumVotes;
+        emit ProposalQuorumVotesUpdated(_proposalConfiguration.quorumVotes, newQuorumVotes);
+        _proposalConfiguration.quorumVotes = newQuorumVotes;
         admin.transfer({value: 0, flag: MsgFlag.REMAINING_GAS});
     }
 
@@ -389,8 +394,8 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
             newThreshold >= MIN_PROPOSAL_THRESHOLD && newThreshold <= MAX_PROPOSAL_THRESHOLD,
             DaoErrors.WRONG_THRESHOLD
         );
-        emit ProposalThresholdUpdated(proposalConfiguration.threshold, newThreshold);
-        proposalConfiguration.threshold = newThreshold;
+        emit ProposalThresholdUpdated(_proposalConfiguration.threshold, newThreshold);
+        _proposalConfiguration.threshold = newThreshold;
         admin.transfer({value: 0, flag: MsgFlag.REMAINING_GAS});
     }
 
@@ -399,8 +404,8 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
             newTimeLock >= MIN_TIME_LOCK && newTimeLock <= MAX_TIME_LOCK,
             DaoErrors.WRONG_TIME_LOCK
         );
-        emit ProposalTimeLockUpdated(proposalConfiguration.timeLock, newTimeLock);
-        proposalConfiguration.timeLock = newTimeLock;
+        emit ProposalTimeLockUpdated(_proposalConfiguration.timeLock, newTimeLock);
+        _proposalConfiguration.timeLock = newTimeLock;
         admin.transfer({value: 0, flag: MsgFlag.REMAINING_GAS});
     }
 
@@ -409,8 +414,8 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
             newVotingPeriod >= MIN_VOTING_PERIOD && newVotingPeriod <= MAX_VOTING_PERIOD,
             DaoErrors.WRONG_VOTING_PERIOD
         );
-        emit ProposalVotingPeriodUpdated(proposalConfiguration.votingPeriod, newVotingPeriod);
-        proposalConfiguration.votingPeriod = newVotingPeriod;
+        emit ProposalVotingPeriodUpdated(_proposalConfiguration.votingPeriod, newVotingPeriod);
+        _proposalConfiguration.votingPeriod = newVotingPeriod;
         admin.transfer({value: 0, flag: MsgFlag.REMAINING_GAS});
     }
 
@@ -419,8 +424,8 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
             newVotingDelay >= MIN_VOTING_DELAY && newVotingDelay <= MAX_VOTING_DELAY,
             DaoErrors.WRONG_VOTING_DELAY
         );
-        emit ProposalVotingDelayUpdated(proposalConfiguration.votingDelay, newVotingDelay);
-        proposalConfiguration.votingDelay = newVotingDelay;
+        emit ProposalVotingDelayUpdated(_proposalConfiguration.votingDelay, newVotingDelay);
+        _proposalConfiguration.votingDelay = newVotingDelay;
         admin.transfer({value: 0, flag: MsgFlag.REMAINING_GAS});
     }
 
@@ -429,15 +434,15 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
             newGracePeriod >= MIN_GRACE_PERIOD && newGracePeriod <= MAX_GRACE_PERIOD,
             DaoErrors.WRONG_GRACE_PERIOD
         );
-        emit ProposalGracePeriodUpdated(proposalConfiguration.gracePeriod, newGracePeriod);
-        proposalConfiguration.gracePeriod = newGracePeriod;
+        emit ProposalGracePeriodUpdated(_proposalConfiguration.gracePeriod, newGracePeriod);
+        _proposalConfiguration.gracePeriod = newGracePeriod;
         admin.transfer({value: 0, flag: MsgFlag.REMAINING_GAS});
     }
 
     function updateProposalConfiguration(ProposalConfiguration newConfig) override public onlyAdmin {
         checkProposalConfiguration(newConfig);
-        emit ProposalConfigurationUpdated(proposalConfiguration, newConfig);
-        proposalConfiguration = newConfig;
+        emit ProposalConfigurationUpdated(_proposalConfiguration, newConfig);
+        _proposalConfiguration = newConfig;
         admin.transfer({value: 0, flag: MsgFlag.REMAINING_GAS});
     }
 
@@ -480,7 +485,7 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
     }
 
     function upgrade(TvmCell code) override public onlyAdmin {
-        require(msg.value > gasToValue(Gas.UPGRADE_ACCOUNT_MIN_GAS, address(this).wid), DaoErrors.VALUE_TOO_LOW);
+        require(msg.value > gasToValue(Gas.UPGRADE_ACCOUNT_MIN_GAS), DaoErrors.VALUE_TOO_LOW);
         tvm.rawReserve(address(this).balance - msg.value, 2);
 
         emit RootCodeUpgraded();
@@ -488,7 +493,7 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
         TvmCell data = abi.encode(
             admin, pendingAdmin,
             stakingRoot, ethereumActionEventConfiguration, deployEventValue,
-            proposalCount, proposalVersion, proposalConfiguration,
+            proposalCount, proposalVersion, _proposalConfiguration,
             proposalCode, platformCode,
             delegators
         );

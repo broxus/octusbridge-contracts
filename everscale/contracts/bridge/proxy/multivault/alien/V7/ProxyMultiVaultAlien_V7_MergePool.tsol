@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "./../../../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.tsol";
 
@@ -16,7 +16,7 @@ abstract contract ProxyMultiVaultAlien_V7_MergePool is ProxyMultiVaultAlien_V7_W
 
     function deriveMergePool(
         uint256 nonce
-    ) public override responsible returns (address pool) {
+    ) externalMsg internalMsg public override responsible returns (address pool) {
         TvmCell stateInit = _buildMergePoolPlatformInitState(nonce);
 
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
@@ -32,7 +32,7 @@ abstract contract ProxyMultiVaultAlien_V7_MergePool is ProxyMultiVaultAlien_V7_W
         address[] tokens,
         uint256 canonId
     ) external override reserveAtLeastTargetBalance {
-        require(msg.sender == owner || msg.sender == manager, ErrorCodes.ONLY_OWNER_OR_MANAGER);
+        require(msg.sender == owner() || msg.sender == manager, ErrorCodes.ONLY_OWNER_OR_MANAGER);
 
         TvmCell stateInit = _buildMergePoolPlatformInitState(nonce);
 
@@ -46,7 +46,7 @@ abstract contract ProxyMultiVaultAlien_V7_MergePool is ProxyMultiVaultAlien_V7_W
             mergePoolVersion,
             tokens,
             canonId,
-            owner,
+            owner(),
             manager
         );
     }
@@ -120,7 +120,7 @@ abstract contract ProxyMultiVaultAlien_V7_MergePool is ProxyMultiVaultAlien_V7_W
     function _buildMergePoolPlatformInitState(
         uint256 mergePoolNonce
     ) internal view returns (TvmCell) {
-        return tvm.buildStateInit({
+        return abi.encodeStateInit({
             contr: MergePoolPlatform,
             varInit: {
                 proxy: address(this),

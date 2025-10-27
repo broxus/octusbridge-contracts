@@ -1,14 +1,15 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "../../bridge/interfaces/event-contracts/multivault/evm/IEVMCallback.tsol";
 
-
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract MediatorCellEncoder is IEVMCallback {
     function encodeMediatorPayload(
         uint8 operation,
         address proxy,
         TvmCell payload
-    ) external pure returns(TvmCell) {
+    ) externalMsg external pure returns(TvmCell) {
         return abi.encode(operation, proxy, payload);
     }
 }

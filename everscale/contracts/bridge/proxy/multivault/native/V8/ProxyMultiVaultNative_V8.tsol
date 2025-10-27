@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 import "./../../../../interfaces/proxy/multivault/native/IProxyMultiVaultNative_V8.tsol";
@@ -9,8 +9,10 @@ import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 
 
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract ProxyMultiVaultNative_V8 is ProxyMultiVaultNative_V8_Deposit, CheckPubKey, RandomNonce {
-    constructor(address owner_) checkPubKey {
+    constructor(address owner_) externalMsg checkPubKey {
         tvm.accept();
 
         setOwnership(owner_);
@@ -23,17 +25,17 @@ contract ProxyMultiVaultNative_V8 is ProxyMultiVaultNative_V8_Deposit, CheckPubK
             evmConfiguration,
             solanaConfiguration,
             tvmConfiguration,
-            owner,
+            owner(),
             api_version,
-            dex_middleware,
-            proxyMultiVaultAlien,
+            dexMiddleware,
+            proxyMultiVaultAlien_,
             _randomNonce,
             platformCode,
             tokenToDailyLimits,
             limitApprover,
-            coldVault,
-            vaultWithdrawer,
-            wNativeAddresses,
+            coldVault_,
+            vaultWithdrawer_,
+            wNativeAddresses_,
             eventAddressKeeperCode
         );
 
@@ -43,19 +45,19 @@ contract ProxyMultiVaultNative_V8 is ProxyMultiVaultNative_V8_Deposit, CheckPubK
         onCodeUpgrade(data);
     }
 
-    function onCodeUpgrade(TvmCell data) /*functionID(2)*/ private {
+    function onCodeUpgrade(TvmCell data) private {
         tvm.resetStorage();
 
         (
-            EVMConfiguration evmConfiguration_,
-            SolanaConfiguration solanaConfiguration_,
-//            TVMConfiguration tvmConfiguration_,
-            address owner_,
-            uint8 api_version_,
-            address dex_middleware_,
-//            address proxyMultiVaultAlien_,
-            uint _randomNonce_
-//            TvmCell platformCode_
+            EVMConfiguration _evmConfiguration,
+            SolanaConfiguration _solanaConfiguration,
+//            TVMConfiguration _tvmConfiguration,
+            address _owner,
+            uint8 _api_version,
+            address _dexMiddleware,
+            address _proxyMultiVaultAlien,
+            uint _randomNonce_,
+            TvmCell _platformCode
         ) = abi.decode(data, (
             EVMConfiguration,
             SolanaConfiguration,
@@ -63,20 +65,20 @@ contract ProxyMultiVaultNative_V8 is ProxyMultiVaultNative_V8_Deposit, CheckPubK
             address,
             uint8,
             address,
-//            address,
-            uint
-//            TvmCell
+            address,
+            uint,
+            TvmCell
         ));
 
-        evmConfiguration = evmConfiguration_;
-        solanaConfiguration = solanaConfiguration_;
-//        tvmConfiguration = tvmConfiguration_;
+        evmConfiguration = _evmConfiguration;
+        solanaConfiguration = _solanaConfiguration;
+//        tvmConfiguration = _tvmConfiguration;
 
-        api_version = api_version_ + 1;
-        dex_middleware = dex_middleware_;
-//        proxyMultiVaultAlien = proxyMultiVaultAlien_;
-        setOwnership(owner_);
+        api_version = _api_version + 1;
+        dexMiddleware = _dexMiddleware;
+        proxyMultiVaultAlien_ = _proxyMultiVaultAlien;
+        setOwnership(_owner);
         _randomNonce = _randomNonce_;
-//        platformCode = platformCode_;
+        platformCode = _platformCode;
     }
 }

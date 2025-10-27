@@ -1,7 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader pubkey;
-pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/TIP3TokenRoot.tsol";
@@ -16,31 +13,44 @@ import "./../../../interfaces/event-contracts/multivault/solana/IMultiVaultEvers
 /// - Verify that the `tokenWallet` is a correct token wallet for `token`, owned by the proxy
 /// - Obtain the `token` metadata (name, symbol, decimals)
 /// - Rewrite the `eventData` with the correct value
+#[ExternalMessage(time, pubkey, expire)]
+#[CustomReplayProt]
 contract MultiVaultEverscaleSolanaEventNative is
     EverscaleSolanaBaseEvent,
     IMultiVaultEverscaleSolanaEventNative
 {
-    uint32 public nonce;
-    address public proxy;
-    address public tokenWallet;
-    address public token;
-    address public remainingGasTo;
-    uint128 public amount;
-    uint256 public recipient;
+    uint32 nonce_;
+    address proxy;
+    address tokenWallet;
+    address token;
+    address remainingGasTo;
+    uint128 amount;
+    uint256 recipient;
 
-    address public sender;
-    uint128 public initial_balance;
+    address sender_;
+    coins initial_balance_;
 
-    string public name;
-    string public symbol;
-    uint8 public decimals;
-    address public expectedTokenWallet;
-    bytes public solanaPayload;
+    string name;
+    string symbol;
+    uint8 decimals;
+    bytes solanaPayload;
 
     constructor(
         address _initializer,
         TvmCell _meta
     ) EverscaleSolanaBaseEvent(_initializer, _meta) {}
+
+    function nonce() externalMsg public view returns (uint32) {
+        return nonce_;
+    }
+
+    function sender() externalMsg public view returns (address) {
+        return sender_;
+    }
+
+    function initial_balance() externalMsg public view returns (coins) {
+        return initial_balance_;
+    }
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
         body.load(uint64, uint32);
@@ -54,23 +64,23 @@ contract MultiVaultEverscaleSolanaEventNative is
 
     function onInit() override internal {
         (
-            nonce,
+            nonce_,
             proxy,
             tokenWallet,
             token,
             remainingGasTo,
             amount,
             recipient,
-            sender,
+            sender_,
             solanaPayload
         ) = abi.decode(
             eventInitData.voteData.eventData,
             (uint32, address, address, address, address, uint128, uint256, address, bytes)
         );
 
-        initial_balance = address(this).balance;
+        initial_balance_ = address(this).balance;
 
-        uint128 value = gasToValue(Gas.GET_TOKEN_DATA_GAS, address(this).wid);
+        coins value = gasToValue(Gas.GET_TOKEN_DATA_GAS);
 
         ITokenRoot(token).name{
             value: value,
@@ -126,9 +136,7 @@ contract MultiVaultEverscaleSolanaEventNative is
     ) external override {
         require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
-        expectedTokenWallet = tokenWallet_;
-
-        if (tokenWallet == expectedTokenWallet) {
+        if (tokenWallet == tokenWallet_) {
             _updateEventData();
 
             loadRelays();
@@ -137,7 +145,7 @@ contract MultiVaultEverscaleSolanaEventNative is
         }
     }
 
-    function getDecodedData() external override responsible returns(
+    function getDecodedData() externalMsg internalMsg external override responsible returns(
         address proxy_,
         address tokenWallet_,
         address token_,
@@ -185,10 +193,10 @@ contract MultiVaultEverscaleSolanaEventNative is
         uint32 selector = slice.load(uint32);
 
         if (
-            (selector == tvm.functionId(TIP3TokenRoot.name) && msg.sender == token )||
-            (selector == tvm.functionId(TIP3TokenRoot.symbol) && msg.sender == token) ||
-            (selector == tvm.functionId(TIP3TokenRoot.decimals) && msg.sender == token) ||
-            (selector == tvm.functionId(ITokenRoot.walletOf) && msg.sender == token)
+            (selector == abi.functionId(TIP3TokenRoot.name) && msg.sender == token )||
+            (selector == abi.functionId(TIP3TokenRoot.symbol) && msg.sender == token) ||
+            (selector == abi.functionId(TIP3TokenRoot.decimals) && msg.sender == token) ||
+            (selector == abi.functionId(ITokenRoot.walletOf) && msg.sender == token)
         ) {
             setStatusRejected(2);
         }

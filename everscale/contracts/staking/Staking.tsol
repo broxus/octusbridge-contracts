@@ -1,9 +1,9 @@
-pragma ever-solidity >= 0.62.0;
-pragma AbiHeader pubkey;
-pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 import "./base/StakingRelay.tsol";
 
+#[ExternalMessage(time, pubkey, expire)]
+#[TimeReplayProt]
 contract Staking is StakingPoolRelay {
     constructor(
         address _admin,
@@ -13,7 +13,7 @@ contract Staking is StakingPoolRelay {
         address _bridge_event_config_eth_ton,
         address _bridge_event_config_ton_eth,
         address _tokenRoot
-    ) {
+    ) externalMsg {
         tvm.accept();
 
         base_details.tokenRoot = _tokenRoot;

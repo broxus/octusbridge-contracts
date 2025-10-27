@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "./interfaces/IProposal.tsol";
 import "./interfaces/IDaoRoot.tsol";
@@ -13,30 +13,31 @@ import "../staking/interfaces/IUserData.tsol";
 import {
     PlatformTypes as StakingPlatformTypes
 } from "../staking/libraries/PlatformTypes.tsol";
+import "../utils/common/Platform.tsol";
 
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
-import "@broxus/contracts/contracts/platform/Platform.tsol";
 import "@broxus/contracts/contracts/platform/PlatformBase.tsol";
 
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformTypes {
-    uint32 public /*static */ id;
+    uint32 _id;
+    address _stakingRoot;
+    uint16 _proposalVersion;
 
-    address public stakingRoot;
+    address proposer;
+    string description;
+    TonAction[] tonActions;
+    EthAction[] ethActions;
+    ProposalConfiguration config;
+    uint32 startTime;
+    uint32 endTime;
+    uint32 executionTime;
+    bool canceled;
+    bool executed;
 
-    address public proposer;
-    string public description;
-    TonAction[] public tonActions;
-    EthAction[] public ethActions;
-    uint16 public proposalVersion;
-    ProposalConfiguration public config;
-    uint32 public startTime;
-    uint32 public endTime;
-    uint32 public executionTime;
-    bool public canceled;
-    bool public executed;
-
-    uint128 public forVotes;
-    uint128 public againstVotes;
+    uint128 forVotes;
+    uint128 againstVotes;
 
     modifier onlyStakingAccount(address accountOwner) {
         require(msg.sender == expectedAccountAddress(accountOwner), DaoErrors.NOT_ACCOUNT);
@@ -46,7 +47,19 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
     * Getter functions *
     *******************/
 
-    function getOverview() override public view responsible returns (
+    function stakingRoot() externalMsg public view returns (address) {
+        return _stakingRoot;
+    }
+
+    function id() externalMsg public view returns (uint32) {
+        return _id;
+    }
+
+    function proposalVersion() externalMsg public view returns (uint16) {
+        return _proposalVersion;
+    }
+
+    function getOverview() externalMsg internalMsg override public view responsible returns (
         address proposer_,
         string description_,
         uint32 startTime_,
@@ -65,49 +78,49 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
 
     }
 
-    function getProposer() override public view responsible returns (address) {
+    function getProposer() externalMsg internalMsg override public view responsible returns (address) {
         return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} proposer;
     }
 
-    function getActions() override public view responsible returns (TonAction[], EthAction[]) {
+    function getActions() externalMsg internalMsg override public view responsible returns (TonAction[], EthAction[]) {
         return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (tonActions, ethActions);
     }
 
-    function getConfig() override public view responsible returns (ProposalConfiguration) {
+    function getConfig() externalMsg internalMsg override public view responsible returns (ProposalConfiguration) {
         return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} config;
     }
 
-    function getTimings() override public view responsible returns (uint32, uint32, uint32) {
+    function getTimings() externalMsg internalMsg override public view responsible returns (uint32, uint32, uint32) {
         return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (startTime, endTime, executionTime);
     }
 
-    function getVotes() override public view responsible returns (uint128, uint128, uint128) {
+    function getVotes() externalMsg internalMsg override public view responsible returns (uint128, uint128, uint128) {
         return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (forVotes, againstVotes, config.quorumVotes);
     }
 
-    function getStatuses() override public view responsible returns (bool, bool) {
+    function getStatuses() externalMsg internalMsg override public view responsible returns (bool, bool) {
         return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (canceled, executed);
     }
 
-    function getState() override public view responsible returns (ProposalState) {
+    function getState() externalMsg internalMsg override public view responsible returns (ProposalState) {
         return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} state();
     }
 
-    function queue() override public {
+    function queue() externalMsg override public {
         require(state() == ProposalState.Succeeded, DaoErrors.PROPOSAL_IS_NOT_SUCCEEDED);
 
         tvm.accept();
-        require(address(this).balance > gasToValue(Gas.UNLOCK_VOTE_GAS, address(this).wid), DaoErrors.PROPOSAL_BALANCE_TOO_LOW);
+        require(address(this).balance > gasToValue(Gas.UNLOCK_VOTE_GAS), DaoErrors.PROPOSAL_BALANCE_TOO_LOW);
 
         executionTime = endTime + config.timeLock;
         emit Queued(executionTime);
         IUserData(expectedAccountAddress(proposer)).unlockVoteTokens{
-            value: gasToValue(Gas.UNLOCK_VOTE_GAS, address(this).wid),
+            value: gasToValue(Gas.UNLOCK_VOTE_GAS),
             flag: MsgFlag.SENDER_PAYS_FEES
-        }(id, true);
+        }(_id, true);
     }
 
-    function execute() override public {
+    function execute() externalMsg override public {
         require(state() == ProposalState.Queued, DaoErrors.PROPOSAL_IS_NOT_QUEUED);
         require(block.timestamp >= executionTime, DaoErrors.EXECUTION_TIME_NOT_COME_YET);
         tvm.accept();
@@ -116,7 +129,7 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
         IDaoRoot(root).onProposalSucceeded{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
-        }(id, proposer, tonActions, ethActions);
+        }(_id, proposer, tonActions, ethActions);
     }
 
     function cancel() override public {
@@ -128,7 +141,7 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
         IUserData(expectedAccountAddress(proposer)).unlockVoteTokens{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
-        }(id, true);
+        }(_id, true);
     }
 
     function castVote(
@@ -145,9 +158,9 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
                 againstVotes += votes;
             }
             emit VoteCast(voter, support, votes, reason);
-            IUserData(msg.sender).voteCasted{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id);
+            IUserData(msg.sender).voteCasted{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(_id);
         } else {
-            IUserData(msg.sender).rejectVote{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id);
+            IUserData(msg.sender).rejectVote{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(_id);
         }
     }
 
@@ -179,7 +192,7 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
     function unlockCastedVote(address accountOwner) override public view onlyStakingAccount(accountOwner) {
         ProposalState currentState = state();
         bool success = currentState != ProposalState.Active;
-        IUserData(msg.sender).unlockCastedVote{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id, success);
+        IUserData(msg.sender).unlockCastedVote{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(_id, success);
     }
 
     function unlockVoteTokens(address accountOwner) override public view onlyStakingAccount(accountOwner) {
@@ -189,7 +202,7 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
             currentState != ProposalState.Pending &&
             currentState != ProposalState.Active
         );
-        IUserData(msg.sender).unlockVoteTokens{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id, success);
+        IUserData(msg.sender).unlockVoteTokens{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(_id, success);
     }
 
     function expectedAccountAddress(address accountOwner) private view returns (address) {
@@ -203,10 +216,10 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
     }
 
     function _buildStakingInitData(uint8 platformType, TvmCell initialData) private inline view returns (TvmCell) {
-        return tvm.buildStateInit({
+        return abi.encodeStateInit({
             contr: Platform,
             varInit: {
-                root: stakingRoot,
+                root: _stakingRoot,
                 platformType: platformType,
                 initialData: initialData,
                 platformCode: platformCode
@@ -224,10 +237,10 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
         platformCode = s.loadRef();
 
         TvmSlice initialData = s.loadRefAsSlice();
-        id = initialData.load(uint32);
+        _id = initialData.load(uint32);
 
         TvmCell params = s.loadRef();
-        (stakingRoot, proposer, description, tonActions, ethActions, config, proposalVersion)
+        (_stakingRoot, proposer, description, tonActions, ethActions, config, _proposalVersion)
             = abi.decode(params, (address, address, string, TonAction[], EthAction[], ProposalConfiguration, uint16));
         startTime = block.timestamp + config.votingDelay;
         endTime = startTime + config.votingPeriod;
@@ -239,25 +252,25 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
 
     function requestUpgrade(address sendGasTo) override public view {
         require(msg.sender == proposer, DaoErrors.NOT_OWNER);
-        require(msg.value >= gasToValue(Gas.UPGRADE_PROPOSAL_MIN_GAS, address(this).wid), DaoErrors.VALUE_TOO_LOW);
+        require(msg.value >= gasToValue(Gas.UPGRADE_PROPOSAL_MIN_GAS), DaoErrors.VALUE_TOO_LOW);
         tvm.rawReserve(Gas.ACCOUNT_INITIAL_BALANCE, 2);
-        emit CodeUpgradeRequested(proposalVersion);
-        IDaoRoot(root).requestUpgradeProposal{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(proposalVersion, sendGasTo, id);
+        emit CodeUpgradeRequested(_proposalVersion);
+        IDaoRoot(root).requestUpgradeProposal{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(_proposalVersion, sendGasTo, _id);
     }
 
     function upgrade(TvmCell code, uint16 newVersion, address sendGasTo) override public onlyRoot {
-        if (proposalVersion == newVersion) {
+        if (_proposalVersion == newVersion) {
             sendGasTo.transfer({value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false});
         } else {
             emit ProposalCodeUpgraded(newVersion);
             TvmCell data = abi.encode(
-                root, proposer, stakingRoot,
-                id, description, config,
+                root, proposer, _stakingRoot,
+                _id, description, config,
                 tonActions, ethActions,
                 startTime, endTime, executionTime,
                 canceled, executed,
                 forVotes, againstVotes,
-                proposalVersion, newVersion,
+                _proposalVersion, newVersion,
                 platformCode
             );
 

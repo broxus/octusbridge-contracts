@@ -1,8 +1,10 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "../../utils/Delegate.tsol";
 
 
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract TestTarget is Delegate {
     uint32 static _nonce;
 
@@ -11,7 +13,7 @@ contract TestTarget is Delegate {
     uint128 public value;
     uint32 public param;
 
-    constructor(address _daoRoot) {
+    constructor(address _daoRoot) externalMsg {
         tvm.accept();
         daoRoot = _daoRoot;
     }
@@ -44,10 +46,10 @@ contract TestTarget is Delegate {
     }
 
     function encodePayload(address addr, uint callHash) public pure returns (TvmCell) {
-        return tvm.encodeBody(addDelegate, addr, callHash);
+        return abi.encodeBody(addDelegate, addr, callHash);
     }
 
     function getCallHash(uint32 newParam) public pure returns (uint) {
-        return tvm.hash(tvm.encodeBody(onProposalSuccess, newParam));
+        return tvm.hash(abi.encodeBody(onProposalSuccess, newParam));
     }
 }

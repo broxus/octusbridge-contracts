@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 interface IMergeRouter {
@@ -11,6 +11,6 @@ interface IMergeRouter {
 
     function disablePool() external;
 
-    function getPool() external responsible returns (address);
-    function getDetails() external responsible returns (address, address, address);
+    function getPool() externalMsg internalMsg external responsible returns (address);
+    function getDetails() externalMsg internalMsg external responsible returns (address, address, address);
 }

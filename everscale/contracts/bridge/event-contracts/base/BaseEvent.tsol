@@ -1,7 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader expire;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 import "../../../utils/ErrorCodes.tsol";
 import "../../../utils/TransferUtils.tsol";
@@ -13,29 +10,38 @@ import "../../interfaces/event-contracts/IBasicEvent.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 import "../../libraries/Gas.tsol";
 
-
+#[ExternalMessage(time, pubkey, expire)]
+#[TimeReplayProt]
 abstract contract BaseEvent is IBasicEvent, TransferUtils {
     // Event contract status
     Status private _status;
     // Relays votes
-    mapping (uint => Vote) public votes;
+    mapping (uint => Vote) votes;
     // Event contract deployer
-    address public initializer;
+    address initializer;
     // Event configuration meta
-    TvmCell public meta;
+    TvmCell meta;
     // How many votes required for confirm / reject
-    uint32 public requiredVotes;
+    uint32 requiredVotes;
     // How many relays confirm event
-    uint16 public confirms;
+    uint16 confirms;
     // How many relays rejects event
-    uint16 public rejects;
+    uint16 rejects;
     // address of relay round contract
-    address public relay_round;
+    address relay_round_;
     // number of relay round
-    uint32 public round_number;
+    uint32 round_number_;
 
-    function status() public view returns (Status) {
+    function status() externalMsg public view returns (Status) {
         return _status;
+    }
+
+    function relay_round() externalMsg public view returns (address) {
+        return relay_round_;
+    }
+
+    function round_number() externalMsg public view returns (uint32) {
+        return round_number_;
     }
 
     function onInit() virtual internal {
@@ -56,7 +62,7 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
     }
 
     modifier onlyRelayRound() {
-        require(msg.sender == relay_round, ErrorCodes.SENDER_NOT_RELAY_ROUND);
+        require(msg.sender == relay_round_, ErrorCodes.SENDER_NOT_RELAY_ROUND);
         _;
     }
 
@@ -72,7 +78,7 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
         require(_status == Status.Initializing, ErrorCodes.WRONG_STATUS);
 
         IStaking(getStakingAddress()).getRelayRoundAddressFromTimestamp{
-            value: gasToValue(Gas.GET_RELAY_ROUND_GAS, address(this).wid),
+            value: gasToValue(Gas.GET_RELAY_ROUND_GAS),
             bounce: false,
             callback: BaseEvent.receiveRoundAddress
         }(block.timestamp);
@@ -82,11 +88,11 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
         address roundContract,
         uint32 roundNum
     ) external onlyStaking {
-        relay_round = roundContract;
-        round_number = roundNum;
+        relay_round_ = roundContract;
+        round_number_ = roundNum;
 
         IRound(roundContract).relayKeys{
-            value: gasToValue(Gas.RELAY_KEYS_GAS, address(this).wid),
+            value: gasToValue(Gas.RELAY_KEYS_GAS),
             bounce: false,
             callback: BaseEvent.receiveRoundRelays
         }();
@@ -169,7 +175,7 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
         @param vote Vote type
         @return voters List of voters (relays) public keys
     */
-    function getVoters(Vote vote) public view responsible returns(uint[] voters) {
+    function getVoters(Vote vote) externalMsg internalMsg public view responsible returns(uint[] voters) {
         for ((uint voter, Vote vote_): votes) {
             if (vote_ == vote) {
                 voters.push(voter);
@@ -179,11 +185,11 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
         return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} voters;
     }
 
-    function getVote(uint256 voter) public view responsible returns(optional(Vote) vote) {
+    function getVote(uint256 voter) externalMsg internalMsg public view responsible returns(optional(Vote) vote) {
         return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} votes.fetch(voter);
     }
 
-    function getApiVersion() external pure responsible returns(uint32) {
+    function getApiVersion() externalMsg internalMsg external pure responsible returns(uint32) {
         return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} 2;
     }
 }

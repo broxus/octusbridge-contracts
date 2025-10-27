@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "../../../event-contracts/multivault/evm/IEVMCallback.tsol";
 import "../../INetworks.tsol";
@@ -17,8 +17,8 @@ interface IProxyMultiVaultNative_V3 is IEVMCallback, INetworks {
     }
 
     // Settings
-    function apiVersion() external view responsible returns(uint8);
-    function getConfiguration() external view responsible returns (EVMConfiguration, SolanaConfiguration);
+    function apiVersion() externalMsg internalMsg external view responsible returns(uint8);
+    function getConfiguration() externalMsg internalMsg external view responsible returns (EVMConfiguration, SolanaConfiguration);
     function setEVMConfiguration(EVMConfiguration _config, address gasBackAddress) external;
     function setSolanaConfiguration(SolanaConfiguration _config, address gasBackAddress) external;
 

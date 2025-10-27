@@ -228,11 +228,11 @@ describe("Test EVM-EVM bridge transfers, deposit native withdraw native token", 
       );
     });
 
-    it.skip("Confirm event", async () => {
+    it("Confirm event", async () => {
       await processEvent(relays, depositEventContract.address, EventType.EthereumEverscale, EventAction.Confirm);
     });
 
-    it.skip("Check withdraw event contract deployed", async () => {
+    it("Check withdraw event contract deployed", async () => {
       const events = await nativeEverscaleEthereumEventConfiguration
         .getPastEvents({ filter: "NewEventContract" })
         .then(e => e.events);
@@ -253,16 +253,16 @@ describe("Test EVM-EVM bridge transfers, deposit native withdraw native token", 
       );
     });
 
-    it.skip("Check event contract nonce", async () => {
-      const { nonce: depositNonce } = await depositEventContract.methods.nonce({}).call();
+    it("Check event contract nonce", async () => {
+      const { value0: depositNonce } = await depositEventContract.methods.nonce({}).call();
 
-      const { nonce: withdrawNonce } = await withdrawEventContract.methods.nonce({}).call();
+      const { value0: withdrawNonce } = await withdrawEventContract.methods.nonce({}).call();
 
       expect(depositNonce).to.be.equal(withdrawNonce, "Wrong deposit and withdraw nonces");
     });
 
-    it.skip("Check withdraw event sender", async () => {
-      const { sender } = await withdrawEventContract.methods.sender({}).call();
+    it("Check withdraw event sender", async () => {
+      const { value0: sender } = await withdrawEventContract.methods.sender({}).call();
 
       expect(sender.toString()).to.be.equal(mediator.address.toString(), "Withdraw sender should be mediator");
     });

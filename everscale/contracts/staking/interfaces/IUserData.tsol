@@ -1,5 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 import "./IStakingPool.tsol";
 
@@ -39,8 +38,8 @@ interface IUserData {
     event ProposalCreationRejected(uint128 votes_available, uint128 threshold);
     event ProposalCodeUpgraded(uint128 votes_available, uint128 threshold);
 
-    function lockedTokens() external view responsible returns(uint128);
-    function canWithdrawVotes() external view responsible returns (bool);
+    function lockedTokens() externalMsg internalMsg external view responsible returns(uint128);
+    function canWithdrawVotes() externalMsg internalMsg external view responsible returns (bool);
 
     function castVote(uint32 code_version, uint32 proposal_id, bool support, string reason) external;
     function rejectVote(uint32 proposal_id) external;
@@ -54,7 +53,7 @@ interface IUserData {
     function unlockCastedVote(uint32 proposalId, bool success) external;
 
 
-    function getDetails() external responsible view returns (UserDataDetails);
+    function getDetails() externalMsg internalMsg external responsible view returns (UserDataDetails);
     function processLinkRelayAccounts(uint256 ton_pubkey, uint160 eth_address, bool confirm, uint32 user_data_code_version) external;
     function processConfirmEthAccount(uint160 eth_address, address send_gas_to) external;
     function processDeposit(

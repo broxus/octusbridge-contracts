@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.7",
 	"header": ["pubkey", "time", "expire"],
 	"functions": [
 		{
@@ -119,7 +119,7 @@
 				{"name":"sender","type":"address"},
 				{"name":"remainingGasTo","type":"address"},
 				{"name":"notify","type":"bool"},
-				{"name":"payload","type":"cell"}
+				{"name":"innerPayload","type":"cell"}
 			],
 			"outputs": [
 			]
@@ -131,7 +131,7 @@
 				{"name":"amount","type":"uint128"},
 				{"name":"remainingGasTo","type":"address"},
 				{"name":"notify","type":"bool"},
-				{"name":"payload","type":"cell"}
+				{"name":"innerPayload","type":"cell"}
 			],
 			"outputs": [
 			]
@@ -145,18 +145,27 @@
 			]
 		}
 	],
-	"data": [
-		{"key":1,"name":"root_","type":"address"},
-		{"key":2,"name":"owner_","type":"address"}
+	"getters": [
+		{
+			"name": "get_wallet_data",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"int257"},
+				{"name":"value1","type":"address_std"},
+				{"name":"value2","type":"address_std"},
+				{"name":"value3","type":"cell"}
+			]
+		}
 	],
 	"events": [
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"root_","type":"address"},
-		{"name":"owner_","type":"address"},
-		{"name":"balance_","type":"uint128"}
+		{"init":true,"name":"_pubkey","type":"fixedbytes32"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":true,"name":"root_","type":"address"},
+		{"init":true,"name":"owner_","type":"address"},
+		{"init":false,"name":"balance_","type":"uint128"}
 	]
 }

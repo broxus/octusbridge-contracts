@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.7",
 	"header": ["time", "expire"],
 	"functions": [
 		{
@@ -10,6 +10,44 @@
 				{"name":"_meta","type":"cell"}
 			],
 			"outputs": [
+			]
+		},
+		{
+			"name": "getDetails",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"name":"_basicConfiguration","type":"tuple"},
+				{"components":[{"name":"program","type":"uint256"},{"name":"proxy","type":"address"},{"name":"startTimestamp","type":"uint64"},{"name":"endTimestamp","type":"uint64"}],"name":"_networkConfiguration","type":"tuple"},
+				{"name":"_meta","type":"cell"}
+			]
+		},
+		{
+			"name": "getType",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"_type","type":"uint8"}
+			]
+		},
+		{
+			"name": "getFlags",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"_flags","type":"uint64"}
+			]
+		},
+		{
+			"name": "getEventAction",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"_eventAction","type":"uint8"}
 			]
 		},
 		{
@@ -56,7 +94,7 @@
 			"name": "deployEvents",
 			"inputs": [
 				{"components":[{"name":"accountSeed","type":"uint128"},{"name":"slot","type":"uint64"},{"name":"blockTime","type":"uint64"},{"name":"txSignature","type":"string"},{"name":"eventData","type":"cell"}],"name":"eventsVoteData","type":"tuple[]"},
-				{"name":"values","type":"uint128[]"}
+				{"name":"values","type":"varuint16[]"}
 			],
 			"outputs": [
 			]
@@ -69,35 +107,6 @@
 			],
 			"outputs": [
 				{"name":"eventContract","type":"address"}
-			]
-		},
-		{
-			"name": "getDetails",
-			"inputs": [
-				{"name":"answerId","type":"uint32"}
-			],
-			"outputs": [
-				{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"name":"_basicConfiguration","type":"tuple"},
-				{"components":[{"name":"program","type":"uint256"},{"name":"proxy","type":"address"},{"name":"startTimestamp","type":"uint64"},{"name":"endTimestamp","type":"uint64"}],"name":"_networkConfiguration","type":"tuple"},
-				{"name":"_meta","type":"cell"}
-			]
-		},
-		{
-			"name": "getType",
-			"inputs": [
-				{"name":"answerId","type":"uint32"}
-			],
-			"outputs": [
-				{"name":"_type","type":"uint8"}
-			]
-		},
-		{
-			"name": "getFlags",
-			"inputs": [
-				{"name":"answerId","type":"uint32"}
-			],
-			"outputs": [
-				{"name":"_flags","type":"uint64"}
 			]
 		},
 		{
@@ -120,6 +129,14 @@
 			]
 		},
 		{
+			"name": "owner",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
 			"name": "transferOwnership",
 			"inputs": [
 				{"name":"newOwner","type":"address"}
@@ -133,51 +150,9 @@
 			],
 			"outputs": [
 			]
-		},
-		{
-			"name": "owner",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"owner","type":"address"}
-			]
-		},
-		{
-			"name": "basicConfiguration",
-			"inputs": [
-			],
-			"outputs": [
-				{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"name":"basicConfiguration","type":"tuple"}
-			]
-		},
-		{
-			"name": "networkConfiguration",
-			"inputs": [
-			],
-			"outputs": [
-				{"components":[{"name":"program","type":"uint256"},{"name":"proxy","type":"address"},{"name":"startTimestamp","type":"uint64"},{"name":"endTimestamp","type":"uint64"}],"name":"networkConfiguration","type":"tuple"}
-			]
-		},
-		{
-			"name": "flags",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"flags","type":"uint64"}
-			]
-		},
-		{
-			"name": "meta",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"meta","type":"cell"}
-			]
 		}
 	],
-	"data": [
-		{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"key":1,"name":"basicConfiguration","type":"tuple"},
-		{"components":[{"name":"program","type":"uint256"},{"name":"proxy","type":"address"},{"name":"startTimestamp","type":"uint64"},{"name":"endTimestamp","type":"uint64"}],"key":2,"name":"networkConfiguration","type":"tuple"}
+	"getters": [
 	],
 	"events": [
 		{
@@ -199,13 +174,14 @@
 		}
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"owner","type":"address"},
-		{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"name":"basicConfiguration","type":"tuple"},
-		{"components":[{"name":"program","type":"uint256"},{"name":"proxy","type":"address"},{"name":"startTimestamp","type":"uint64"},{"name":"endTimestamp","type":"uint64"}],"name":"networkConfiguration","type":"tuple"},
-		{"name":"flags","type":"uint64"},
-		{"name":"meta","type":"cell"}
+		{"init":true,"name":"_pubkey","type":"fixedbytes32"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":false,"name":"_owner","type":"address"},
+		{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"init":true,"name":"basicConfiguration","type":"tuple"},
+		{"components":[{"name":"program","type":"uint256"},{"name":"proxy","type":"address"},{"name":"startTimestamp","type":"uint64"},{"name":"endTimestamp","type":"uint64"}],"init":true,"name":"networkConfiguration","type":"tuple"},
+		{"init":true,"name":"eventAction","type":"uint8"},
+		{"init":false,"name":"flags","type":"uint64"},
+		{"init":false,"name":"meta","type":"cell"}
 	]
 }

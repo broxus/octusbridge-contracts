@@ -1,5 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 
 interface IRoundDeployer {
@@ -31,7 +30,7 @@ interface IRoundDeployer {
         uint32 currentRelayRoundEndTime;
     }
 
-    function getRelayRoundsDetails() external view responsible returns (RelayRoundsDetails);
+    function getRelayRoundsDetails() externalMsg internalMsg external view responsible returns (RelayRoundsDetails);
 
     function setRelaysOnNewRound(
         uint160[] eth_keys,

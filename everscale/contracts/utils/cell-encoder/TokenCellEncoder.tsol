@@ -1,14 +1,16 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "./../../bridge/interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
 //import "./../../bridge/interfaces/IProxyTokenTransfer.tsol";
 import "./../../bridge/libraries/BurnType.tsol";
 
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract TokenCellEncoder {
     function encodeEthereumBurnPayload(
         uint160 ethereumAddress,
         uint32 chainId
-    ) public pure returns(
+    ) externalMsg public pure returns(
         TvmCell data
     ) {
         TvmCell burnPayload = abi.encode(ethereumAddress, chainId);
@@ -18,7 +20,7 @@ contract TokenCellEncoder {
 
     function decodeEthereumBurnPayload(
         TvmCell data
-    ) public pure returns(
+    ) externalMsg public pure returns(
         uint160 ethereumAddress,
         uint32 chainId
     ) {
@@ -28,7 +30,7 @@ contract TokenCellEncoder {
     function encodeSolanaBurnPayload(
         uint256 solanaOwnerAddress,
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
-    ) public pure returns(
+    ) externalMsg public pure returns(
         TvmCell data
     ) {
         TvmCell burnPayload = abi.encode(solanaOwnerAddress, executeAccounts);
@@ -38,7 +40,7 @@ contract TokenCellEncoder {
 
     function decodeSolanaBurnPayload(
         TvmCell data
-    ) public pure returns(
+    ) externalMsg public pure returns(
         uint256 solanaOwnerAddress,
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
     ) {

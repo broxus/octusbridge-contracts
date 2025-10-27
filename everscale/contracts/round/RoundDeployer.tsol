@@ -1,10 +1,10 @@
-pragma ever-solidity >= 0.62.0;
-pragma AbiHeader pubkey;
-pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 import "./base/RoundDeployerRelay.tsol";
 
 
+#[ExternalMessage(time, pubkey, expire)]
+#[TimeReplayProt]
 contract RoundDeployer is RoundDeployerRelay {
     event RoundDeployerUpdated();
 
@@ -12,14 +12,14 @@ contract RoundDeployer is RoundDeployerRelay {
         address _admin,
         address _bridge_event_config_ton_eth,
         address _bridge_event_config_ton_sol
-    ) {
+    ) externalMsg {
         tvm.rawReserve(Gas.ROOT_INITIAL_BALANCE, 0);
 
         tvm.accept();
 
         base_details.bridge_event_config_ton_eth = _bridge_event_config_ton_eth;
         base_details.admin = _admin;
-        bridge_event_config_ton_sol = _bridge_event_config_ton_sol;
+        bridge_event_config_ton_sol_ = _bridge_event_config_ton_sol;
         round_details.currentRelayRound = 1;
 
         _admin.transfer({
@@ -44,7 +44,7 @@ contract RoundDeployer is RoundDeployerRelay {
             base_details.bridge_event_config_ton_eth, // address 267
             base_details.admin, // address 267
 
-            bridge_event_config_ton_sol,
+            bridge_event_config_ton_sol_,
 
             active, // 1
             round_details.currentRelayRound, // 32
@@ -66,7 +66,7 @@ contract RoundDeployer is RoundDeployerRelay {
         onCodeUpgrade(data);
     }
 
-    function onCodeUpgrade(TvmCell upgrade_data) private functionID(2) {
+    function onCodeUpgrade(TvmCell upgrade_data) private {
         tvm.rawReserve(1 ever, 0);
 
         address send_gas_to;
@@ -83,7 +83,7 @@ contract RoundDeployer is RoundDeployerRelay {
             base_details.bridge_event_config_ton_eth, // address 267
             base_details.admin, // address 267
 
-            bridge_event_config_ton_sol,
+            bridge_event_config_ton_sol_,
 
             active, // 1
             round_details.currentRelayRound, // 32
@@ -93,7 +93,7 @@ contract RoundDeployer is RoundDeployerRelay {
             relay_config.relayRoundTime, // 32
             relay_config.minRoundGapTime, // 32
             relay_config.minRelaysCount, // 16
-            tonEthEventDeployValue, // 128
+            tonEthEventDeployValue, // 120
             tonSolEventDeployValue
         ) = abi.decode(upgrade_data, (
             address,
@@ -116,8 +116,8 @@ contract RoundDeployer is RoundDeployerRelay {
             uint32,
             uint32,
             uint16,
-            uint128,
-            uint128
+            coins,
+            coins
         ));
 
         send_gas_to.transfer({

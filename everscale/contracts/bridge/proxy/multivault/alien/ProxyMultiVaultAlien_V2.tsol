@@ -1,24 +1,23 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 import "./../../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
 import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V1.tsol";
 import "./../../../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
 
+import "../../../../utils/common/InternalOwner.tsol";
 import "./../../../../utils/ErrorCodes.tsol";
 import "./../../../../utils/TransferUtils.tsol";
 
-import "./../../../alien-token/TokenRootAlienEVM.tsol";
-
+import "ton-eth-bridge-token-contracts/contracts/bridge/TokenRootAlienEVM.tsol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.tsol";
 
-import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
+#[ExternalMessage(time, pubkey)]
+#[TimeReplayProt]
 contract ProxyMultiVaultAlien_V2 is
     InternalOwner,
     TransferUtils,
@@ -31,7 +30,7 @@ contract ProxyMultiVaultAlien_V2 is
     Configuration config;
     uint8 api_version = 0;
 
-    constructor(address owner_) checkPubKey {
+    constructor(address owner_) externalMsg checkPubKey {
         tvm.accept();
 
         setOwnership(owner_);
@@ -41,7 +40,7 @@ contract ProxyMultiVaultAlien_V2 is
     /// @notice Get current contract API version.
     /// Each time contract is upgraded, API version is incremented.
     /// @return Current API version
-    function apiVersion() external override view responsible returns(uint8) {
+    function apiVersion() externalMsg internalMsg external override view responsible returns(uint8) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} api_version;
     }
 
@@ -123,7 +122,7 @@ contract ProxyMultiVaultAlien_V2 is
         string name,
         string symbol,
         uint8 decimals
-    ) public override responsible returns (address) {
+    ) externalMsg internalMsg public override responsible returns (address) {
         TvmCell stateInit = _buildAlienTokenRootInitState(
             chainId,
             token,
@@ -175,6 +174,8 @@ contract ProxyMultiVaultAlien_V2 is
     }
 
     function getConfiguration()
+        externalMsg
+        internalMsg
         override
         external
         view
@@ -198,7 +199,7 @@ contract ProxyMultiVaultAlien_V2 is
         string symbol,
         uint8 decimals
     ) internal view returns (TvmCell) {
-        return tvm.buildStateInit({
+        return abi.encodeStateInit({
             contr: TokenRootAlienEVM,
             varInit: {
                 randomNonce_: 0,
@@ -241,7 +242,7 @@ contract ProxyMultiVaultAlien_V2 is
             config,
             api_version,
             _randomNonce,
-            owner
+            owner()
         );
 
         tvm.setcode(code);

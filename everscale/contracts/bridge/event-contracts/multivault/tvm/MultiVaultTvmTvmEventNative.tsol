@@ -1,7 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader pubkey;
-pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.tsol";
@@ -22,6 +19,8 @@ import "./../../../libraries/Gas.tsol";
 import "./../../base/tvm/TvmTvmBaseEvent.tsol";
 
 
+#[ExternalMessage(time, pubkey, expire)]
+#[TimeReplayProt]
 contract MultiVaultTvmTvmEventNative is
     TvmTvmBaseEvent,
     IMultiVaultTvmTvmEventNative,
@@ -29,35 +28,35 @@ contract MultiVaultTvmTvmEventNative is
     INotEnoughLiquidity,
     IAcceptTokensTransferCallback
 {
-    address public token;
-    string public name;
-    string public symbol;
-    uint8 public decimals;
-    address public proxyTokenWallet;
+    address token;
+    string name;
+    string symbol;
+    uint8 decimals;
+    address proxyTokenWallet;
 
-    address public sender;
-    uint128 public amount;
-    address public recipient;
+    address sender;
+    uint128 amount;
+    address recipient;
 
-    uint public value;
-    uint128 public expected_gas;
-    optional(TvmCell) public payload;
+    uint value;
+    uint128 expected_gas;
+    optional(TvmCell) payload;
 
     // Derived fields
-    address public proxy;
+    address proxy;
 
     bool setupFinished;
 
-    uint128 public bounty;
-    address public eventTokenWallet;
+    uint128 bounty;
+    address eventTokenWallet;
 
-    address public limitApprover;
-    bool public isLimitApproved;
+    address limitApprover_;
+    bool isLimitApproved_;
 
     bool private isWNative;
 
     modifier onlyLimitApprover() {
-        require(msg.sender == limitApprover && limitApprover.value != 0, ErrorCodes.SENDER_IS_NOT_LIMIT_APPROVER);
+        require(msg.sender == limitApprover_ && !limitApprover_.isStdZero(), ErrorCodes.SENDER_IS_NOT_LIMIT_APPROVER);
         _;
     }
 
@@ -68,6 +67,14 @@ contract MultiVaultTvmTvmEventNative is
         TvmCell _eventBody,
         uint128 _eventInitialBalance
     ) TvmTvmBaseEvent(_initializer, _meta,  _transactionChecker, _eventBody, _eventInitialBalance) {}
+
+    function isLimitApproved() externalMsg public view returns (bool) {
+        return isLimitApproved_;
+    }
+
+    function limitApprover() externalMsg public view returns (address) {
+        return limitApprover_;
+    }
 
     function onInit() override internal {
         status = Status.Initializing;
@@ -108,7 +115,7 @@ contract MultiVaultTvmTvmEventNative is
         ));
 
         // return gas in case event contract is less than required
-        if (address(this).balance < expected_gas + eventInitialBalance + msg.forwardFee - gasToValue(Gas.DEPLOY_TVM_TVM_EVENT_REMAINING, address(this).wid)) {
+        if (address(this).balance < expected_gas + eventInitialBalance + msg.forwardFee - gasToValue(Gas.DEPLOY_TVM_TVM_EVENT_REMAINING)) {
             initializer.transfer({
                 value: 0,
                 bounce: false,
@@ -137,14 +144,14 @@ contract MultiVaultTvmTvmEventNative is
 
             ITrustlessVerifier(transactionChecker)
                 .verifyTx{
-                    value: gasToValue(Gas.VERIFY_TRANSACTION_GAS, address(this).wid),
+                    value: gasToValue(Gas.VERIFY_TRANSACTION_GAS),
                     flag: MsgFlag.SENDER_PAYS_FEES
                 }(_eventVoteData.txBlockProof, txProof);
         }
 
         ITvmTvmEventConfiguration(eventInitData.configuration)
             .getDetails{
-                value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS, address(this).wid),
+                value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS),
                 callback: MultiVaultTvmTvmEventNative.receiveConfigurationDetails
             }();
     }
@@ -162,7 +169,9 @@ contract MultiVaultTvmTvmEventNative is
     function receiveConfigurationDetails(
         IBasicEventConfiguration.BasicConfiguration,
         ITvmTvmEventConfiguration.TvmTvmEventConfiguration _networkConfiguration,
-        TvmCell
+        TvmCell,
+        address,
+        address
     ) external override {
         require(msg.sender == eventInitData.configuration, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
 
@@ -172,7 +181,7 @@ contract MultiVaultTvmTvmEventNative is
         onConfirm();
     }
 
-    function getDecodedData() external override responsible returns(
+    function getDecodedData() externalMsg internalMsg external override responsible returns(
         address token_,
         string name_,
         string symbol_,
@@ -211,7 +220,7 @@ contract MultiVaultTvmTvmEventNative is
             emit Confirmed();
 
             TvmCell metaData = abi.encode(
-                isLimitApproved,
+                isLimitApproved_,
                 token,
                 proxyTokenWallet,
                 amount,
@@ -222,6 +231,7 @@ contract MultiVaultTvmTvmEventNative is
             );
 
             ITvmTvmProxyExtended(eventInitData.configuration).onTVMEventConfirmedExtended{
+                value: 0,
                 flag: MsgFlag.ALL_NOT_RESERVED
             }(eventInitData, metaData, initializer);
         }
@@ -232,9 +242,9 @@ contract MultiVaultTvmTvmEventNative is
         require(status == Status.Confirmed, ErrorCodes.WRONG_STATUS);
 
         isWNative = _wNativeAddresses.exists(token);
-        isLimitApproved = true;
+        isLimitApproved_ = true;
 
-        if (eventTokenWallet.value == 0) {
+        if (eventTokenWallet.isNone()) {
             ITokenRoot(token).walletOf{
                 value: 0,
                 flag: MsgFlag.REMAINING_GAS,
@@ -255,7 +265,7 @@ contract MultiVaultTvmTvmEventNative is
     ) external {
         require(
             (msg.sender == recipient || msg.sender == sender) && status == Status.LiquidityRequested ||
-            msg.sender == limitApprover && limitApprover.value != 0 && status == Status.LimitReached,
+            msg.sender == limitApprover_ && !limitApprover_.isStdZero() && status == Status.LimitReached,
             ErrorCodes.SENDER_NOT_RECIPIENT
         );
 
@@ -264,7 +274,7 @@ contract MultiVaultTvmTvmEventNative is
 
         if (expected_gas > 0) {
             _expectedGasReceiver.transfer({
-                value: expected_gas,
+                value: coins(expected_gas),
                 flag: MsgFlag.SENDER_PAYS_FEES,
                 bounce: false
             });
@@ -358,7 +368,7 @@ contract MultiVaultTvmTvmEventNative is
         // send tokens to original recipient
         if (isWNative && !payload.hasValue()) {
             IBurnableTokenWallet(eventTokenWallet).burn{
-                value: Gas.getTransferTokenValue() + expected_gas,
+                value: Gas.getTransferTokenValue() + coins(expected_gas),
                 bounce: false,
                 flag: MsgFlag.SENDER_PAYS_FEES
             }(
@@ -369,7 +379,7 @@ contract MultiVaultTvmTvmEventNative is
             );
         } else {
             ITokenWallet(eventTokenWallet).transfer{
-                value: Gas.getTransferTokenValue() + expected_gas,
+                value: Gas.getTransferTokenValue() + coins(expected_gas),
                 bounce: false,
                 flag: MsgFlag.SENDER_PAYS_FEES
             }(
@@ -416,23 +426,24 @@ contract MultiVaultTvmTvmEventNative is
 
         ITvmEventCancelled(eventInitData.configuration)
             .onTVMEventCancelled{
+                value: 0,
                 flag: MsgFlag.ALL_NOT_RESERVED
             }(eventInitData, withdrawPayload);
     }
 
     function dailyLimitReached(address _approver) external override {
-        require(msg.sender == proxy && proxy.value != 0, ErrorCodes.SENDER_NOT_PROXY);
+        require(msg.sender == proxy && !proxy.isStdZero(), ErrorCodes.SENDER_NOT_PROXY);
         require(status == Status.Confirmed, ErrorCodes.WRONG_STATUS);
 
         status = Status.LimitReached;
 
         emit LimitReached(_approver);
 
-        limitApprover = _approver;
+        limitApprover_ = _approver;
     }
 
     function approveLimit() external onlyLimitApprover {
-        isLimitApproved = true;
+        isLimitApproved_ = true;
 
         onConfirm();
     }
@@ -445,7 +456,7 @@ contract MultiVaultTvmTvmEventNative is
 
         if (expected_gas > 0) {
             _expectedGasReceiver.transfer({
-                value: expected_gas,
+                value: coins(expected_gas),
                 flag: MsgFlag.SENDER_PAYS_FEES,
                 bounce: false
             });

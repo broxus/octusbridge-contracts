@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 import "./../../../../interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
@@ -107,9 +107,10 @@ abstract contract ProxyMultiVaultAlien_V9_Withdraw is
             TvmCell
         ));
 
-        if (nativeProxyWallet.value != 0) {
+        if (!nativeProxyWallet.isNone()) {
             ITvmEventCancelled(proxyMultiVaultNative)
                 .onTVMEventCancelled{
+                    value: 0,
                     flag: MsgFlag.ALL_NOT_RESERVED
                 }(_eventInitData, _withdrawPayload);
 

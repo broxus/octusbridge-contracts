@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 import "./../interfaces/IStaking.tsol";
@@ -13,8 +13,14 @@ import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
     @title Staking contract mockup
     Simply approve each event action without any real checks
 */
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract StakingMockup is IStaking, IRound, RandomNonce {
     uint[] public static __keys;
+
+    constructor() externalMsg {
+        tvm.accept();
+    }
 
     /*
         @dev Get round contract address by it's id
@@ -24,6 +30,8 @@ contract StakingMockup is IStaking, IRound, RandomNonce {
     function getRelayRoundAddressFromTimestamp(
         uint32
     )
+        externalMsg
+        internalMsg
         override
         public
         view
@@ -39,6 +47,8 @@ contract StakingMockup is IStaking, IRound, RandomNonce {
         @return _keys Round relays Everscale public keys
     */
     function relayKeys()
+        externalMsg
+        internalMsg
         override
         public
         view

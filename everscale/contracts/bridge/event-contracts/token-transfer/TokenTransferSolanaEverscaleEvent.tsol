@@ -1,11 +1,9 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader expire;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 import "./../../interfaces/IEventNotificationReceiver.tsol";
 import "./../../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
 import "./../../interfaces/proxy/ISolanaEverscaleProxy.tsol";
+import "./../../libraries/Gas.tsol";
 import "./../../../utils/ErrorCodes.tsol";
 
 import "./../base/solana/SolanaEverscaleBaseEvent.tsol";
@@ -15,6 +13,8 @@ import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 /// @title Solana Everscale event
 /// @dev This implementation is used for cross chain token transfers
+#[ExternalMessage(time, pubkey, expire)]
+#[CustomReplayProt]
 contract TokenTransferSolanaEverscaleEvent is SolanaEverscaleBaseEvent, ProxyTokenTransferCellEncoder {
     constructor(
         address _initializer,
@@ -41,6 +41,7 @@ contract TokenTransferSolanaEverscaleEvent is SolanaEverscaleBaseEvent, ProxyTok
         notifyEventStatusChanged();
 
         ISolanaEverscaleProxy(eventInitData.configuration).onSolanaEventConfirmed{
+            value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, initializer);
     }
@@ -61,7 +62,7 @@ contract TokenTransferSolanaEverscaleEvent is SolanaEverscaleBaseEvent, ProxyTok
         @returns tokens How much tokens to mint
         @returns receiver_addr Token receiver address
     */
-    function getDecodedData() public view responsible returns (
+    function getDecodedData() externalMsg internalMsg public view responsible returns (
         uint256 sender_addr,
         uint128 tokens,
         address receiver_addr
@@ -85,8 +86,9 @@ contract TokenTransferSolanaEverscaleEvent is SolanaEverscaleBaseEvent, ProxyTok
     function notifyEventStatusChanged() internal view {
         address owner = getOwner();
 
-        if (owner.value != 0) {
+        if (!owner.isStdZero()) {
             IEventNotificationReceiver(owner).notifyEventStatusChanged{
+                value: gasToValue(Gas.NOTIFICATION_GAS),
                 flag: 0,
                 bounce: false
             }(status());

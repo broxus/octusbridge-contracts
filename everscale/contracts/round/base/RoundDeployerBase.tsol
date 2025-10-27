@@ -1,6 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-//pragma AbiHeader expire;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransferCallback.tsol";
 
@@ -9,14 +7,16 @@ import "./../interfaces/IRoundDeployer.tsol";
 import "./../interfaces/IRelayRound.tsol";
 
 import "./../libraries/PlatformTypes.tsol";
-import "./../../utils/ErrorCodes.tsol";
 import "./../libraries/Gas.tsol";
+import "./../../utils/ErrorCodes.tsol";
+import "./../../utils/common/Platform.tsol";
 
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
-import "@broxus/contracts/contracts/platform/Platform.tsol";
 import "../../utils/Delegate.tsol";
 
 
+#[ExternalMessage(time, pubkey)]
+#[TimeReplayProt]
 abstract contract RoundDeployerBase is IRoundDeployer, Delegate {
     // Events
     event RelayRoundInitialized(
@@ -33,8 +33,8 @@ abstract contract RoundDeployerBase is IRoundDeployer, Delegate {
     event BridgeEventTonEthConfigUpdated(address new_bridge_event_config_ton_eth);
     event BridgeEventTonSolConfigUpdated(address new_bridge_event_config_ton_sol);
 
-    event TonEthEventDeployValueUpdated(uint128 new_value);
-    event TonSolEventDeployValueUpdated(uint128 new_value);
+    event TonEthEventDeployValueUpdated(coins new_value);
+    event TonSolEventDeployValueUpdated(coins new_value);
 
     event AdminUpdated(address new_admin);
     event ManagerUpdated(address new_manager);
@@ -56,7 +56,7 @@ abstract contract RoundDeployerBase is IRoundDeployer, Delegate {
 
     BaseDetails base_details;
 
-    address public bridge_event_config_ton_sol;
+    address bridge_event_config_ton_sol_;
 
     address manager;
 
@@ -72,22 +72,26 @@ abstract contract RoundDeployerBase is IRoundDeployer, Delegate {
         MIN_RELAYS_COUNT
     );
 
-    uint128 tonEthEventDeployValue = 150 ever;
-    uint128 tonSolEventDeployValue = 150 ever;
+    coins tonEthEventDeployValue = 150 ever;
+    coins tonSolEventDeployValue = 150 ever;
 
-    function getDetails() public view responsible returns (BaseDetails) {
+    function bridge_event_config_ton_sol() externalMsg public view returns (address) {
+        return bridge_event_config_ton_sol_;
+    }
+
+    function getDetails() externalMsg internalMsg public view responsible returns (BaseDetails) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false }base_details;
     }
 
-    function getCodeData() external view responsible returns (CodeData) {
+    function getCodeData() externalMsg internalMsg external view responsible returns (CodeData) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false }code_data;
     }
 
-    function getRelayRoundsDetails() external override view responsible returns (RelayRoundsDetails) {
+    function getRelayRoundsDetails() externalMsg internalMsg external override view responsible returns (RelayRoundsDetails) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false }round_details;
     }
 
-    function getRelayConfig() external view responsible returns (RelayConfigDetails) {
+    function getRelayConfig() externalMsg internalMsg external view responsible returns (RelayConfigDetails) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false }relay_config;
     }
 
@@ -106,7 +110,7 @@ abstract contract RoundDeployerBase is IRoundDeployer, Delegate {
         return math.max(address(this).balance - msg.value, Gas.ROOT_INITIAL_BALANCE);
     }
 
-    function setEventDeployValues(uint128 ton_eth_event_value, uint128 ton_sol_event_value, address send_gas_to) external onlyAdmin {
+    function setEventDeployValues(coins ton_eth_event_value, coins ton_sol_event_value, address send_gas_to) external onlyAdmin {
         require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
 
@@ -131,7 +135,7 @@ abstract contract RoundDeployerBase is IRoundDeployer, Delegate {
         require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
         emit BridgeEventTonSolConfigUpdated(new_bridge_event_config_ton_sol);
-        bridge_event_config_ton_sol = new_bridge_event_config_ton_sol;
+        bridge_event_config_ton_sol_ = new_bridge_event_config_ton_sol;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
@@ -169,7 +173,7 @@ abstract contract RoundDeployerBase is IRoundDeployer, Delegate {
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-    function isActive() external view responsible returns (bool) {
+    function isActive() externalMsg internalMsg external view responsible returns (bool) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false } active;
     }
 
@@ -184,7 +188,7 @@ abstract contract RoundDeployerBase is IRoundDeployer, Delegate {
     }
 
     function _buildInitData(uint8 type_id, TvmCell _initialData) internal view returns (TvmCell) {
-        return tvm.buildStateInit({
+        return abi.encodeStateInit({
             contr: Platform,
             varInit: {
                 root: address(this),

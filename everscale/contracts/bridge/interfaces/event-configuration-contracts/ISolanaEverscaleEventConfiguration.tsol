@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "./IBasicEventConfiguration.tsol";
 import "./../event-contracts/ISolanaEverscaleEvent.tsol";
@@ -18,14 +18,14 @@ interface ISolanaEverscaleEventConfiguration is IBasicEventConfiguration {
 
     function deployEvents(
         ISolanaEverscaleEvent.SolanaEverscaleEventVoteData[] eventsVoteData,
-        uint128[] values
+        coins[] values
     ) external;
 
     function deriveEventAddress(
         ISolanaEverscaleEvent.SolanaEverscaleEventVoteData eventVoteData
-    ) external view responsible returns (address eventContract);
+    ) externalMsg internalMsg external view responsible returns (address eventContract);
 
-    function getDetails() external view responsible returns(
+    function getDetails() externalMsg internalMsg external view responsible returns(
         BasicConfiguration _basicConfiguration,
         SolanaEverscaleEventConfiguration _networkConfiguration,
         TvmCell _meta

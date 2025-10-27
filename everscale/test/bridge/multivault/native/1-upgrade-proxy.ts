@@ -93,7 +93,7 @@ describe('Test Native proxy upgrade', async function () {
                 .methods
                 .owner()
                 .call()
-                .then(t => t.owner);
+                .then(t => t.value0);
         });
 
         it('Upgrade', async () => {
@@ -146,7 +146,7 @@ describe('Test Native proxy upgrade', async function () {
 
         it('Check owner', async () => {
             const {
-                owner
+                value0: owner
             } = await proxy_v2.methods.owner().call();
 
             expect(owner.toString())
@@ -164,7 +164,7 @@ describe('Test Native proxy upgrade', async function () {
 
             _owner = await proxy_v2
                 .methods
-                .owner().call().then(t => t.owner);
+                .owner().call().then(t => t.value0);
         });
 
         it('Upgrade', async () => {
@@ -206,7 +206,7 @@ describe('Test Native proxy upgrade', async function () {
 
         it('Check owner', async () => {
             const {
-                owner
+                value0: owner
             } = await proxy_v2_fix.methods.owner().call();
 
             expect(owner.toString())
@@ -224,7 +224,7 @@ describe('Test Native proxy upgrade', async function () {
 
             _owner = await proxy_v2_fix
                 .methods
-                .owner().call().then(t => t.owner);
+                .owner().call().then(t => t.value0);
         });
 
         it('Upgrade', async () => {
@@ -273,7 +273,7 @@ describe('Test Native proxy upgrade', async function () {
 
         it('Check owner', async () => {
             const {
-                owner
+                value0: owner
             } = await proxy_v3.methods.owner().call();
 
             expect(owner.toString())
@@ -291,7 +291,7 @@ describe('Test Native proxy upgrade', async function () {
 
             _owner = await proxy_v3
                 .methods
-                .owner().call().then(t => t.owner);
+                .owner().call().then(t => t.value0);
         });
 
         it('Upgrade', async () => {
@@ -340,7 +340,7 @@ describe('Test Native proxy upgrade', async function () {
 
         it('Check owner', async () => {
             const {
-                owner
+                value0: owner
             } = await proxy_v4.methods.owner().call();
 
             expect(owner.toString())
@@ -358,7 +358,7 @@ describe('Test Native proxy upgrade', async function () {
 
             _owner = await proxy_v4
                 .methods
-                .owner().call().then(t => t.owner);
+                .owner().call().then(t => t.value0);
         });
 
         it('Upgrade', async () => {
@@ -407,7 +407,7 @@ describe('Test Native proxy upgrade', async function () {
 
         it('Check owner', async () => {
             const {
-                owner
+                value0: owner
             } = await proxy_v5.methods.owner().call();
 
             expect(owner.toString())
@@ -425,7 +425,7 @@ describe('Test Native proxy upgrade', async function () {
 
             _owner = await proxy_v5
                 .methods
-                .owner().call().then(t => t.owner);
+                .owner().call().then(t => t.value0);
         });
 
         it('Upgrade', async () => {
@@ -473,7 +473,7 @@ describe('Test Native proxy upgrade', async function () {
         });
 
         it('Check owner', async () => {
-            const { owner } = await proxy_v6.methods.owner().call();
+            const { value0: owner } = await proxy_v6.methods.owner().call();
 
             expect(owner.toString())
                 .to.be.equal(_owner.toString(), 'Wrong owner after upgrade')
@@ -490,7 +490,7 @@ describe('Test Native proxy upgrade', async function () {
 
             _owner = await proxy_v6
                 .methods
-                .owner().call().then(t => t.owner);
+                .owner().call().then(t => t.value0);
         });
 
         it('Upgrade', async () => {
@@ -538,7 +538,7 @@ describe('Test Native proxy upgrade', async function () {
         });
 
         it('Check owner', async () => {
-            const { owner } = await proxy_v6.methods.owner().call();
+            const { value0: owner } = await proxy_v6.methods.owner().call();
 
             expect(owner.toString())
                 .to.be.equal(_owner.toString(), 'Wrong owner after upgrade')
@@ -555,7 +555,7 @@ describe('Test Native proxy upgrade', async function () {
 
             _owner = await proxy_v7
               .methods
-              .owner().call().then(t => t.owner);
+              .owner().call().then(t => t.value0);
         });
 
         it('Upgrade', async () => {
@@ -603,7 +603,7 @@ describe('Test Native proxy upgrade', async function () {
         });
 
         it('Check owner', async () => {
-            const { owner } = await proxy_v8.methods.owner().call();
+            const { value0: owner } = await proxy_v8.methods.owner().call();
 
             expect(owner.toString()).to.be.equal(_owner.toString(), 'Wrong owner after upgrade')
         });

@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 import "./../../../event-configuration-contracts/ITvmTvmEventConfiguration.tsol";
@@ -50,7 +50,9 @@ interface IMultiVaultTvmTvmEventAlien {
     function receiveConfigurationDetails(
         IBasicEventConfiguration.BasicConfiguration,
         ITvmTvmEventConfiguration.TvmTvmEventConfiguration _networkConfiguration,
-        TvmCell
+        TvmCell,
+        address,
+        address
     ) external;
 
     function receivePredeployedToken(
@@ -83,10 +85,10 @@ interface IMultiVaultTvmTvmEventAlien {
         IMergePool_V2.Token canonToken_
     ) external;
 
-    function getEventData() external responsible returns(EventData);
+    function getEventData() externalMsg internalMsg external responsible returns(EventData);
 
     // Legacy
-    function getDecodedData() external responsible returns(
+    function getDecodedData() externalMsg internalMsg external responsible returns(
         int32 base_chainId_,
         address base_token_,
         address base_native_proxy_wallet_,
@@ -100,7 +102,8 @@ interface IMultiVaultTvmTvmEventAlien {
         optional(TvmCell) payload_,
         address proxy_,
         address token_,
-        optional(address) native_proxy_token_wallet
+        optional(address) native_proxy_token_wallet,
+        uint128 bounty_
     );
 
     function dailyLimitReached(address _approver) external;

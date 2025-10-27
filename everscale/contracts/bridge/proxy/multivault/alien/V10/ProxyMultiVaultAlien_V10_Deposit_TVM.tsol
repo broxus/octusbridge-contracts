@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "../../../../interfaces/event-contracts/ITvmTvmEvent.tsol";
 import "../../../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
@@ -56,7 +56,8 @@ abstract contract ProxyMultiVaultAlien_V10_Deposit_TVM is
                 expectedGas
             );
 
-            ITvmTvmProxyExtended(proxyMultiVaultNative).onTVMEventConfirmedExtended{
+            ITvmTvmProxyExtended(proxyMultiVaultNative_).onTVMEventConfirmedExtended{
+                value: 0,
                 flag: MsgFlag.ALL_NOT_RESERVED
             }(eventInitData, _meta, remainingGasTo);
 
@@ -71,7 +72,7 @@ abstract contract ProxyMultiVaultAlien_V10_Deposit_TVM is
         if (!isLimitApproved && isLimitReached) {
             IMultiVaultTvmTvmEventAlien(eventContract)
                 .dailyLimitReached{
-                    value: Gas.getMintTokenValue() + expectedGas,
+                    value: Gas.getMintTokenValue() + coins(expectedGas),
                     flag: MsgFlag.SENDER_PAYS_FEES,
                     bounce: false
                 }(limitApprover);
@@ -105,7 +106,7 @@ abstract contract ProxyMultiVaultAlien_V10_Deposit_TVM is
             recipient,
             recipient,
             abi.encode(BridgeOpCodes.BridgeDeposit, nonce, payload),
-            Gas.getMintTokenValue() + expectedGas
+            Gas.getMintTokenValue() + coins(expectedGas)
         );
 
         // Refund remaining gas to event deployer

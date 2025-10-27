@@ -1,7 +1,7 @@
-pragma ever-solidity >= 0.62.0;
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 
+import "../../../utils/common/InternalOwner.tsol";
 import "./../../../utils/TransferUtils.tsol";
 import "./../../../utils/ErrorCodes.tsol";
 import "./../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.tsol";
@@ -13,7 +13,6 @@ import "./../../interfaces/proxy/INetworks.tsol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.tsol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
 
-import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
@@ -25,6 +24,8 @@ import "../../libraries/Gas.tsol";
 /// Must be deployed by the ProxyMultiVaultAlien
 /// @dev Differences from the V5:
 /// 1. Added TVM-TVM support
+#[ExternalMessage(time, pubkey)]
+#[TimeReplayProt]
 contract MergePool_V7 is
     IMergePool_V2,
     InternalOwner,
@@ -36,10 +37,10 @@ contract MergePool_V7 is
 {
     address static proxy;
 
-    uint8 public version;
+    uint8 version_;
 
     mapping (address => Token) tokens;
-    address public manager;
+    address manager_;
     address canon;
 
     modifier tokenExists(address token) {
@@ -49,7 +50,7 @@ contract MergePool_V7 is
     }
 
     modifier onlyOwnerOrManager() {
-        require(msg.sender == owner || msg.sender == manager, ErrorCodes.ONLY_OWNER_OR_MANAGER);
+        require(msg.sender == owner() || msg.sender == manager_, ErrorCodes.ONLY_OWNER_OR_MANAGER);
 
         _;
     }
@@ -64,11 +65,19 @@ contract MergePool_V7 is
         revert();
     }
 
+    function manager() externalMsg public view returns (address) {
+        return manager_;
+    }
+
+    function version() externalMsg public view returns (uint8) {
+        return version_;
+    }
+
     function acceptUpgrade(
         TvmCell code,
         uint8 newVersion
     ) external override onlyProxy {
-        if (version == newVersion) return;
+        if (version_ == newVersion) return;
 
         address[] tokens_;
         uint256 canonId;
@@ -91,7 +100,7 @@ contract MergePool_V7 is
             tokens_,
             canonId,
             owner,
-            manager
+            manager_
         );
 
         tvm.setcode(code);
@@ -102,17 +111,17 @@ contract MergePool_V7 is
 
     function onCodeUpgrade(
         TvmCell data
-    )  functionID(2) private {
+    ) private {
         tvm.resetStorage();
 
         (
-            address proxy_,
+            address _proxy,
             uint256 _randomNonce_,
-            uint8 version_,
-            address[] tokens_,
-            uint256 canonId,
-            address owner_,
-            address manager_
+            uint8 _version,
+            address[] _tokens,
+            uint256 _canonId,
+            address _owner,
+            address _manager
         ) = abi.decode(
             data,
             (
@@ -121,22 +130,22 @@ contract MergePool_V7 is
             )
         );
 
-        proxy = proxy_;
+        proxy = _proxy;
         _randomNonce = _randomNonce_;
-        version = version_;
+        version_ = _version;
 
-        require(tokens_.length > 0, ErrorCodes.TOKEN_NOT_EXISTS);
+        require(_tokens.length > 0, ErrorCodes.TOKEN_NOT_EXISTS);
         require(msg.sender == proxy, ErrorCodes.WRONG_PROXY);
-        require(canonId <= tokens_.length - 1, ErrorCodes.WRONG_CANON_ID);
+        require(_canonId <= _tokens.length - 1, ErrorCodes.WRONG_CANON_ID);
 
-        canon = tokens_[canonId];
+        canon = _tokens[_canonId];
 
-        setOwnership(owner_);
+        setOwnership(_owner);
 
-        manager = manager_;
+        manager_ = _manager;
 
         // Request decimals for every token
-        for (address token: tokens_) {
+        for (address token: _tokens) {
             tokens[token] = Token({
                 decimals: 0,
                 enabled: false
@@ -155,7 +164,7 @@ contract MergePool_V7 is
     function setManager(
         address _manager
     ) external override onlyOwner cashBack {
-        manager = _manager;
+        manager_ = _manager;
     }
 
     /// @notice Remove token from the pool
@@ -236,14 +245,14 @@ contract MergePool_V7 is
 
     /// @notice Get canon token
     /// @return Canon token address
-    function getCanon() external override responsible returns (address, Token) {
+    function getCanon() externalMsg internalMsg external override responsible returns (address, Token) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (canon, tokens[canon]);
     }
 
     /// @notice Get token pools, decimals and canon token
     /// @return _tokens Pool tokens, mapping token => decimals
     /// @return _canon Canon token
-    function getTokens() external override responsible returns(
+    function getTokens() externalMsg internalMsg external override responsible returns(
         mapping(address => Token) _tokens,
         address _canon
     ) {
@@ -366,7 +375,7 @@ contract MergePool_V7 is
 
     function _requestTokenDecimals(address token) internal pure {
         ITokenRoot(token).decimals{
-            value: gasToValue(Gas.REQUEST_TOKEN_DECIMALS_GAS, address(this).wid),
+            value: gasToValue(Gas.REQUEST_TOKEN_DECIMALS_GAS),
             bounce: false,
             callback: MergePool_V7.receiveTokenDecimals
         }();

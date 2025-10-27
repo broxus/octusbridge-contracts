@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 function exoticCellToSlice(TvmCell a) assembly pure returns (TvmSlice, bool) {
     "XCTOS",
@@ -171,7 +171,7 @@ library BocDecoder {
         address src;
         address dest;
         uint128 value;
-        mapping(uint32 => varUint32) extraCurrency;
+        mapping(uint32 => varuint32) extraCurrency;
         uint128 ihrFee;
         uint128 fwdFee;
         uint64 createdLt;
@@ -229,7 +229,7 @@ library BocDecoder {
                 createdLt = s.load(uint64);
                 createdAt = s.load(uint32);
             } else {
-                importFee = s.loadTons();
+                importFee = s.load(coins);
             }
 
             direction = isOutbound ? MessageDirection.OUTBOUND : MessageDirection.INBOUND;
@@ -247,10 +247,10 @@ library BocDecoder {
                 bounced: s.load(bool),
                 src: s.load(address),
                 dest: s.load(address),
-                value: s.loadTons(),
-                extraCurrency: s.load(mapping(uint32 => varUint32)),
-                ihrFee: s.loadTons(),
-                fwdFee: s.loadTons(),
+                value: s.load(coins),
+                extraCurrency: s.load(mapping(uint32 => varuint32)),
+                ihrFee: s.load(coins),
+                fwdFee: s.load(coins),
                 createdLt: s.load(uint64),
                 createdAt: s.load(uint32)
             });

@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.7",
 	"header": ["pubkey", "time", "expire"],
 	"functions": [
 		{
@@ -8,6 +8,16 @@
 			"inputs": [
 			],
 			"outputs": [
+			]
+		},
+		{
+			"name": "getProposalsData",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"created_proposals_","type":"map(uint32,uint128)"},
+				{"name":"tmp_proposals_","type":"map(uint32,uint128)"},
+				{"name":"casted_votes_","type":"map(uint32,bool)"}
 			]
 		},
 		{
@@ -264,33 +274,9 @@
 			],
 			"outputs": [
 			]
-		},
-		{
-			"name": "created_proposals",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"created_proposals","type":"map(uint32,uint128)"}
-			]
-		},
-		{
-			"name": "_tmp_proposals",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"_tmp_proposals","type":"map(uint32,uint128)"}
-			]
-		},
-		{
-			"name": "casted_votes",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"casted_votes","type":"map(uint32,bool)"}
-			]
 		}
 	],
-	"data": [
+	"getters": [
 	],
 	"events": [
 		{
@@ -405,26 +391,26 @@
 		}
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"current_version","type":"uint32"},
-		{"name":"platform_code","type":"cell"},
-		{"name":"token_balance","type":"uint128"},
-		{"name":"relay_lock_until","type":"uint32"},
-		{"components":[{"name":"reward_balance","type":"uint128"},{"name":"reward_debt","type":"uint128"}],"name":"rewardRounds","type":"tuple[]"},
-		{"name":"relay_eth_address","type":"uint160"},
-		{"name":"eth_address_confirmed","type":"bool"},
-		{"name":"relay_ton_pubkey","type":"uint256"},
-		{"name":"ton_pubkey_confirmed","type":"bool"},
-		{"name":"slashed","type":"bool"},
-		{"name":"root","type":"address"},
-		{"name":"user","type":"address"},
-		{"name":"dao_root","type":"address"},
-		{"name":"_proposal_nonce","type":"uint32"},
-		{"name":"lastExtCall","type":"uint32"},
-		{"name":"created_proposals","type":"map(uint32,uint128)"},
-		{"name":"_tmp_proposals","type":"map(uint32,uint128)"},
-		{"name":"casted_votes","type":"map(uint32,bool)"}
+		{"init":true,"name":"_pubkey","type":"fixedbytes32"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":false,"name":"current_version","type":"uint32"},
+		{"init":false,"name":"platform_code","type":"cell"},
+		{"init":false,"name":"token_balance","type":"uint128"},
+		{"init":false,"name":"relay_lock_until","type":"uint32"},
+		{"components":[{"name":"reward_balance","type":"uint128"},{"name":"reward_debt","type":"uint128"}],"init":false,"name":"rewardRounds","type":"tuple[]"},
+		{"init":false,"name":"relay_eth_address","type":"uint160"},
+		{"init":false,"name":"eth_address_confirmed","type":"bool"},
+		{"init":false,"name":"relay_ton_pubkey","type":"uint256"},
+		{"init":false,"name":"ton_pubkey_confirmed","type":"bool"},
+		{"init":false,"name":"slashed","type":"bool"},
+		{"init":false,"name":"root","type":"address"},
+		{"init":false,"name":"user","type":"address"},
+		{"init":false,"name":"dao_root","type":"address"},
+		{"init":false,"name":"_proposal_nonce","type":"uint32"},
+		{"init":false,"name":"lastExtCall","type":"uint32"},
+		{"init":false,"name":"created_proposals","type":"map(uint32,uint128)"},
+		{"init":false,"name":"_tmp_proposals","type":"map(uint32,uint128)"},
+		{"init":false,"name":"casted_votes","type":"map(uint32,bool)"}
 	]
 }

@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.7",
 	"header": ["time"],
 	"functions": [
 		{
@@ -9,33 +9,17 @@
 			],
 			"outputs": [
 			]
-		},
-		{
-			"name": "storedData",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"storedData","type":"cell"}
-			]
-		},
-		{
-			"name": "isUpgraded",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"isUpgraded","type":"bool"}
-			]
 		}
 	],
-	"data": [
+	"getters": [
 	],
 	"events": [
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"storedData","type":"cell"},
-		{"name":"isUpgraded","type":"bool"}
+		{"init":true,"name":"_pubkey","type":"fixedbytes32"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":false,"name":"storedData","type":"cell"},
+		{"init":false,"name":"isUpgraded","type":"bool"}
 	]
 }

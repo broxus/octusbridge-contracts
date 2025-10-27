@@ -1,9 +1,11 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 import "../.././libraries/Gas.tsol";
 import "../../../utils/ErrorCodes.tsol";
 
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract BridgeTokenFee {
 
     address static token; // for Native Proxy - proxy tokenWallet, for Alien Proxy - tokenRoot
@@ -31,7 +33,7 @@ contract BridgeTokenFee {
 
     modifier onlyProxy {
         require(
-            msg.sender.value != 0 &&
+            !msg.sender.isStdZero() &&
             proxy == msg.sender,
             ErrorCodes.SENDER_IS_NOT_PROXY
         );
@@ -43,11 +45,11 @@ contract BridgeTokenFee {
         accumulatedFees = 0;
     }
 
-    function getToken() external view responsible returns(address) {
+    function getToken() externalMsg internalMsg external view responsible returns(address) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} token;
     }
 
-    function getProxy() external view responsible returns(address) {
+    function getProxy() externalMsg internalMsg external view responsible returns(address) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} proxy;
     }
 
@@ -55,7 +57,7 @@ contract BridgeTokenFee {
         accumulatedFees += _fee;
     }
 
-    function getAccumulatedFee() external view responsible returns(uint128) {
+    function getAccumulatedFee() externalMsg internalMsg external view responsible returns(uint128) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} accumulatedFees;
     }
 

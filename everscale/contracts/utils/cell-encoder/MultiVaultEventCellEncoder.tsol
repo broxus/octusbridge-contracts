@@ -1,13 +1,15 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "../../bridge/interfaces/event-contracts/multivault/evm/IEVMCallback.tsol";
 
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 abstract contract MultiVaultEventCellEncoder is IEVMCallback {
     function encodeCancelPredeployedTokenDataPayload(
         string _name,
         string _symbol,
         uint8 _decimals
-    ) public pure returns (TvmCell data) {
+    ) externalMsg public pure returns (TvmCell data) {
         data = abi.encode(_name, _symbol, _decimals);
     }
 
@@ -19,7 +21,7 @@ abstract contract MultiVaultEventCellEncoder is IEVMCallback {
         string _name,
         string _symbol,
         uint8 _decimals
-    ) public pure returns (TvmCell data) {
+    ) externalMsg public pure returns (TvmCell data) {
         TvmCell predeployedTokenData = encodeCancelPredeployedTokenDataPayload(_name, _symbol, _decimals);
 
         data = abi.encode(
@@ -36,7 +38,7 @@ abstract contract MultiVaultEventCellEncoder is IEVMCallback {
         address _remainingGasTo,
         uint128 _expectedGas,
         optional(TvmCell) _eventPayload
-    ) public pure returns (TvmCell data) {
+    ) externalMsg public pure returns (TvmCell data) {
         data = abi.encode(
             _newRecipient,
             _remainingGasTo,
@@ -49,7 +51,7 @@ abstract contract MultiVaultEventCellEncoder is IEVMCallback {
         uint160 _newRecipient,
         address _remainingGasTo,
         IEVMCallback _callback
-    ) public pure returns (TvmCell data) {
+    ) externalMsg public pure returns (TvmCell data) {
         data = abi.encode(
             _newRecipient,
             _remainingGasTo,

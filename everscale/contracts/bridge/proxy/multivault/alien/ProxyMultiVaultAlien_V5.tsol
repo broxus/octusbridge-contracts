@@ -1,27 +1,27 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader pubkey;
+pragma tvm-solidity >= 0.79.0;
 
 import "./../../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
 import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V4.tsol";
 import "./../../../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
 
+import "../../../../utils/common/InternalOwner.tsol";
 import "./../../../../utils/ErrorCodes.tsol";
 import "./../../../../utils/TransferUtils.tsol";
 
-import "./../../../alien-token/TokenRootAlienEVM.tsol";
+import "ton-eth-bridge-token-contracts/contracts/bridge/TokenRootAlienEVM.tsol";
 import "./../../../alien-token-merge/merge-pool/MergePool_V2.tsol";
 import "./../../../alien-token-merge/MergeRouter.tsol";
 import "./../../../alien-token-merge/MergePoolPlatform.tsol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.tsol";
 
-import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
+#[ExternalMessage(time, pubkey)]
+#[TimeReplayProt]
 contract ProxyMultiVaultAlien_V5 is
     InternalOwner,
     TransferUtils,
@@ -43,7 +43,7 @@ contract ProxyMultiVaultAlien_V5 is
 
     mapping (uint256 => mapping (uint160 => address)) customAliens;
 
-    constructor(address owner_) checkPubKey {
+    constructor(address owner_) externalMsg checkPubKey {
         tvm.accept();
 
         _reserveTargetBalance();
@@ -66,7 +66,7 @@ contract ProxyMultiVaultAlien_V5 is
     /// @notice Get current contract API version.
     /// Each time contract is upgraded, API version is incremented.
     /// @return Current API version
-    function apiVersion() external override view responsible returns(uint8) {
+    function apiVersion() externalMsg internalMsg external override view responsible returns(uint8) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} api_version;
     }
 
@@ -227,7 +227,7 @@ contract ProxyMultiVaultAlien_V5 is
         string name,
         string symbol,
         uint8 decimals
-    ) public override responsible returns (address) {
+    ) externalMsg internalMsg public override responsible returns (address) {
         TvmCell stateInit = _buildAlienTokenRootInitState(
             chainId,
             token,
@@ -286,7 +286,7 @@ contract ProxyMultiVaultAlien_V5 is
 
     function deriveMergeRouter(
         address token
-    ) external override responsible returns (address router) {
+    ) externalMsg internalMsg external override responsible returns (address router) {
         TvmCell stateInit = _buildMergeRouterInitState(token);
 
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
@@ -302,12 +302,12 @@ contract ProxyMultiVaultAlien_V5 is
             value: 0,
             bounce: false,
             flag: MsgFlag.ALL_NOT_RESERVED
-        }(owner, manager);
+        }(owner(), manager);
     }
 
     function deriveMergePool(
         uint256 nonce
-    ) public override responsible returns (address pool) {
+    ) externalMsg internalMsg public override responsible returns (address pool) {
         TvmCell stateInit = _buildMergePoolPlatformInitState(nonce);
 
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
@@ -336,7 +336,7 @@ contract ProxyMultiVaultAlien_V5 is
         address[] tokens,
         uint256 canonId
     ) external override reserveAtLeastTargetBalance {
-        require(msg.sender == owner || msg.sender == manager);
+        require(msg.sender == owner() || msg.sender == manager);
 
         TvmCell stateInit = _buildMergePoolPlatformInitState(nonce);
 
@@ -350,12 +350,14 @@ contract ProxyMultiVaultAlien_V5 is
             mergePoolVersion,
             tokens,
             canonId,
-            owner,
+            owner(),
             manager
         );
     }
 
     function getConfiguration()
+        externalMsg
+        internalMsg
         override
         external
         view
@@ -379,7 +381,7 @@ contract ProxyMultiVaultAlien_V5 is
         string symbol,
         uint8 decimals
     ) internal view returns (TvmCell) {
-        return tvm.buildStateInit({
+        return abi.encodeStateInit({
             contr: TokenRootAlienEVM,
             varInit: {
                 randomNonce_: 0,
@@ -404,7 +406,7 @@ contract ProxyMultiVaultAlien_V5 is
     function _buildMergeRouterInitState(
         address token
     ) internal view returns (TvmCell) {
-        return tvm.buildStateInit({
+        return abi.encodeStateInit({
             contr: MergeRouter,
             varInit: {
                 token: token,
@@ -418,7 +420,7 @@ contract ProxyMultiVaultAlien_V5 is
     function _buildMergePoolPlatformInitState(
         uint256 nonce
     ) internal view returns (TvmCell) {
-        return tvm.buildStateInit({
+        return abi.encodeStateInit({
             contr: MergePoolPlatform,
             varInit: {
                 proxy: address(this),
@@ -523,7 +525,7 @@ contract ProxyMultiVaultAlien_V5 is
             config,
             api_version,
             _randomNonce,
-            owner,
+            owner(),
             manager,
             mergeRouter,
             mergePool,
@@ -561,7 +563,7 @@ contract ProxyMultiVaultAlien_V5 is
         config = config_;
         api_version = api_version_ + 1;
         _randomNonce = _randomNonce_;
-        owner = owner_;
+        setOwnership(owner_);
 
         manager = manager_;
         mergeRouter = mergeRouter_;

@@ -1,5 +1,7 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract TestTarget {
     TvmCell public storedData;
     bool public isUpgraded;

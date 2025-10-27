@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.7",
 	"header": ["pubkey", "time", "expire"],
 	"functions": [
 		{
@@ -256,7 +256,7 @@
 				{"name":"walletOwner","type":"address"},
 				{"name":"remainingGasTo","type":"address"},
 				{"name":"callbackTo","type":"address"},
-				{"name":"payload","type":"cell"}
+				{"name":"innerPayload","type":"cell"}
 			],
 			"outputs": [
 			]
@@ -270,36 +270,57 @@
 			]
 		}
 	],
-	"data": [
-		{"key":1,"name":"name_","type":"string"},
-		{"key":2,"name":"symbol_","type":"string"},
-		{"key":3,"name":"decimals_","type":"uint8"},
-		{"key":4,"name":"rootOwner_","type":"address"},
-		{"key":5,"name":"walletCode_","type":"cell"},
-		{"key":6,"name":"randomNonce_","type":"uint256"},
-		{"key":7,"name":"deployer_","type":"address"},
-		{"key":8,"name":"platformCode_","type":"cell"},
-		{"key":9,"name":"base_token_","type":"uint256"}
+	"getters": [
+		{
+			"name": "get_jetton_platform_data",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"},
+				{"name":"value1","type":"int257"}
+			]
+		},
+		{
+			"name": "get_jetton_data",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"int257"},
+				{"name":"value1","type":"bool"},
+				{"name":"value2","type":"address_std"},
+				{"name":"value3","type":"cell"},
+				{"name":"value4","type":"cell"}
+			]
+		},
+		{
+			"name": "get_wallet_address",
+			"inputs": [
+				{"name":"owner_address","type":"address_std"}
+			],
+			"outputs": [
+				{"name":"value0","type":"address_std"}
+			]
+		}
 	],
 	"events": [
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"name_","type":"string"},
-		{"name":"symbol_","type":"string"},
-		{"name":"decimals_","type":"uint8"},
-		{"name":"rootOwner_","type":"address"},
-		{"name":"walletCode_","type":"cell"},
-		{"name":"totalSupply_","type":"uint128"},
-		{"name":"burnPaused_","type":"bool"},
-		{"name":"burnByRootDisabled_","type":"bool"},
-		{"name":"mintDisabled_","type":"bool"},
-		{"name":"randomNonce_","type":"uint256"},
-		{"name":"deployer_","type":"address"},
-		{"name":"platformCode_","type":"cell"},
-		{"name":"walletVersion_","type":"uint32"},
-		{"name":"base_token_","type":"uint256"}
+		{"init":true,"name":"_pubkey","type":"fixedbytes32"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":true,"name":"name_","type":"string"},
+		{"init":true,"name":"symbol_","type":"string"},
+		{"init":true,"name":"decimals_","type":"uint8"},
+		{"init":true,"name":"rootOwner_","type":"address"},
+		{"init":true,"name":"walletCode_","type":"cell"},
+		{"init":false,"name":"totalSupply_","type":"uint128"},
+		{"init":false,"name":"burnPaused_","type":"bool"},
+		{"init":false,"name":"burnByRootDisabled_","type":"bool"},
+		{"init":false,"name":"mintDisabled_","type":"bool"},
+		{"init":true,"name":"randomNonce_","type":"uint256"},
+		{"init":true,"name":"deployer_","type":"address"},
+		{"init":true,"name":"platformCode_","type":"cell"},
+		{"init":false,"name":"walletVersion_","type":"uint32"},
+		{"init":true,"name":"base_token_","type":"uint256"}
 	]
 }

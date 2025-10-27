@@ -1,14 +1,16 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 import "../../dao/structures/ActionStructure.tsol";
 
+#[ExternalMessage(time)]
+#[TimeReplayProt]
 contract DaoCellEncoder {
     function encodeDaoEthereumActionData(
         int8 gasBackWid,
         uint256 gasBackAddress,
         uint32 chainId,
         ActionStructure.EthActionStripped[] actions
-    ) public pure returns(
+    ) externalMsg public pure returns(
         TvmCell data
     ) {
         TvmBuilder builder;
@@ -18,7 +20,7 @@ contract DaoCellEncoder {
 
     function decodeDaoEthereumActionData(
         TvmCell data
-    ) public pure returns(
+    ) externalMsg public pure returns(
         int8 gasBackWid,
         uint256 gasBackAddress,
         uint32 chainId,

@@ -8,20 +8,22 @@ import {
   TvmTvmEventConfigurationFactoryAbi,
   ProxyMultiVaultAlien_V10Abi,
   ProxyMultiVaultNative_V8Abi,
-} from "../../build/factorySource";
-
-import {
   BridgeAbi,
   MultiVaultEVMEverscaleEventAlienAbi,
   MultiVaultEverscaleEVMEventAlienAbi,
   EthereumEverscaleEventConfigurationFactoryAbi,
   EverscaleEthereumEventConfigurationFactoryAbi,
   RoundDeployerAbi,
-} from "../../build_prod/factorySource";
+} from "../../build/factorySource";
 
 const config = getConfig();
 
 assert(!!config, "Config should be defined");
+
+enum EventAction {
+  MultivaultAlien,
+  MultivaultNative
+}
 
 const ALIEN_TRANSFER_EVENT_ABI = {
   anonymous: false,
@@ -180,19 +182,19 @@ const main = async (): Promise<void> => {
   const tvmTvmFactoryConfigCode = await tvmTvmEventConfigFactory.methods.configurationCode().call();
 
   assert(
-    ethEverFactoryConfigCode.configurationCode ===
+    ethEverFactoryConfigCode.value0 ===
       locklift.factory.getContractArtifacts("EthereumEverscaleEventConfiguration").code ||
       config?.ETH_CHAIN_IDS.length === 0,
     "Different config codes on eth ever factory",
   );
   assert(
-    everEthFactoryConfigCode.configurationCode ===
+    everEthFactoryConfigCode.value0 ===
       locklift.factory.getContractArtifacts("EverscaleEthereumEventConfiguration").code ||
       config?.ETH_CHAIN_IDS.length === 0,
     "Different config codes on ever eth factory",
   );
   assert(
-    tvmTvmFactoryConfigCode.configurationCode ===
+    tvmTvmFactoryConfigCode.value0 ===
       locklift.factory.getContractArtifacts("TvmTvmEventConfiguration").code,
     "Different config codes on tvm tvm factory",
   );
@@ -214,6 +216,7 @@ const main = async (): Promise<void> => {
           startTimestamp: config?.CONFIG_START_TIMESTAMP,
           endTimestamp: 0,
         },
+        eventAction: EventAction.MultivaultAlien,
         _eventEmitter: new Address(config?.TVM_EVENT_EMITTERS[chainId].native),
         _transactionChecker: new Address(config?.TRANSACTION_CHECKERS[chainId]),
       };
@@ -230,6 +233,7 @@ const main = async (): Promise<void> => {
         .deriveConfigurationAddress({
           networkConfiguration: tvmTvmAlienConfiguration.networkConfiguration,
           basicConfiguration: tvmTvmAlienConfiguration.basicConfiguration,
+          eventAction: EventAction.MultivaultAlien,
           _eventEmitter: new Address(config?.TVM_EVENT_EMITTERS[chainId].native),
           _transactionChecker: new Address(config?.TRANSACTION_CHECKERS[chainId]),
         })
@@ -263,6 +267,7 @@ const main = async (): Promise<void> => {
           startTimestamp: config?.CONFIG_START_TIMESTAMP,
           endTimestamp: 0,
         },
+        eventAction: EventAction.MultivaultNative,
         _eventEmitter: new Address(config?.TVM_EVENT_EMITTERS[chainId].alien),
         _transactionChecker: new Address(config?.TRANSACTION_CHECKERS[chainId]),
       };
@@ -279,6 +284,7 @@ const main = async (): Promise<void> => {
         .deriveConfigurationAddress({
           basicConfiguration: tvmTvmNativeConfiguration.basicConfiguration,
           networkConfiguration: tvmTvmNativeConfiguration.networkConfiguration,
+          eventAction: EventAction.MultivaultNative,
           _eventEmitter: new Address(config?.TVM_EVENT_EMITTERS[chainId].alien),
           _transactionChecker: new Address(config?.TRANSACTION_CHECKERS[chainId]),
         })
@@ -316,6 +322,7 @@ const main = async (): Promise<void> => {
           startBlockNumber: config.ETH_LAST_BLOCK[chainId],
           endBlockNumber: 0,
         },
+        eventAction: EventAction.MultivaultAlien,
       };
 
       await locklift.tracing.trace(
@@ -330,6 +337,7 @@ const main = async (): Promise<void> => {
         .deriveConfigurationAddress({
           networkConfiguration: ethEverAlienConfiguration.networkConfiguration,
           basicConfiguration: ethEverAlienConfiguration.basicConfiguration,
+          eventAction: EventAction.MultivaultAlien,
         })
         .call()
         .then(r => locklift.factory.getDeployedContract("EthereumEverscaleEventConfiguration", r.value0));
@@ -363,6 +371,7 @@ const main = async (): Promise<void> => {
           startBlockNumber: config.ETH_LAST_BLOCK[chainId],
           endBlockNumber: 0,
         },
+        eventAction: EventAction.MultivaultNative,
       };
 
       await locklift.tracing.trace(
@@ -377,6 +386,7 @@ const main = async (): Promise<void> => {
         .deriveConfigurationAddress({
           basicConfiguration: ethEverNativeConfiguration.basicConfiguration,
           networkConfiguration: ethEverNativeConfiguration.networkConfiguration,
+          eventAction: EventAction.MultivaultNative,
         })
         .call()
         .then(r => locklift.factory.getDeployedContract("EthereumEverscaleEventConfiguration", r.value0));
@@ -409,6 +419,7 @@ const main = async (): Promise<void> => {
         startTimestamp: config?.CONFIG_START_TIMESTAMP,
         endTimestamp: 0,
       },
+      eventAction: EventAction.MultivaultAlien,
     };
 
     await locklift.tracing.trace(
@@ -423,6 +434,7 @@ const main = async (): Promise<void> => {
       .deriveConfigurationAddress({
         basicConfiguration: everEthAlienConfiguration.basicConfiguration,
         networkConfiguration: everEthAlienConfiguration.networkConfiguration,
+        eventAction: EventAction.MultivaultAlien,
       })
       .call()
       .then(r => locklift.factory.getDeployedContract("EverscaleEthereumEventConfiguration", r.value0));
@@ -454,6 +466,7 @@ const main = async (): Promise<void> => {
         startTimestamp: config?.CONFIG_START_TIMESTAMP,
         endTimestamp: 0,
       },
+      eventAction: EventAction.MultivaultNative,
     };
 
     await locklift.tracing.trace(
@@ -468,6 +481,7 @@ const main = async (): Promise<void> => {
       .deriveConfigurationAddress({
         basicConfiguration: everEthNativeConfiguration.basicConfiguration,
         networkConfiguration: everEthNativeConfiguration.networkConfiguration,
+        eventAction: EventAction.MultivaultNative,
       })
       .call()
       .then(r => locklift.factory.getDeployedContract("EverscaleEthereumEventConfiguration", r.value0));

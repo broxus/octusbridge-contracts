@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 
 interface IProxyMultiVaultAlien_V1 {
@@ -12,9 +12,9 @@ interface IProxyMultiVaultAlien_V1 {
         TvmCell alienTokenWalletPlatformCode;
     }
 
-    function apiVersion() external view responsible returns(uint8);
+    function apiVersion() externalMsg internalMsg external view responsible returns(uint8);
 
-    function getConfiguration() external view responsible returns (Configuration);
+    function getConfiguration() externalMsg internalMsg external view responsible returns (Configuration);
     function setConfiguration(Configuration _config, address gasBackAddress) external;
 
     function deriveAlienTokenRoot(
@@ -23,7 +23,7 @@ interface IProxyMultiVaultAlien_V1 {
         string name,
         string symbol,
         uint8 decimals
-    ) external responsible returns (address);
+    ) externalMsg internalMsg external responsible returns (address);
 
     function deployAlienToken(
         uint256 chainId,

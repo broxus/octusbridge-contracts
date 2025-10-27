@@ -1,7 +1,4 @@
-pragma ever-solidity >= 0.62.0;
-
-pragma AbiHeader pubkey;
-pragma AbiHeader expire;
+pragma tvm-solidity >= 0.79.0;
 
 import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V9.tsol";
 
@@ -17,6 +14,8 @@ import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/TIP3TokenRoot.tsol";
 
 
+#[ExternalMessage(time, pubkey, expire)]
+#[CustomReplayProt]
 contract MultiVaultSolanaEverscaleEventAlien is
     SolanaEverscaleBaseEvent,
     IMultiVaultSolanaEverscaleEventAlien
@@ -46,11 +45,11 @@ contract MultiVaultSolanaEverscaleEventAlien is
     address target_token;
     uint128 target_amount;
 
-    address public limitApprover;
-    bool public isLimitApproved;
+    address limitApprover_;
+    bool isLimitApproved_;
 
     modifier onlyLimitApprover() {
-        require(msg.sender == limitApprover && limitApprover.value != 0, ErrorCodes.SENDER_IS_NOT_LIMIT_APPROVER);
+        require(msg.sender == limitApprover_ && !limitApprover_.isStdZero(), ErrorCodes.SENDER_IS_NOT_LIMIT_APPROVER);
         _;
     }
 
@@ -58,6 +57,14 @@ contract MultiVaultSolanaEverscaleEventAlien is
         address _initializer,
         TvmCell _meta
     ) SolanaEverscaleBaseEvent(_initializer, _meta) {}
+
+    function isLimitApproved() externalMsg public view returns (bool) {
+        return isLimitApproved_;
+    }
+
+    function limitApprover() externalMsg public view returns (address) {
+        return limitApprover_;
+    }
 
     function afterSignatureCheck(
         TvmSlice body,
@@ -110,7 +117,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
         }
 
         ISolanaEverscaleEventConfiguration(eventInitData.configuration).getDetails{
-            value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS, address(this).wid),
+            value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS),
             callback: MultiVaultSolanaEverscaleEventAlien.receiveConfigurationDetails
         }();
     }
@@ -125,7 +132,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
         proxy = _networkConfiguration.proxy;
 
         IProxyMultiVaultAlien_V9(proxy).deriveSolanaAlienTokenRoot{
-            value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS, address(this).wid),
+            value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS),
             callback: MultiVaultSolanaEverscaleEventAlien.receiveAlienTokenRoot
         }(
             base_token,
@@ -143,7 +150,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
         token = token_;
 
         TIP3TokenRoot(token).name{
-            value: gasToValue(Gas.REQUEST_TOKEN_NAME_GAS, address(this).wid),
+            value: gasToValue(Gas.REQUEST_TOKEN_NAME_GAS),
             bounce: true,
             callback: MultiVaultSolanaEverscaleEventAlien.receiveTokenName
         }();
@@ -161,7 +168,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
         // Token exists, no need to deploy
         // Ask the router address
         IProxyMultiVaultAlien_V9(proxy).deriveMergeRouter{
-            value: gasToValue(Gas.REQUEST_MERGE_ROUTER_GAS, address(this).wid),
+            value: gasToValue(Gas.REQUEST_MERGE_ROUTER_GAS),
             bounce: false,
             callback: MultiVaultSolanaEverscaleEventAlien.receiveMergeRouter
         }(token);
@@ -181,7 +188,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
 
         // Request merge router pool
         IMergeRouter(router).getPool{
-            value: gasToValue(Gas.REQUEST_POOL_GAS, address(this).wid),
+            value: gasToValue(Gas.REQUEST_POOL_GAS),
             bounce: true,
             callback: MultiVaultSolanaEverscaleEventAlien.receiveMergeRouterPool
         }();
@@ -199,11 +206,11 @@ contract MultiVaultSolanaEverscaleEventAlien is
 
         pool = pool_;
 
-        if (pool.value == 0) {
+        if (pool.isStdZero()) {
             _finishSetup(token, amount);
         } else {
             IMergePool_V2(pool).getCanon{
-                value: gasToValue(Gas.REQUEST_CANON_GAS, address(this).wid),
+                value: gasToValue(Gas.REQUEST_CANON_GAS),
                 bounce: false,
                 callback: MultiVaultSolanaEverscaleEventAlien.receiveMergePoolCanon
             }();
@@ -253,7 +260,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
 
     function onConfirm() internal override {
         TvmCell metaData = abi.encode(
-            isLimitApproved,
+            isLimitApproved_,
             address(this),
             target_token,
             target_amount,
@@ -262,11 +269,12 @@ contract MultiVaultSolanaEverscaleEventAlien is
         );
 
         ISolanaEverscaleProxyExtended(eventInitData.configuration).onSolanaEventConfirmedExtended{
+            value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, metaData, initializer);
     }
 
-    function getDecodedData() external override responsible returns(
+    function getDecodedData() externalMsg internalMsg external override responsible returns(
         uint256 base_token_,
         string name_,
         string symbol_,
@@ -295,15 +303,15 @@ contract MultiVaultSolanaEverscaleEventAlien is
     }
 
     function dailyLimitReached(address _approver) external override {
-        require(msg.sender == proxy && proxy.value != 0, ErrorCodes.SENDER_NOT_PROXY);
+        require(msg.sender == proxy && !proxy.isStdZero(), ErrorCodes.SENDER_NOT_PROXY);
 
         _setStatusLimitReached(_approver);
 
-        limitApprover = _approver;
+        limitApprover_ = _approver;
     }
 
     function approveLimit() external onlyLimitApprover {
-        isLimitApproved = true;
+        isLimitApproved_ = true;
 
         setStatusConfirmed();
         onConfirm();
@@ -318,7 +326,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
         uint32 selector = slice.load(uint32);
 
         if (
-            selector == tvm.functionId(TIP3TokenRoot.name) &&
+            selector == abi.functionId(TIP3TokenRoot.name) &&
             msg.sender == token
         ) {
             // Failed to request token meta
@@ -336,13 +344,13 @@ contract MultiVaultSolanaEverscaleEventAlien is
 
             _requestMergeRouter();
         } else if (
-            selector == tvm.functionId(IMergeRouter.getPool) &&
+            selector == abi.functionId(IMergeRouter.getPool) &&
             msg.sender == router
         ) {
             // Failed to request router's pool
             // Seems like corresponding router not deployed so deploy it
             IProxyMultiVaultAlien_V9(proxy).deployMergeRouter{
-                value: gasToValue(Gas.DEPLOY_MERGE_ROUTER_GAS, address(this).wid),
+                value: gasToValue(Gas.DEPLOY_MERGE_ROUTER_GAS),
                 bounce: false
             }(token);
 

@@ -1,8 +1,8 @@
-pragma ever-solidity >= 0.62.0;
+pragma tvm-solidity >= 0.79.0;
 
 interface ActionStructure {
     struct TonAction {
-        uint128 value;
+        coins value;
         address target;
         TvmCell payload;
     }

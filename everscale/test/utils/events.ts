@@ -17,16 +17,35 @@ export enum EventAction {
 
 export const getRequiredVotes = async (
     eventContract_: Address,
+    type_: EventType
 ): Promise<number> => {
-    const eventContract = locklift.factory.getDeployedContract(
-        "EthereumEverscaleBaseEvent",
-        eventContract_
-    );
+    let eventContract: any;
+    if (type_ == EventType.EthereumEverscale) {
+        eventContract = locklift.factory.getDeployedContract(
+            "EthereumEverscaleBaseEvent",
+            eventContract_
+        );
+    } else if (type_ == EventType.EverscaleEthereum) {
+        eventContract = locklift.factory.getDeployedContract(
+            "EverscaleEthereumBaseEvent",
+            eventContract_
+        );
+    } else if (type_ == EventType.SolanaEverscale) {
+        eventContract = locklift.factory.getDeployedContract(
+            "SolanaEverscaleBaseEvent",
+            eventContract_
+        );
+    } else if (type_ == EventType.EverscaleSolana) {
+        eventContract = locklift.factory.getDeployedContract(
+            "EverscaleSolanaBaseEvent",
+            eventContract_
+        );
+    }
 
     return eventContract.methods
-        .requiredVotes()
+        .getDetails({answerId: 0})
         .call()
-        .then((t) => parseInt(t.requiredVotes, 10));
+        .then((t) => parseInt(t._requiredVotes, 10));
 }
 
 export const processEvent = async (
@@ -35,7 +54,7 @@ export const processEvent = async (
     type_: EventType,
     action_: EventAction,
 ) => {
-    const requiredVotes = await getRequiredVotes(eventContract_);
+    const requiredVotes = await getRequiredVotes(eventContract_, type_);
 
     const votes = [];
 

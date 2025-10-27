@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.7",
 	"header": ["time", "expire"],
 	"functions": [
 		{
@@ -11,6 +11,38 @@
 				{"name":"_alienTokenWalletPlatformCode","type":"cell"}
 			],
 			"outputs": [
+			]
+		},
+		{
+			"name": "alienTokenWalletPlatformCode",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "nativeProxy",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
+			"name": "eventClosers",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address[]"}
+			]
+		},
+		{
+			"name": "eventDeployers",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address[]"}
 			]
 		},
 		{
@@ -63,6 +95,14 @@
 			]
 		},
 		{
+			"name": "owner",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
 			"name": "transferOwnership",
 			"inputs": [
 				{"name":"newOwner","type":"address"}
@@ -76,58 +116,9 @@
 			],
 			"outputs": [
 			]
-		},
-		{
-			"name": "owner",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"owner","type":"address"}
-			]
-		},
-		{
-			"name": "_randomNonce",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"_randomNonce","type":"uint256"}
-			]
-		},
-		{
-			"name": "alienTokenWalletPlatformCode",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"alienTokenWalletPlatformCode","type":"cell"}
-			]
-		},
-		{
-			"name": "nativeProxy",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"nativeProxy","type":"address"}
-			]
-		},
-		{
-			"name": "eventClosers",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"eventClosers","type":"address[]"}
-			]
-		},
-		{
-			"name": "eventDeployers",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"eventDeployers","type":"address[]"}
-			]
 		}
 	],
-	"data": [
-		{"key":1,"name":"_randomNonce","type":"uint256"}
+	"getters": [
 	],
 	"events": [
 		{
@@ -141,14 +132,14 @@
 		}
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"owner","type":"address"},
-		{"name":"_randomNonce","type":"uint256"},
-		{"name":"alienTokenWalletPlatformCode","type":"cell"},
-		{"name":"nativeProxy","type":"address"},
-		{"name":"eventClosers","type":"address[]"},
-		{"name":"eventDeployers","type":"address[]"}
+		{"init":true,"name":"_pubkey","type":"fixedbytes32"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":false,"name":"_owner","type":"address"},
+		{"init":true,"name":"_randomNonce","type":"uint256"},
+		{"init":false,"name":"alienTokenWalletPlatformCode_","type":"cell"},
+		{"init":false,"name":"nativeProxy_","type":"address"},
+		{"init":false,"name":"eventClosers_","type":"address[]"},
+		{"init":false,"name":"eventDeployers_","type":"address[]"}
 	]
 }
