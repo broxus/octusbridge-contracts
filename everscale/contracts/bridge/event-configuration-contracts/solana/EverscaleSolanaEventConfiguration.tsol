@@ -193,15 +193,13 @@ contract EverscaleSolanaEventConfiguration is
         coins _value,
         uint8 _flag
     ) internal view {
+        TvmCell stateInit = _buildEventStateInit(_eventInitData);
+
         if (eventAction == EventAction.MultivaultAlien) {
             new MultiVaultEverscaleSolanaEventAlien{
                 value: _value,
                 flag: _flag,
-                code: basicConfiguration.eventCode,
-                pubkey: 0,
-                varInit: {
-                    eventInitData: _eventInitData
-                },
+                stateInit: stateInit,
                 wid: address(this).wid
             }(msg.sender, meta);
 
@@ -212,11 +210,7 @@ contract EverscaleSolanaEventConfiguration is
             new MultiVaultEverscaleSolanaEventNative{
                 value: _value,
                 flag: _flag,
-                code: basicConfiguration.eventCode,
-                pubkey: 0,
-                varInit: {
-                    eventInitData: _eventInitData
-                },
+                stateInit: stateInit,
                 wid: address(this).wid
             }(msg.sender, meta);
 
@@ -227,11 +221,7 @@ contract EverscaleSolanaEventConfiguration is
             new TokenTransferEverscaleSolanaEvent{
                 value: _value,
                 flag: _flag,
-                code: basicConfiguration.eventCode,
-                pubkey: 0,
-                varInit: {
-                    eventInitData: _eventInitData
-                },
+                stateInit: stateInit,
                 wid: address(this).wid
             }(msg.sender, meta);
 
@@ -242,11 +232,7 @@ contract EverscaleSolanaEventConfiguration is
             new StakingEverscaleSolanaEvent{
                 value: _value,
                 flag: _flag,
-                code: basicConfiguration.eventCode,
-                pubkey: 0,
-                varInit: {
-                    eventInitData: _eventInitData
-                },
+                stateInit: stateInit,
                 wid: address(this).wid
             }(msg.sender, meta);
         }
@@ -255,11 +241,15 @@ contract EverscaleSolanaEventConfiguration is
     function _deriveEventAddress(
         IEverscaleSolanaEvent.EverscaleSolanaEventInitData eventInitData
     ) internal view returns (address _event) {
+        TvmCell stateInit = _buildEventStateInit(eventInitData);
+        _event = address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
+    }
 
-        TvmCell stateInit;
-
+    function _buildEventStateInit(
+        IEverscaleSolanaEvent.EverscaleSolanaEventInitData eventInitData
+    ) internal view returns (TvmCell _stateInit) {
         if (eventAction == EventAction.MultivaultAlien) {
-            stateInit = abi.encodeStateInit({
+            _stateInit = abi.encodeStateInit({
                 contr: MultiVaultEverscaleSolanaEventAlien,
                 varInit: {
                     eventInitData: eventInitData
@@ -268,7 +258,7 @@ contract EverscaleSolanaEventConfiguration is
                 code: basicConfiguration.eventCode
             });
         } else if (eventAction == EventAction.MultivaultNative) {
-            stateInit = abi.encodeStateInit({
+            _stateInit = abi.encodeStateInit({
                 contr: MultiVaultEverscaleSolanaEventNative,
                 varInit: {
                     eventInitData: eventInitData
@@ -277,7 +267,7 @@ contract EverscaleSolanaEventConfiguration is
                 code: basicConfiguration.eventCode
             });
         } else if (eventAction == EventAction.TokenTransfer) {
-            stateInit = abi.encodeStateInit({
+            _stateInit = abi.encodeStateInit({
                 contr: TokenTransferEverscaleSolanaEvent,
                 varInit: {
                     eventInitData: eventInitData
@@ -286,7 +276,7 @@ contract EverscaleSolanaEventConfiguration is
                 code: basicConfiguration.eventCode
             });
         } else if (eventAction == EventAction.Staking) {
-            stateInit = abi.encodeStateInit({
+            _stateInit = abi.encodeStateInit({
                 contr: StakingEverscaleSolanaEvent,
                 varInit: {
                     eventInitData: eventInitData
@@ -295,7 +285,5 @@ contract EverscaleSolanaEventConfiguration is
                 code: basicConfiguration.eventCode
             });
         }
-
-        _event = address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 }

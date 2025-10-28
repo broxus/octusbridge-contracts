@@ -197,15 +197,13 @@ contract EverscaleEthereumEventConfiguration is
         coins _value,
         uint8 _flag
     ) internal view {
+        TvmCell stateInit = _buildEventStateInit(_eventInitData);
+
         if (eventAction == EventAction.MultivaultAlien) {
             new MultiVaultEverscaleEVMEventAlien{
                 value: _value,
                 flag: _flag,
-                code: basicConfiguration.eventCode,
-                pubkey: 0,
-                varInit: {
-                    eventInitData: _eventInitData
-                },
+                stateInit: stateInit,
                 wid: address(this).wid
             }(msg.sender, meta);
 
@@ -216,11 +214,7 @@ contract EverscaleEthereumEventConfiguration is
             new MultiVaultEverscaleEVMEventNative{
                 value: _value,
                 flag: _flag,
-                code: basicConfiguration.eventCode,
-                pubkey: 0,
-                varInit: {
-                    eventInitData: _eventInitData
-                },
+                stateInit: stateInit,
                 wid: address(this).wid
             }(msg.sender, meta);
 
@@ -231,11 +225,7 @@ contract EverscaleEthereumEventConfiguration is
             new TokenTransferEverscaleEthereumEvent{
                 value: _value,
                 flag: _flag,
-                code: basicConfiguration.eventCode,
-                pubkey: 0,
-                varInit: {
-                    eventInitData: _eventInitData
-                },
+                stateInit: stateInit,
                 wid: address(this).wid
             }(msg.sender, meta);
 
@@ -246,11 +236,7 @@ contract EverscaleEthereumEventConfiguration is
             new StakingEverscaleEthereumEvent{
                 value: _value,
                 flag: _flag,
-                code: basicConfiguration.eventCode,
-                pubkey: 0,
-                varInit: {
-                    eventInitData: _eventInitData
-                },
+                stateInit: stateInit,
                 wid: address(this).wid
             }(msg.sender, meta);
 
@@ -261,11 +247,7 @@ contract EverscaleEthereumEventConfiguration is
             new DaoEthereumActionEvent{
                 value: _value,
                 flag: _flag,
-                code: basicConfiguration.eventCode,
-                pubkey: 0,
-                varInit: {
-                    eventInitData: _eventInitData
-                },
+                stateInit: stateInit,
                 wid: address(this).wid
             }(msg.sender, meta);
         }
@@ -274,11 +256,15 @@ contract EverscaleEthereumEventConfiguration is
     function _deriveEventAddress(
         IEverscaleEthereumEvent.EverscaleEthereumEventInitData eventInitData
     ) internal view returns (address _event) {
+        TvmCell stateInit = _buildEventStateInit(eventInitData);
+        _event = address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
+    }
 
-        TvmCell stateInit;
-
+    function _buildEventStateInit(
+        IEverscaleEthereumEvent.EverscaleEthereumEventInitData eventInitData
+    ) internal view returns (TvmCell _stateInit) {
         if (eventAction == EventAction.MultivaultAlien) {
-            stateInit = abi.encodeStateInit({
+            _stateInit = abi.encodeStateInit({
                 contr: MultiVaultEverscaleEVMEventAlien,
                 varInit: {
                     eventInitData: eventInitData
@@ -287,7 +273,7 @@ contract EverscaleEthereumEventConfiguration is
                 code: basicConfiguration.eventCode
             });
         } else if (eventAction == EventAction.MultivaultNative) {
-            stateInit = abi.encodeStateInit({
+            _stateInit = abi.encodeStateInit({
                 contr: MultiVaultEverscaleEVMEventNative,
                 varInit: {
                     eventInitData: eventInitData
@@ -296,7 +282,7 @@ contract EverscaleEthereumEventConfiguration is
                 code: basicConfiguration.eventCode
             });
         } else if (eventAction == EventAction.TokenTransfer) {
-            stateInit = abi.encodeStateInit({
+            _stateInit = abi.encodeStateInit({
                 contr: TokenTransferEverscaleEthereumEvent,
                 varInit: {
                     eventInitData: eventInitData
@@ -305,7 +291,7 @@ contract EverscaleEthereumEventConfiguration is
                 code: basicConfiguration.eventCode
             });
         } else if (eventAction == EventAction.Staking) {
-            stateInit = abi.encodeStateInit({
+            _stateInit = abi.encodeStateInit({
                 contr: StakingEverscaleEthereumEvent,
                 varInit: {
                     eventInitData: eventInitData
@@ -314,7 +300,7 @@ contract EverscaleEthereumEventConfiguration is
                 code: basicConfiguration.eventCode
             });
         } else if (eventAction == EventAction.Dao) {
-            stateInit = abi.encodeStateInit({
+            _stateInit = abi.encodeStateInit({
                 contr: DaoEthereumActionEvent,
                 varInit: {
                     eventInitData: eventInitData
@@ -323,7 +309,5 @@ contract EverscaleEthereumEventConfiguration is
                 code: basicConfiguration.eventCode
             });
         }
-
-        _event = address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 }

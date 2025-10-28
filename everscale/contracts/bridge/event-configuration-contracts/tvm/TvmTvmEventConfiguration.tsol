@@ -355,43 +355,38 @@ contract TvmTvmEventConfiguration is
         TvmCell _eventBody,
         coins _value,
         uint8 _flag
-    ) internal view returns(address) {
-        address newEvent;
+    ) internal view returns(address _newEvent) {
+        TvmCell stateInit = _buildEventStateInit(_eventInitData);
+
         if (eventAction == EventAction.MultivaultAlien) {
-            newEvent = new MultiVaultTvmTvmEventAlien{
+            _newEvent = new MultiVaultTvmTvmEventAlien{
                 value: _value,
                 flag: _flag,
-                code: basicConfiguration.eventCode,
-                pubkey: 0,
-                varInit: {
-                    eventInitData: _eventInitData
-                },
+                stateInit: stateInit,
                 wid: address(this).wid
             }(msg.sender, meta, transactionChecker, _eventBody, basicConfiguration.eventInitialBalance);
         } else if (eventAction == EventAction.MultivaultNative) {
-            newEvent = new MultiVaultTvmTvmEventNative{
+            _newEvent = new MultiVaultTvmTvmEventNative{
                 value: _value,
                 flag: _flag,
-                code: basicConfiguration.eventCode,
-                pubkey: 0,
-                varInit: {
-                    eventInitData: _eventInitData
-                },
+                stateInit: stateInit,
                 wid: address(this).wid
             }(msg.sender, meta, transactionChecker, _eventBody, basicConfiguration.eventInitialBalance);
         }
-
-        return newEvent;
     }
 
     function _deriveEventAddress(
         ITvmTvmEvent.TvmTvmEventInitData eventInitData
     ) internal view returns (address _event) {
+        TvmCell stateInit = _buildEventStateInit(eventInitData);
+        _event = address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
+    }
 
-        TvmCell stateInit;
-
+    function _buildEventStateInit(
+        ITvmTvmEvent.TvmTvmEventInitData eventInitData
+    ) internal view returns (TvmCell _stateInit) {
         if (eventAction == EventAction.MultivaultAlien) {
-            stateInit = abi.encodeStateInit({
+            _stateInit = abi.encodeStateInit({
                 contr: MultiVaultTvmTvmEventAlien,
                 varInit: {
                     eventInitData: eventInitData
@@ -400,7 +395,7 @@ contract TvmTvmEventConfiguration is
                 code: basicConfiguration.eventCode
             });
         } else if (eventAction == EventAction.MultivaultNative) {
-            stateInit = abi.encodeStateInit({
+            _stateInit = abi.encodeStateInit({
                 contr: MultiVaultTvmTvmEventNative,
                 varInit: {
                     eventInitData: eventInitData
@@ -409,7 +404,5 @@ contract TvmTvmEventConfiguration is
                 code: basicConfiguration.eventCode
             });
         }
-
-        _event = address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 }
