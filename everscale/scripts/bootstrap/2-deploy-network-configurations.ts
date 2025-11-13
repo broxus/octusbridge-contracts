@@ -14,6 +14,7 @@ import {
   EthereumEverscaleEventConfigurationFactoryAbi,
   EverscaleEthereumEventConfigurationFactoryAbi,
   RoundDeployerAbi,
+  GasValuesAbi,
 } from "../../build/factorySource";
 
 const config = getConfig();
@@ -22,7 +23,7 @@ assert(!!config, "Config should be defined");
 
 enum EventAction {
   MultivaultAlien,
-  MultivaultNative
+  MultivaultNative,
 }
 
 const ALIEN_TRANSFER_EVENT_ABI = {
@@ -176,6 +177,7 @@ const main = async (): Promise<void> => {
   const proxyMultiVaultNative = locklift.deployments.getContract<ProxyMultiVaultNative_V8Abi>("ProxyMultiVaultNative");
   const bridge = locklift.deployments.getContract<BridgeAbi>("Bridge");
   const roundDeployer = locklift.deployments.getContract<RoundDeployerAbi>("RoundDeployer");
+  const gasValues = locklift.deployments.getContract<GasValuesAbi>("GasValues");
 
   const ethEverFactoryConfigCode = await ethEverEventConfigFactory.methods.configurationCode().call();
   const everEthFactoryConfigCode = await everEthEventConfigFactory.methods.configurationCode().call();
@@ -194,20 +196,30 @@ const main = async (): Promise<void> => {
     "Different config codes on ever eth factory",
   );
   assert(
-    tvmTvmFactoryConfigCode.value0 ===
-      locklift.factory.getContractArtifacts("TvmTvmEventConfiguration").code,
+    tvmTvmFactoryConfigCode.value0 === locklift.factory.getContractArtifacts("TvmTvmEventConfiguration").code,
     "Different config codes on tvm tvm factory",
   );
 
   for (const chainId of config.TVM_CHAIN_IDS) {
     if (!locklift.deployments.deploymentsStore[`NetworkConfig-TvmTvmAlienEvent-${chainId}`]) {
+      const eventInitialGas = await gasValues.methods
+        .getTvmTvmAlienEventInitialBalance({
+          deployMergeRouter: false,
+          deployTokenRoot: false,
+        })
+        .call()
+        .then(r => r.value0);
+
       const tvmTvmAlienConfiguration = {
         _owner: admin.address,
         _flags: 2,
         basicConfiguration: {
           eventABI: Buffer.from(JSON.stringify(TVM_ALIEN_TRANSFER_EVENT_ABI)).toString("base64"),
           staking: roundDeployer.address,
-          eventInitialBalance: config?.GAS.CONFIGURATION_EVENT_INITIAL_BALANCE,
+          eventInitialBalance: new BigNumber(eventInitialGas.dynamicGas)
+            .multipliedBy(config?.GAS_PRICE)
+            .plus(eventInitialGas.fixedValue)
+            .toString(),
           eventCode: locklift.factory.getContractArtifacts("MultiVaultTvmTvmEventAlien").code,
         },
         networkConfiguration: {
@@ -252,13 +264,21 @@ const main = async (): Promise<void> => {
     }
 
     if (!locklift.deployments.deploymentsStore[`NetworkConfig-TvmTvmNativeEvent-${chainId}`]) {
+      const eventInitialGas = await gasValues.methods
+        .getTvmTvmNativeEventInitialBalance()
+        .call()
+        .then(r => r.value0);
+
       const tvmTvmNativeConfiguration = {
         _owner: admin.address,
         _flags: 10,
         basicConfiguration: {
           eventABI: Buffer.from(JSON.stringify(TVM_NATIVE_TRANSFER_EVENT_ABI)).toString("base64"),
           staking: roundDeployer.address,
-          eventInitialBalance: config?.GAS.CONFIGURATION_EVENT_INITIAL_BALANCE,
+          eventInitialBalance: new BigNumber(eventInitialGas.dynamicGas)
+            .multipliedBy(config?.GAS_PRICE)
+            .plus(eventInitialGas.fixedValue)
+            .toString(),
           eventCode: locklift.factory.getContractArtifacts("MultiVaultTvmTvmEventNative").code,
         },
         networkConfiguration: {
@@ -305,13 +325,25 @@ const main = async (): Promise<void> => {
 
   for (const chainId of config.ETH_CHAIN_IDS) {
     if (!locklift.deployments.deploymentsStore[`NetworkConfig-EthEverAlienEvent-${chainId}`]) {
+      const eventInitialGas = await gasValues.methods
+        .getEvmTvmAlienEventInitialBalance({
+          relaysCount: config?.RELAYS_COUNT,
+          deployMergeRouter: false,
+          deployTokenRoot: false,
+        })
+        .call()
+        .then(r => r.value0);
+
       const ethEverAlienConfiguration = {
         _owner: admin.address,
         _flags: 2,
         basicConfiguration: {
           eventABI: Buffer.from(JSON.stringify(ALIEN_TRANSFER_EVENT_ABI)).toString("base64"),
           staking: roundDeployer.address,
-          eventInitialBalance: config?.GAS.CONFIGURATION_EVENT_INITIAL_BALANCE,
+          eventInitialBalance: new BigNumber(eventInitialGas.dynamicGas)
+            .multipliedBy(config?.GAS_PRICE)
+            .plus(eventInitialGas.fixedValue)
+            .toString(),
           eventCode: locklift.factory.getContractArtifacts("MultiVaultEVMEverscaleEventAlien").code,
         },
         networkConfiguration: {
@@ -354,13 +386,23 @@ const main = async (): Promise<void> => {
     }
 
     if (!locklift.deployments.deploymentsStore[`NetworkConfig-EthEverNativeEvent-${chainId}`]) {
+      const eventInitialGas = await gasValues.methods
+        .getEvmTvmNativeEventInitialBalance({
+          relaysCount: config?.RELAYS_COUNT,
+        })
+        .call()
+        .then(r => r.value0);
+
       const ethEverNativeConfiguration = {
         _owner: admin.address,
         _flags: 10,
         basicConfiguration: {
           eventABI: Buffer.from(JSON.stringify(NATIVE_TRANSFER_EVENT_ABI)).toString("base64"),
           staking: roundDeployer.address,
-          eventInitialBalance: config?.GAS.CONFIGURATION_EVENT_INITIAL_BALANCE,
+          eventInitialBalance: new BigNumber(eventInitialGas.dynamicGas)
+            .multipliedBy(config?.GAS_PRICE)
+            .plus(eventInitialGas.fixedValue)
+            .toString(),
           eventCode: locklift.factory.getContractArtifacts("MultiVaultEVMEverscaleEventNative").code,
         },
         networkConfiguration: {

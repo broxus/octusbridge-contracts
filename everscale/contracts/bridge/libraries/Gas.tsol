@@ -27,9 +27,9 @@ library Gas {
     coins constant NOTIFICATION_GAS = 10_000;
 
     coins constant DEPLOY_EVENT_COMPENSATION = GasParams.STORAGE_FEE_K * 0.06 ever;
-    coins constant RELAY_VOTE_MIN = 20_000;
+    coins constant RELAY_VOTE_MIN = 26_000;
     coins constant RELAY_VOTE_MAX = 35_000;
-    coins constant DEPLOY_EVM_TVM_ALIEN_EVENT_EXTRA_GAS = 270_000;
+    coins constant DEPLOY_EVM_TVM_ALIEN_EVENT_EXTRA_GAS = 230_000;
     coins constant DEPLOY_EVM_TVM_NATIVE_EVENT_EXTRA_GAS = 190_000;
 
     coins constant DEPLOY_TVM_TVM_EVENT = 150_000;

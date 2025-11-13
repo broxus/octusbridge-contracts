@@ -59,7 +59,7 @@ describe("Deposit Alien token to Everscale with no merging", async function () {
   };
 
   it("Setup bridge", async () => {
-    relays = await setupRelays(3);
+    relays = await setupRelays();
     [bridge, bridgeOwner, staking, cellEncoder, , gasValues] = await setupBridge(relays);
 
     const signer = (await locklift.keystore.getSigner("0"))!;

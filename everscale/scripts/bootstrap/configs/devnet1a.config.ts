@@ -35,11 +35,11 @@ export const config: Config = {
   CONFIG_END_TIMESTAMP: 0,
   CONFIG_END_BLOCK: {},
 
-  LIMIT_APPROVER: '',
-  WITHDRAWER: '',
-  COLD_VAULT: '',
-  MANAGER: '',
-  WNATIVE_ADDRESSES: [''],
+  LIMIT_APPROVER: "",
+  WITHDRAWER: "",
+  COLD_VAULT: "",
+  MANAGER: "",
+  WNATIVE_ADDRESSES: [""],
 
   GAS: {
     ROUND_DEPLOYER_INSTALL_PLATFORM_ONCE: toNano(11 * GAS_COEFF),
@@ -60,6 +60,7 @@ export const config: Config = {
     DEPLOY_PROXY_MULTI_VAULT: toNano(1.5 * GAS_COEFF),
     DEPLOY_ROUND_DEPLOYER: toNano(3 * GAS_COEFF),
     DEPLOY_CELL_ENCODER_STANDALONE: toNano(1.5 * GAS_COEFF),
+    DEPLOY_GAS_VALUES: toNano(1.5 * GAS_COEFF),
 
     MERGE_POOL_ADD_TOKEN: toNano(0.5 * GAS_COEFF),
     MERGE_POOL_ENABLE_ALL: toNano(1 * GAS_COEFF),
@@ -86,4 +87,5 @@ export const config: Config = {
 
     BRIDGE_CONNECTOR_DEPLOY_VALUE: toNano(1 * GAS_COEFF),
   },
+  GAS_PRICE: 60000,
 };

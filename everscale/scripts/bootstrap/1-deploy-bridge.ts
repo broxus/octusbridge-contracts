@@ -429,17 +429,15 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
 
   for (let wNative of config?.WNATIVE_ADDRESSES) {
     await locklift.tracing.trace(
-      proxyNative.methods
-        .setWNative({ _wNative: new Address(wNative) })
-          .send({
-            from: admin.address,
-            amount: config.GAS.PROXY_MULTI_VAULT_SET_ONCE_EVM_TOKEN_PLATFORM,
-            bounce: true,
-          }),
+      proxyNative.methods.setWNative({ _wNative: new Address(wNative) }).send({
+        from: admin.address,
+        amount: config.GAS.PROXY_MULTI_VAULT_SET_ONCE_EVM_TOKEN_PLATFORM,
+        bounce: true,
+      }),
     );
   }
 
-  console.log('Set wNative to native proxy');
+  console.log("Set wNative to native proxy");
 
   await locklift.tracing.trace(
     proxyAlien.methods.setProxyMultiVaultNative({ _proxyMultiVaultNative: proxyNative.address }).send({
@@ -502,7 +500,7 @@ const deployStakingConfigurations = async (
         startBlockNumber: config.ETH_LAST_BLOCK[chainId],
         endBlockNumber: 0,
       },
-      eventAction: EVENT_ACTION_STAKING
+      eventAction: EVENT_ACTION_STAKING,
     };
 
     await locklift.tracing.trace(
@@ -517,7 +515,7 @@ const deployStakingConfigurations = async (
       .deriveConfigurationAddress({
         basicConfiguration: stakingEthEverConfiguration.basicConfiguration,
         networkConfiguration: stakingEthEverConfiguration.networkConfiguration,
-        eventAction: EVENT_ACTION_STAKING
+        eventAction: EVENT_ACTION_STAKING,
       })
       .call()
       .then(r => locklift.factory.getDeployedContract("EthereumEverscaleEventConfiguration", r.value0));
@@ -554,7 +552,7 @@ const deployStakingConfigurations = async (
       startTimestamp: config.ETH_STAKING_START_TIMESTAMP,
       endTimestamp: 0,
     },
-    eventAction: EVENT_ACTION_STAKING
+    eventAction: EVENT_ACTION_STAKING,
   };
 
   await locklift.tracing.trace(
@@ -569,7 +567,7 @@ const deployStakingConfigurations = async (
     .deriveConfigurationAddress({
       basicConfiguration: stakingEverEthConfiguration.basicConfiguration,
       networkConfiguration: stakingEverEthConfiguration.networkConfiguration,
-      eventAction: EVENT_ACTION_STAKING
+      eventAction: EVENT_ACTION_STAKING,
     })
     .call()
     .then(r => locklift.factory.getDeployedContract("EverscaleEthereumEventConfiguration", r.value0));
@@ -705,6 +703,22 @@ const main = async (): Promise<void> => {
     deploymentName: "CellEncoderStandalone",
     address: cellEncoder.address,
     contractName: "CellEncoderStandalone",
+  });
+
+  const { contract: gasValues } = await locklift.factory.deployContract({
+    contract: "GasValues",
+    constructorParams: { _owner: admin.address },
+    initParams: { _nonce: getRandomNonce() },
+    publicKey: signer.publicKey,
+    value: config?.GAS.DEPLOY_GAS_VALUES,
+  });
+
+  console.log(`GasValues: ${gasValues.address}`);
+
+  await locklift.deployments.saveContract({
+    deploymentName: "GasValues",
+    address: gasValues.address,
+    contractName: "GasValues",
   });
 
   const { stakingEthEverConfigs, stakingEverEthConfig } = await deployStakingConfigurations(

@@ -71,7 +71,7 @@ describe("Test EVM native multivault pipeline", async function () {
   const amount = 500;
 
   it("Setup bridge", async () => {
-    relays = await setupRelays(3);
+    relays = await setupRelays();
     [bridge, bridgeOwner, staking, cellEncoder, trustlessVerifier, gasValues] = await setupBridge(relays);
 
     const signer = (await locklift.keystore.getSigner("0"))!;

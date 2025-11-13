@@ -86,7 +86,7 @@ describe("Deposit Alien token with merging with custom token", async function ()
   const amount = 333;
 
   it("Setup bridge", async () => {
-    relays = await setupRelays(3);
+    relays = await setupRelays();
     [bridge, bridgeOwner, staking, cellEncoder, , gasValues] = await setupBridge(relays);
 
     const signer = (await locklift.keystore.getSigner("0"))!;

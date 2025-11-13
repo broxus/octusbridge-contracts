@@ -39,6 +39,7 @@ export type Config = {
   MANAGER: string;
 
   GAS: Record<string, string>;
+  GAS_PRICE: string | number;
 };
 
 export const getConfig = (): Config | null => {

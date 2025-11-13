@@ -1,11 +1,4 @@
-import {
-  Address,
-  Contract,
-  getRandomNonce,
-  Signer,
-  toNano,
-  zeroAddress,
-} from 'locklift';
+import { Address, Contract, getRandomNonce, Signer, toNano, zeroAddress } from "locklift";
 
 import {
   ProxyMultiVaultAlien_V10Abi,
@@ -15,16 +8,17 @@ import {
   TvmTvmEventConfigurationFactoryAbi,
   RoundDeployerAbi,
   MergePool_V7Abi,
-} from '../../build/factorySource';
+  GasValuesAbi,
+} from "../../build/factorySource";
 
-import assert from 'node:assert';
-import { getConfig } from '../bootstrap/configs';
+import assert from "node:assert";
+import { getConfig } from "../bootstrap/configs";
 
 const config = getConfig();
 
-assert(!!config, 'Config should be defined');
+assert(!!config, "Config should be defined");
 
-const EMPTY_CELL = 'te6ccgEBAQEAAgAAAA==';
+const EMPTY_CELL = "te6ccgEBAQEAAgAAAA==";
 
 const gasCoeff = 60;
 
@@ -37,36 +31,20 @@ const upgradeProxies = async (
 }> => {
   let needToUpgradeMergePool = false;
 
-  let alienProxy =
-    locklift.deployments.getContract<ProxyMultiVaultAlien_V10Abi>(
-      'ProxyMultiVaultAlien',
-    );
-  let nativeProxy =
-    locklift.deployments.getContract<ProxyMultiVaultNative_V8Abi>(
-      'ProxyMultiVaultNative',
-    );
+  let alienProxy = locklift.deployments.getContract<ProxyMultiVaultAlien_V10Abi>("ProxyMultiVaultAlien");
+  let nativeProxy = locklift.deployments.getContract<ProxyMultiVaultNative_V8Abi>("ProxyMultiVaultNative");
 
-  const alienProxyCodeHash = await alienProxy
-    .getFullState()
-    .then((s) => s.state?.codeHash);
-  const nativeProxyCodeHash = await nativeProxy
-    .getFullState()
-    .then((s) => s.state?.codeHash);
+  const alienProxyCodeHash = await alienProxy.getFullState().then(s => s.state?.codeHash);
+  const nativeProxyCodeHash = await nativeProxy.getFullState().then(s => s.state?.codeHash);
 
-  assert(alienProxyCodeHash !== undefined, 'Alien proxy is not deployed');
-  assert(nativeProxyCodeHash !== undefined, 'Native proxy is not deployed');
+  assert(alienProxyCodeHash !== undefined, "Alien proxy is not deployed");
+  assert(nativeProxyCodeHash !== undefined, "Native proxy is not deployed");
 
-  const alienProxyNewCode = locklift.factory.getContractArtifacts(
-    'ProxyMultiVaultAlien_V10',
-  );
-  const nativeProxyNewCode = locklift.factory.getContractArtifacts(
-    'ProxyMultiVaultNative_V8',
-  );
+  const alienProxyNewCode = locklift.factory.getContractArtifacts("ProxyMultiVaultAlien_V10");
+  const nativeProxyNewCode = locklift.factory.getContractArtifacts("ProxyMultiVaultNative_V8");
 
   if (alienProxyCodeHash !== alienProxyNewCode.codeHash) {
-    console.log(
-      `Updating alien proxy: ${alienProxyCodeHash} -> ${alienProxyNewCode.codeHash}`,
-    );
+    console.log(`Updating alien proxy: ${alienProxyCodeHash} -> ${alienProxyNewCode.codeHash}`);
 
     await locklift.tracing.trace(
       alienProxy.methods
@@ -76,21 +54,16 @@ const upgradeProxies = async (
 
     // Update abi in deployments and reload contract
     await locklift.deployments.saveContract({
-      contractName: 'ProxyMultiVaultAlien_V10',
+      contractName: "ProxyMultiVaultAlien_V10",
       address: alienProxy.address,
-      deploymentName: 'ProxyMultiVaultAlien',
+      deploymentName: "ProxyMultiVaultAlien",
     });
 
-    alienProxy =
-      locklift.deployments.getContract<ProxyMultiVaultAlien_V10Abi>(
-        'ProxyMultiVaultAlien',
-      );
+    alienProxy = locklift.deployments.getContract<ProxyMultiVaultAlien_V10Abi>("ProxyMultiVaultAlien");
   }
 
   if (nativeProxyCodeHash !== nativeProxyNewCode.codeHash) {
-    console.log(
-      `Updating native proxy: ${nativeProxyCodeHash} -> ${nativeProxyNewCode.codeHash}`,
-    );
+    console.log(`Updating native proxy: ${nativeProxyCodeHash} -> ${nativeProxyNewCode.codeHash}`);
 
     await locklift.tracing.trace(
       nativeProxy.methods
@@ -100,15 +73,12 @@ const upgradeProxies = async (
 
     // Update abi in deployments and reload contract
     await locklift.deployments.saveContract({
-      contractName: 'ProxyMultiVaultNative_V8',
+      contractName: "ProxyMultiVaultNative_V8",
       address: nativeProxy.address,
-      deploymentName: 'ProxyMultiVaultNative',
+      deploymentName: "ProxyMultiVaultNative",
     });
 
-    nativeProxy =
-      locklift.deployments.getContract<ProxyMultiVaultNative_V8Abi>(
-        'ProxyMultiVaultNative',
-      );
+    nativeProxy = locklift.deployments.getContract<ProxyMultiVaultNative_V8Abi>("ProxyMultiVaultNative");
   }
 
   const { value2: alienTvmConfiguration } = await alienProxy.methods
@@ -116,11 +86,9 @@ const upgradeProxies = async (
     .call({ responsible: true });
 
   if (alienTvmConfiguration.alienTokenRootCode === EMPTY_CELL) {
-    const tvmAlienRoot = locklift.factory.getContractArtifacts('TokenRootAlienTVM');
+    const tvmAlienRoot = locklift.factory.getContractArtifacts("TokenRootAlienTVM");
 
-    console.log(
-      `Setting alien TVM root code to alien proxy: ${tvmAlienRoot.codeHash}`,
-    );
+    console.log(`Setting alien TVM root code to alien proxy: ${tvmAlienRoot.codeHash}`);
 
     await locklift.tracing.trace(
       alienProxy.methods
@@ -133,11 +101,9 @@ const upgradeProxies = async (
   }
 
   if (alienTvmConfiguration.alienTokenWalletCode === EMPTY_CELL) {
-    const tvmAlienWallet = locklift.factory.getContractArtifacts('AlienTokenWalletUpgradeable');
+    const tvmAlienWallet = locklift.factory.getContractArtifacts("AlienTokenWalletUpgradeable");
 
-    console.log(
-      `Setting alien TVM wallet code to alien proxy: ${tvmAlienWallet.codeHash}`,
-    );
+    console.log(`Setting alien TVM wallet code to alien proxy: ${tvmAlienWallet.codeHash}`);
 
     await locklift.tracing.trace(
       alienProxy.methods
@@ -150,11 +116,9 @@ const upgradeProxies = async (
   }
 
   if (alienTvmConfiguration.alienTokenWalletPlatformCode === EMPTY_CELL) {
-    const tvmAlienPlatform = locklift.factory.getContractArtifacts('TokenWalletPlatform');
+    const tvmAlienPlatform = locklift.factory.getContractArtifacts("TokenWalletPlatform");
 
-    console.log(
-      `Setting alien TVM platform code to alien proxy: ${tvmAlienPlatform.codeHash}`,
-    );
+    console.log(`Setting alien TVM platform code to alien proxy: ${tvmAlienPlatform.codeHash}`);
 
     await locklift.tracing.trace(
       alienProxy.methods
@@ -166,17 +130,12 @@ const upgradeProxies = async (
     );
   }
 
-  const alienTokenFeeCodeHash = await locklift.provider.getBocHash(
-    alienTvmConfiguration.tokenFeeCode,
-  );
+  const alienTokenFeeCodeHash = await locklift.provider.getBocHash(alienTvmConfiguration.tokenFeeCode);
 
-  const newTokenFeeCode =
-    locklift.factory.getContractArtifacts('BridgeTokenFee');
+  const newTokenFeeCode = locklift.factory.getContractArtifacts("BridgeTokenFee");
 
   if (alienTokenFeeCodeHash !== newTokenFeeCode.codeHash) {
-    console.log(
-      `Setting token fee code to alien proxy: ${alienTokenFeeCodeHash} -> ${newTokenFeeCode.codeHash}`,
-    );
+    console.log(`Setting token fee code to alien proxy: ${alienTokenFeeCodeHash} -> ${newTokenFeeCode.codeHash}`);
 
     await locklift.tracing.trace(
       alienProxy.methods
@@ -188,15 +147,12 @@ const upgradeProxies = async (
   const alienTokenFeePlatform = await alienProxy.methods
     .getPlatformCode({ answerId: 0 })
     .call({ responsible: true })
-    .then((r) => r.value0);
+    .then(r => r.value0);
 
-  const newTokenFeePlatform =
-    locklift.factory.getContractArtifacts('TokenFeePlatform');
+  const newTokenFeePlatform = locklift.factory.getContractArtifacts("TokenFeePlatform");
 
   if (alienTokenFeePlatform === EMPTY_CELL) {
-    console.log(
-      `Setting token fee platform code to alien proxy: ${newTokenFeePlatform.codeHash}`,
-    );
+    console.log(`Setting token fee platform code to alien proxy: ${newTokenFeePlatform.codeHash}`);
 
     await locklift.tracing.trace(
       alienProxy.methods
@@ -208,15 +164,12 @@ const upgradeProxies = async (
   const mergePoolCodeHash = await alienProxy.methods
     .mergePool()
     .call()
-    .then((r) => locklift.provider.getBocHash(r.value0));
+    .then(r => locklift.provider.getBocHash(r.value0));
 
-  const newMergePoolCode =
-    locklift.factory.getContractArtifacts('MergePool_V7');
+  const newMergePoolCode = locklift.factory.getContractArtifacts("MergePool_V7");
 
   if (mergePoolCodeHash !== newMergePoolCode.codeHash) {
-    console.log(
-      `Setting merge pool code to alien proxy: ${mergePoolCodeHash} -> ${newMergePoolCode.codeHash}`,
-    );
+    console.log(`Setting merge pool code to alien proxy: ${mergePoolCodeHash} -> ${newMergePoolCode.codeHash}`);
 
     // Flag to upgrade all merge pools
     needToUpgradeMergePool = true;
@@ -231,15 +184,12 @@ const upgradeProxies = async (
   const mergeRouterCodeHash = await alienProxy.methods
     .mergeRouter()
     .call()
-    .then((r) => locklift.provider.getBocHash(r.value0));
+    .then(r => locklift.provider.getBocHash(r.value0));
 
-  const newMergeRouterCode =
-    locklift.factory.getContractArtifacts('MergeRouter');
+  const newMergeRouterCode = locklift.factory.getContractArtifacts("MergeRouter");
 
   if (mergeRouterCodeHash !== newMergeRouterCode.codeHash) {
-    console.log(
-      `Setting merge router code to alien proxy: ${mergeRouterCodeHash} -> ${newMergeRouterCode.codeHash}`,
-    );
+    console.log(`Setting merge router code to alien proxy: ${mergeRouterCodeHash} -> ${newMergeRouterCode.codeHash}`);
 
     await locklift.tracing.trace(
       alienProxy.methods
@@ -251,7 +201,7 @@ const upgradeProxies = async (
   const nativeProxyInAlien = await alienProxy.methods
     .proxyMultiVaultNative()
     .call()
-    .then((r) => r.value0);
+    .then(r => r.value0);
 
   if (nativeProxyInAlien.equals(zeroAddress)) {
     console.log(`Setting native proxy address to alien proxy`);
@@ -268,7 +218,7 @@ const upgradeProxies = async (
   const limitApproverInAlien = await alienProxy.methods
     .getLimitApprover({ answerId: 0 })
     .call()
-    .then((r) => r.value0);
+    .then(r => r.value0);
 
   if (limitApproverInAlien.equals(zeroAddress)) {
     console.log(`Setting limit approver address to alien proxy`);
@@ -287,14 +237,10 @@ const upgradeProxies = async (
     .getConfiguration({ answerId: 0 })
     .call({ responsible: true });
 
-  const nativeTokenFeeCodeHash = await locklift.provider.getBocHash(
-    nativeTvmConfiguration.tokenFeeCode,
-  );
+  const nativeTokenFeeCodeHash = await locklift.provider.getBocHash(nativeTvmConfiguration.tokenFeeCode);
 
   if (nativeTokenFeeCodeHash !== newTokenFeeCode.codeHash) {
-    console.log(
-      `Setting token fee code to native proxy: ${nativeTokenFeeCodeHash} -> ${newTokenFeeCode.codeHash}`,
-    );
+    console.log(`Setting token fee code to native proxy: ${nativeTokenFeeCodeHash} -> ${newTokenFeeCode.codeHash}`);
 
     await locklift.tracing.trace(
       nativeProxy.methods
@@ -306,12 +252,10 @@ const upgradeProxies = async (
   const nativeTokenFeePlatform = await nativeProxy.methods
     .getPlatformCode({ answerId: 0 })
     .call({ responsible: true })
-    .then((r) => r.value0);
+    .then(r => r.value0);
 
   if (nativeTokenFeePlatform === EMPTY_CELL) {
-    console.log(
-      `Setting token fee platform code to native proxy: ${newTokenFeePlatform.codeHash}`,
-    );
+    console.log(`Setting token fee platform code to native proxy: ${newTokenFeePlatform.codeHash}`);
 
     await locklift.tracing.trace(
       nativeProxy.methods
@@ -320,17 +264,14 @@ const upgradeProxies = async (
     );
   }
 
-  const eventAddressKeeperCode= await nativeProxy.methods
+  const eventAddressKeeperCode = await nativeProxy.methods
     .getEventAddressKeeperCode({ answerId: 0 })
     .call({ responsible: true })
-    .then((r) => r.value0);
+    .then(r => r.value0);
 
-  const nativeEventAddressKeeperCodeHash = await locklift.provider.getBocHash(
-    eventAddressKeeperCode,
-  );
+  const nativeEventAddressKeeperCodeHash = await locklift.provider.getBocHash(eventAddressKeeperCode);
 
-  const newEventAddressKeeperCode =
-    locklift.factory.getContractArtifacts('EventAddressKeeper');
+  const newEventAddressKeeperCode = locklift.factory.getContractArtifacts("EventAddressKeeper");
 
   if (nativeEventAddressKeeperCodeHash !== newEventAddressKeeperCode.codeHash) {
     console.log(
@@ -350,7 +291,7 @@ const upgradeProxies = async (
   const alienProxyInNative = await nativeProxy.methods
     .proxyMultiVaultAlien()
     .call()
-    .then((r) => r.value0);
+    .then(r => r.value0);
 
   if (alienProxyInNative.equals(zeroAddress)) {
     console.log(`Setting alien proxy address to native proxy`);
@@ -365,7 +306,7 @@ const upgradeProxies = async (
   const coldVaultInNative = await nativeProxy.methods
     .coldVault()
     .call()
-    .then((r) => r.value0);
+    .then(r => r.value0);
 
   if (coldVaultInNative.equals(zeroAddress)) {
     console.log(`Setting cold vault address to native proxy`);
@@ -383,7 +324,7 @@ const upgradeProxies = async (
   const vaultWithdrawerInNative = await nativeProxy.methods
     .vaultWithdrawer()
     .call()
-    .then((r) => r.value0);
+    .then(r => r.value0);
 
   if (vaultWithdrawerInNative.equals(zeroAddress)) {
     console.log(`Setting vault withdrawer address to native proxy`);
@@ -401,7 +342,7 @@ const upgradeProxies = async (
   const limitApproverInNative = await nativeProxy.methods
     .getLimitApprover({ answerId: 0 })
     .call()
-    .then((r) => r.value0);
+    .then(r => r.value0);
 
   if (limitApproverInNative.equals(zeroAddress)) {
     console.log(`Setting limit approver address to native proxy`);
@@ -423,16 +364,10 @@ const upgradeProxies = async (
   };
 };
 
-const upgradeMergePools = async (
-  admin: Address,
-  alienProxy: Contract<ProxyMultiVaultAlien_V10Abi>,
-): Promise<void> => {
-  const mergePools = Object.entries(
-    locklift.deployments.deploymentsStore,
-  ).filter(([name]) => name.startsWith('MergePool-')) as [
-    string,
-    Contract<MergePool_V7Abi>,
-  ][];
+const upgradeMergePools = async (admin: Address, alienProxy: Contract<ProxyMultiVaultAlien_V10Abi>): Promise<void> => {
+  const mergePools = Object.entries(locklift.deployments.deploymentsStore).filter(([name]) =>
+    name.startsWith("MergePool-"),
+  ) as [string, Contract<MergePool_V7Abi>][];
 
   for (const [name, pool] of mergePools) {
     console.log(`Upgrade MergePool: ${name}`);
@@ -444,15 +379,13 @@ const upgradeMergePools = async (
     );
 
     await locklift.deployments.saveContract({
-      contractName: 'MergePool_V7',
+      contractName: "MergePool_V7",
       address: pool.address,
       deploymentName: name,
     });
 
     await locklift.tracing.trace(
-      pool.methods
-        .enableAll({})
-        .send({ from: admin, amount: toNano(0.2 * gasCoeff), bounce: true }),
+      pool.methods.enableAll({}).send({ from: admin, amount: toNano(0.2 * gasCoeff), bounce: true }),
     );
   }
 };
@@ -462,179 +395,147 @@ const upgradeConfigFactories = async (signer: Signer): Promise<void> => {
 
   try {
     oldEvmTvmEventConfigFactory =
-      locklift.deployments.getContract<EthereumEverscaleEventConfigurationFactoryAbi>(
-        'EvmTvmEventConfigFactory',
-      );
+      locklift.deployments.getContract<EthereumEverscaleEventConfigurationFactoryAbi>("EvmTvmEventConfigFactory");
   } catch (e) {
-    console.log('EvmTvmEventConfigFactory is not deployed');
+    console.log("EvmTvmEventConfigFactory is not deployed");
   }
 
   const oldEvmTvmEventConfigFactoryCodeHash = await oldEvmTvmEventConfigFactory
     ?.getFullState()
-    .then((r) => r.state?.codeHash);
+    .then(r => r.state?.codeHash);
   const newEvmTvmEventConfigFactory = locklift.factory.getContractArtifacts(
-    'EthereumEverscaleEventConfigurationFactory',
+    "EthereumEverscaleEventConfigurationFactory",
   );
-  const oldEvmTvmConfigurationCodeHash =
-    await oldEvmTvmEventConfigFactory?.methods
-      .configurationCode()
-      .call()
-      .then((r) => locklift.provider.getBocHash(r.value0));
-  const newEvmTvmConfigurationCode = locklift.factory.getContractArtifacts(
-    'EthereumEverscaleEventConfiguration',
-  );
+  const oldEvmTvmConfigurationCodeHash = await oldEvmTvmEventConfigFactory?.methods
+    .configurationCode()
+    .call()
+    .then(r => locklift.provider.getBocHash(r.value0));
+  const newEvmTvmConfigurationCode = locklift.factory.getContractArtifacts("EthereumEverscaleEventConfiguration");
 
   if (
     !oldEvmTvmEventConfigFactory ||
     newEvmTvmConfigurationCode.codeHash !== oldEvmTvmConfigurationCodeHash ||
     newEvmTvmEventConfigFactory.codeHash !== oldEvmTvmEventConfigFactoryCodeHash
   ) {
-    const { contract: evmTvmEventConfigFactory } =
-      await locklift.factory.deployContract({
-        contract: 'EthereumEverscaleEventConfigurationFactory',
-        constructorParams: {
-          _configurationCode: newEvmTvmConfigurationCode.code,
-        },
-        initParams: { _randomNonce: getRandomNonce() },
-        publicKey: signer.publicKey,
-        value: toNano(1 * gasCoeff),
-      });
-
-    await locklift.deployments.saveContract({
-      contractName: 'EthereumEverscaleEventConfigurationFactory',
-      address: evmTvmEventConfigFactory.address,
-      deploymentName: 'EvmTvmEventConfigFactory',
+    const { contract: evmTvmEventConfigFactory } = await locklift.factory.deployContract({
+      contract: "EthereumEverscaleEventConfigurationFactory",
+      constructorParams: {
+        _configurationCode: newEvmTvmConfigurationCode.code,
+      },
+      initParams: { _randomNonce: getRandomNonce() },
+      publicKey: signer.publicKey,
+      value: toNano(1 * gasCoeff),
     });
 
-    console.log(
-      `EvmTvmEventConfigFactory: ${evmTvmEventConfigFactory.address.toString()}`,
-    );
+    await locklift.deployments.saveContract({
+      contractName: "EthereumEverscaleEventConfigurationFactory",
+      address: evmTvmEventConfigFactory.address,
+      deploymentName: "EvmTvmEventConfigFactory",
+    });
+
+    console.log(`EvmTvmEventConfigFactory: ${evmTvmEventConfigFactory.address.toString()}`);
   }
 
   let oldTvmEvmEventConfigFactory = null;
 
   try {
     oldTvmEvmEventConfigFactory =
-      locklift.deployments.getContract<EverscaleEthereumEventConfigurationFactoryAbi>(
-        'TvmEvmEventConfigFactory',
-      );
+      locklift.deployments.getContract<EverscaleEthereumEventConfigurationFactoryAbi>("TvmEvmEventConfigFactory");
   } catch (e) {
-    console.log('TvmEvmEventConfigFactory is not deployed');
+    console.log("TvmEvmEventConfigFactory is not deployed");
   }
 
   const oldTvmEvmEventConfigFactoryCodeHash = await oldTvmEvmEventConfigFactory
     ?.getFullState()
-    .then((r) => r.state?.codeHash);
+    .then(r => r.state?.codeHash);
   const newTvmEvmEventConfigFactory = locklift.factory.getContractArtifacts(
-    'EverscaleEthereumEventConfigurationFactory',
+    "EverscaleEthereumEventConfigurationFactory",
   );
-  const oldTvmEvmConfigurationCodeHash =
-    await oldTvmEvmEventConfigFactory?.methods
-      .configurationCode()
-      .call()
-      .then((r) => locklift.provider.getBocHash(r.value0));
-  const newTvmEvmConfigurationCode = locklift.factory.getContractArtifacts(
-    'EverscaleEthereumEventConfiguration',
-  );
+  const oldTvmEvmConfigurationCodeHash = await oldTvmEvmEventConfigFactory?.methods
+    .configurationCode()
+    .call()
+    .then(r => locklift.provider.getBocHash(r.value0));
+  const newTvmEvmConfigurationCode = locklift.factory.getContractArtifacts("EverscaleEthereumEventConfiguration");
 
   if (
     !oldTvmEvmEventConfigFactory ||
     newTvmEvmConfigurationCode.codeHash !== oldTvmEvmConfigurationCodeHash ||
     newTvmEvmEventConfigFactory.codeHash !== oldTvmEvmEventConfigFactoryCodeHash
   ) {
-    const { contract: tvmEvmEventConfigFactory } =
-      await locklift.factory.deployContract({
-        contract: 'EverscaleEthereumEventConfigurationFactory',
-        constructorParams: {
-          _configurationCode: newTvmEvmConfigurationCode.code,
-        },
-        initParams: { _randomNonce: getRandomNonce() },
-        publicKey: signer.publicKey,
-        value: toNano(1 * gasCoeff),
-      });
-
-    await locklift.deployments.saveContract({
-      contractName: 'EverscaleEthereumEventConfigurationFactory',
-      address: tvmEvmEventConfigFactory.address,
-      deploymentName: 'TvmEvmEventConfigFactory',
+    const { contract: tvmEvmEventConfigFactory } = await locklift.factory.deployContract({
+      contract: "EverscaleEthereumEventConfigurationFactory",
+      constructorParams: {
+        _configurationCode: newTvmEvmConfigurationCode.code,
+      },
+      initParams: { _randomNonce: getRandomNonce() },
+      publicKey: signer.publicKey,
+      value: toNano(1 * gasCoeff),
     });
 
-    console.log(
-      `TvmEvmEventConfigFactory: ${tvmEvmEventConfigFactory.address.toString()}`,
-    );
+    await locklift.deployments.saveContract({
+      contractName: "EverscaleEthereumEventConfigurationFactory",
+      address: tvmEvmEventConfigFactory.address,
+      deploymentName: "TvmEvmEventConfigFactory",
+    });
+
+    console.log(`TvmEvmEventConfigFactory: ${tvmEvmEventConfigFactory.address.toString()}`);
   }
 
   let oldTvmTvmEventConfigFactory = null;
 
   try {
     oldTvmTvmEventConfigFactory =
-      locklift.deployments.getContract<TvmTvmEventConfigurationFactoryAbi>(
-        'TvmTvmEventConfigFactory',
-      );
+      locklift.deployments.getContract<TvmTvmEventConfigurationFactoryAbi>("TvmTvmEventConfigFactory");
   } catch (e) {
-    console.log('TvmTvmEventConfigFactory is not deployed');
+    console.log("TvmTvmEventConfigFactory is not deployed");
   }
 
   const oldTvmTvmEventConfigFactoryCodeHash = await oldTvmTvmEventConfigFactory
     ?.getFullState()
-    .then((r) => r.state?.codeHash);
-  const newTvmTvmEventConfigFactory = locklift.factory.getContractArtifacts(
-    'TvmTvmEventConfigurationFactory',
-  );
-  const oldTvmTvmConfigurationCodeHash =
-    await oldTvmTvmEventConfigFactory?.methods
-      .configurationCode()
-      .call()
-      .then((r) => locklift.provider.getBocHash(r.value0));
-  const newTvmTvmConfigurationCode = locklift.factory.getContractArtifacts(
-    'TvmTvmEventConfiguration',
-  );
+    .then(r => r.state?.codeHash);
+  const newTvmTvmEventConfigFactory = locklift.factory.getContractArtifacts("TvmTvmEventConfigurationFactory");
+  const oldTvmTvmConfigurationCodeHash = await oldTvmTvmEventConfigFactory?.methods
+    .configurationCode()
+    .call()
+    .then(r => locklift.provider.getBocHash(r.value0));
+  const newTvmTvmConfigurationCode = locklift.factory.getContractArtifacts("TvmTvmEventConfiguration");
 
   if (
     !oldTvmTvmEventConfigFactory ||
     newTvmTvmConfigurationCode.codeHash !== oldTvmTvmConfigurationCodeHash ||
     newTvmTvmEventConfigFactory.codeHash !== oldTvmTvmEventConfigFactoryCodeHash
   ) {
-    const { contract: tvmTvmEventConfigFactory } =
-      await locklift.factory.deployContract({
-        contract: 'TvmTvmEventConfigurationFactory',
-        constructorParams: {
-          _configurationCode: newTvmTvmConfigurationCode.code,
-        },
-        initParams: { _randomNonce: getRandomNonce() },
-        publicKey: signer.publicKey,
-        value: toNano(1 * gasCoeff),
-      });
-
-    await locklift.deployments.saveContract({
-      contractName: 'TvmTvmEventConfigurationFactory',
-      address: tvmTvmEventConfigFactory.address,
-      deploymentName: 'TvmTvmEventConfigFactory',
+    const { contract: tvmTvmEventConfigFactory } = await locklift.factory.deployContract({
+      contract: "TvmTvmEventConfigurationFactory",
+      constructorParams: {
+        _configurationCode: newTvmTvmConfigurationCode.code,
+      },
+      initParams: { _randomNonce: getRandomNonce() },
+      publicKey: signer.publicKey,
+      value: toNano(1 * gasCoeff),
     });
 
-    console.log(
-      `TvmTvmEventConfigFactory: ${tvmTvmEventConfigFactory.address.toString()}`,
-    );
+    await locklift.deployments.saveContract({
+      contractName: "TvmTvmEventConfigurationFactory",
+      address: tvmTvmEventConfigFactory.address,
+      deploymentName: "TvmTvmEventConfigFactory",
+    });
+
+    console.log(`TvmTvmEventConfigFactory: ${tvmTvmEventConfigFactory.address.toString()}`);
   }
 };
 
 const upgradeRoundDeployer = async (admin: Address) => {
-  let roundDeployer =
-    locklift.deployments.getContract<RoundDeployerAbi>('RoundDeployer');
+  let roundDeployer = locklift.deployments.getContract<RoundDeployerAbi>("RoundDeployer");
 
-  const roundDeployerCodeHash = await roundDeployer
-    .getFullState()
-    .then((s) => s.state?.codeHash);
+  const roundDeployerCodeHash = await roundDeployer.getFullState().then(s => s.state?.codeHash);
 
-  assert(roundDeployerCodeHash !== undefined, 'Round deployer is not deployed');
+  assert(roundDeployerCodeHash !== undefined, "Round deployer is not deployed");
 
-  const roundDeployerNewCode =
-    locklift.factory.getContractArtifacts('RoundDeployer');
+  const roundDeployerNewCode = locklift.factory.getContractArtifacts("RoundDeployer");
 
   if (roundDeployerCodeHash !== roundDeployerNewCode.codeHash) {
-    console.log(
-      `Updating round deployer: ${roundDeployerCodeHash} -> ${roundDeployerNewCode.codeHash}`,
-    );
+    console.log(`Updating round deployer: ${roundDeployerCodeHash} -> ${roundDeployerNewCode.codeHash}`);
 
     await locklift.tracing.trace(
       roundDeployer.methods
@@ -644,26 +545,23 @@ const upgradeRoundDeployer = async (admin: Address) => {
 
     // Update abi in deployments and reload contract
     await locklift.deployments.saveContract({
-      contractName: 'RoundDeployer',
+      contractName: "RoundDeployer",
       address: roundDeployer.address,
-      deploymentName: 'RoundDeployer',
+      deploymentName: "RoundDeployer",
     });
 
-    roundDeployer =
-      locklift.deployments.getContract<RoundDeployerAbi>('RoundDeployer');
+    roundDeployer = locklift.deployments.getContract<RoundDeployerAbi>("RoundDeployer");
   }
 
   const relayRoundCodeHash = await roundDeployer.methods
     .getCodeData({ answerId: 0 })
     .call({ responsible: true })
-    .then((r) => locklift.provider.getBocHash(r.value0.relay_round_code));
+    .then(r => locklift.provider.getBocHash(r.value0.relay_round_code));
 
-  const newRelayRoundCode = locklift.factory.getContractArtifacts('RelayRound');
+  const newRelayRoundCode = locklift.factory.getContractArtifacts("RelayRound");
 
   if (relayRoundCodeHash !== newRelayRoundCode.codeHash) {
-    console.log(
-      `Setting relay round code to round deployer: ${relayRoundCodeHash} -> ${newRelayRoundCode.codeHash}`,
-    );
+    console.log(`Setting relay round code to round deployer: ${relayRoundCodeHash} -> ${newRelayRoundCode.codeHash}`);
 
     await locklift.tracing.trace(
       roundDeployer.methods
@@ -676,14 +574,39 @@ const upgradeRoundDeployer = async (admin: Address) => {
   }
 };
 
+const upgradeGasValues = async (admin: Address) => {
+  let gasValues = locklift.deployments.getContract<GasValuesAbi>("GasValues");
+
+  const gasValuesCodeHash = await gasValues.getFullState().then(s => s.state?.codeHash);
+
+  assert(gasValuesCodeHash !== undefined, "GasValues is not deployed");
+
+  const gasValuesNewCode = locklift.factory.getContractArtifacts("GasValues");
+
+  if (gasValuesCodeHash !== gasValuesNewCode.codeHash) {
+    console.log(`Updating GasValues: ${gasValuesCodeHash} -> ${gasValuesNewCode.codeHash}`);
+
+    await locklift.tracing.trace(
+      gasValues.methods
+        .upgrade({ code: gasValuesNewCode.code })
+        .send({ from: admin, amount: toNano(3 * gasCoeff), bounce: true }),
+    );
+
+    // Update abi in deployments and reload contract
+    await locklift.deployments.saveContract({
+      contractName: "GasValues",
+      address: gasValues.address,
+      deploymentName: "GasValues",
+    });
+  }
+};
+
 const main = async (): Promise<void> => {
   await locklift.deployments.load();
 
-  const admin = locklift.deployments.getAccount('Admin');
+  const admin = locklift.deployments.getAccount("Admin");
 
-  const { alienProxy, needToUpgradeMergePool } = await upgradeProxies(
-    admin.account.address,
-  );
+  const { alienProxy, needToUpgradeMergePool } = await upgradeProxies(admin.account.address);
 
   if (needToUpgradeMergePool) {
     await upgradeMergePools(admin.account.address, alienProxy);
@@ -691,11 +614,12 @@ const main = async (): Promise<void> => {
 
   await upgradeConfigFactories(admin.signer);
   await upgradeRoundDeployer(admin.account.address);
+  await upgradeGasValues(admin.account.address);
 };
 
 main()
   .then(() => {
-    console.log('Success');
+    console.log("Success");
   })
   .catch((err: unknown) => {
     console.error(err);

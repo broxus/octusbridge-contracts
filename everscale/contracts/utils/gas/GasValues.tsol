@@ -34,7 +34,7 @@ contract GasValues is InternalOwner {
 
             (deployTokenRoot ? deployTokenRootValue.dynamicGas : 0) +
             (deployMergeRouter ? BridgeGas.DEPLOY_MERGE_ROUTER_GAS : 0) +
-            (relaysCount - 1) * BridgeGas.RELAY_VOTE_MIN + BridgeGas.RELAY_VOTE_MAX +
+            relaysCount * 2 / 3 * BridgeGas.RELAY_VOTE_MIN + BridgeGas.RELAY_VOTE_MAX +
             mintTokenValue.dynamicGas +
             BridgeGas.DEPLOY_EVM_TVM_ALIEN_EVENT_EXTRA_GAS
         );
@@ -48,7 +48,7 @@ contract GasValues is InternalOwner {
             BridgeGas.DEPLOY_EVENT_COMPENSATION,
 
             transferTokenValue.dynamicGas +
-            (relaysCount - 1) * BridgeGas.RELAY_VOTE_MIN + BridgeGas.RELAY_VOTE_MAX +
+            relaysCount * 2 / 3 * BridgeGas.RELAY_VOTE_MIN + BridgeGas.RELAY_VOTE_MAX +
             BridgeGas.DEPLOY_EVENT_ADDRESS_KEEPER +
             BridgeGas.DEPLOY_EVM_TVM_NATIVE_EVENT_EXTRA_GAS
         );
