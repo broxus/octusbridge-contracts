@@ -332,7 +332,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
             // Failed to request token meta
             // Seems like corresponding token root not deployed so deploy it
             IProxyMultiVaultAlien_V9(proxy).deploySolanaAlienToken{
-                value: Gas.getDeployTokenRootValue(),
+                value: Gas.calcValue(Gas.getDeployTokenRootValue()),
                 bounce: false
             }(
                 base_token,

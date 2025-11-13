@@ -212,7 +212,7 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
         if (!is_limit_approved && isLimitReached) {
             IMultiVaultEVMEverscaleEventNative(eventAddress)
                 .dailyLimitReached{
-                    value: Gas.getTransferTokenValue() + coins(expectedGas),
+                    value: Gas.calcValue(Gas.getTransferTokenValue()) + coins(expectedGas),
                     flag: MsgFlag.SENDER_PAYS_FEES,
                     bounce: false
                 }(limitApprover);
@@ -264,7 +264,7 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
                 recipient,
                 abi.encode(BridgeOpCodes.BridgeDeposit, nonce, payload),
                 true,
-                Gas.getTransferTokenValue() + coins(expectedGas)
+                Gas.calcValue(Gas.getTransferTokenValue()) + coins(expectedGas)
             );
         } else {
             _transferTokens(
@@ -274,7 +274,7 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
                 recipient,
                 abi.encode(BridgeOpCodes.BridgeDeposit, nonce, payload),
                 true,
-                Gas.getTransferTokenValue() + coins(expectedGas)
+                Gas.calcValue(Gas.getTransferTokenValue()) + coins(expectedGas)
             );
         }
 
@@ -287,6 +287,7 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
     }
 
     onBounce(TvmSlice slice) external view reserveAtLeastTargetBalance {
+        slice = slice.loadRef().toSlice();
         uint32 selector = slice.load(uint32);
 
         if (selector == abi.functionId(ITokenWallet.transfer) || selector == abi.functionId(IBurnableTokenWallet.burn)) {

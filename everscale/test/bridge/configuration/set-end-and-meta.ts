@@ -1,6 +1,12 @@
 import { expect } from "chai";
 import { Contract, zeroAddress } from "locklift";
-import { BridgeAbi, CellEncoderStandaloneAbi, FactorySource, StakingMockupAbi } from "../../../build/factorySource";
+import {
+  BridgeAbi,
+  CellEncoderStandaloneAbi,
+  FactorySource,
+  GasValuesAbi,
+  StakingMockupAbi,
+} from "../../../build/factorySource";
 import { Account } from "everscale-standalone-client/nodejs";
 import { setupBridge, setupRelays } from "../../utils/bridge";
 import {
@@ -18,6 +24,8 @@ let cellEncoder: Contract<CellEncoderStandaloneAbi>;
 let staking: Contract<StakingMockupAbi>;
 let bridgeOwner: Account;
 
+let relays;
+
 describe("Test setting configuration end", async function () {
   this.timeout(10000000);
 
@@ -25,7 +33,7 @@ describe("Test setting configuration end", async function () {
   const emptyCell = "te6ccgEBAQEAAgAAAA==";
 
   it("Setup bridge", async () => {
-    const relays = await setupRelays();
+    relays = await setupRelays();
 
     [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
   });
@@ -39,7 +47,8 @@ describe("Test setting configuration end", async function () {
         staking,
         proxy,
         "",
-        0
+        0,
+        "0",
       );
     });
 
@@ -98,7 +107,7 @@ describe("Test setting configuration end", async function () {
         staking,
         proxy,
         "",
-        0
+        0,
       );
     });
 
@@ -145,7 +154,13 @@ describe("Test setting configuration end", async function () {
     let solanaEverscaleEventConfiguration: Contract<FactorySource["SolanaEverscaleEventConfiguration"]>;
 
     it("Setup Solana Everscale event configuration", async () => {
-      solanaEverscaleEventConfiguration = await setupSolanaEverscaleEventConfiguration(bridgeOwner, staking, proxy, "", 0);
+      solanaEverscaleEventConfiguration = await setupSolanaEverscaleEventConfiguration(
+        bridgeOwner,
+        staking,
+        proxy,
+        "",
+        0,
+      );
     });
 
     it("Set Solana Everscale end timestamp", async () => {
@@ -191,7 +206,13 @@ describe("Test setting configuration end", async function () {
     let everscaleSolanaEventConfiguration: Contract<FactorySource["EverscaleSolanaEventConfiguration"]>;
 
     it("Setup Everscale Solana event configuration", async () => {
-      everscaleSolanaEventConfiguration = await setupEverscaleSolanaEventConfiguration(bridgeOwner, staking, proxy, "", 0);
+      everscaleSolanaEventConfiguration = await setupEverscaleSolanaEventConfiguration(
+        bridgeOwner,
+        staking,
+        proxy,
+        "",
+        0,
+      );
     });
 
     it("Set Everscale Solana end timestamp", async () => {
@@ -243,7 +264,8 @@ describe("Test setting configuration end", async function () {
         "",
         0,
         zeroAddress,
-        zeroAddress
+        zeroAddress,
+        "0",
       );
     });
 

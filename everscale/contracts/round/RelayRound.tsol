@@ -20,8 +20,8 @@ contract RelayRound is IRelayRound {
     bool relays_installed;
 
     uint32 _relays_count;
-    uint32 public _start_time;
-    uint32 public _end_time;
+    uint32 _start_time;
+    uint32 _end_time;
 
     uint32 round_num; // setup from initialData
     uint256[] ton_keys; // array of ton pubkeys

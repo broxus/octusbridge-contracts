@@ -368,7 +368,7 @@ contract MultiVaultTvmTvmEventNative is
         // send tokens to original recipient
         if (isWNative && !payload.hasValue()) {
             IBurnableTokenWallet(eventTokenWallet).burn{
-                value: Gas.getTransferTokenValue() + coins(expected_gas),
+                value: Gas.calcValue(Gas.getTransferTokenValue()) + coins(expected_gas),
                 bounce: false,
                 flag: MsgFlag.SENDER_PAYS_FEES
             }(
@@ -379,13 +379,13 @@ contract MultiVaultTvmTvmEventNative is
             );
         } else {
             ITokenWallet(eventTokenWallet).transfer{
-                value: Gas.getTransferTokenValue() + coins(expected_gas),
+                value: Gas.calcValue(Gas.getTransferTokenValue()) + coins(expected_gas),
                 bounce: false,
                 flag: MsgFlag.SENDER_PAYS_FEES
             }(
                 _amount,
                 recipient,
-                Gas.getDeployTokenWalletValue(),
+                Gas.calcValue(Gas.getDeployTokenWalletValue()),
                 recipient,
                 payload.hasValue() ? true : false,
                 payload.getOrDefault()

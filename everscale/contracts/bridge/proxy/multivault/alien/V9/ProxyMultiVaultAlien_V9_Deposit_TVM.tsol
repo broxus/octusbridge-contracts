@@ -73,7 +73,7 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
             recipient,
             recipient,
             abi.encode(BridgeOpCodes.BridgeDeposit, nonce, payload),
-            Gas.getMintTokenValue() + coins(expectedGas)
+            Gas.calcValue(Gas.getMintTokenValue()) + coins(expectedGas)
         );
 
         // Refund remaining gas to event deployer

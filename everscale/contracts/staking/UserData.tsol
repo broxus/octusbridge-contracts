@@ -552,6 +552,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     onBounce(TvmSlice slice) external {
+        slice = slice.loadRef().toSlice();
         uint32 functionId = slice.load(uint32);
         if (functionId == abi.functionId(IProposal.castVote)) {
             tvm.rawReserve(_reserve(), 0);

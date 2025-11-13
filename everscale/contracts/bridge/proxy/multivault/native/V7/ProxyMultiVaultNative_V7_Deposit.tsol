@@ -156,7 +156,7 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             recipient,
             abi.encode(BridgeOpCodes.BridgeDeposit, nonce, payload),
             true,
-            Gas.getTransferTokenValue() + coins(expectedGas)
+            Gas.calcValue(Gas.getTransferTokenValue()) + coins(expectedGas)
         );
 
         // Refund remaining gas to event deployer
@@ -168,6 +168,7 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
     }
 
     onBounce(TvmSlice slice) external view reserveAtLeastTargetBalance {
+        slice = slice.loadRef().toSlice();
         uint32 selector = slice.load(uint32);
 
         if (selector == abi.functionId(ITokenWallet.transfer)) {

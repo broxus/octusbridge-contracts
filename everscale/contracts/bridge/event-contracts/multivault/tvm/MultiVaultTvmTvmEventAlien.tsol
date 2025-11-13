@@ -60,7 +60,7 @@ contract MultiVaultTvmTvmEventAlien is
     function isLimitApproved() externalMsg public view returns (bool) {
         return isLimitApproved_;
     }
-    
+
     function limitApprover() externalMsg public view returns (address) {
         return limitApprover_;
     }
@@ -129,6 +129,13 @@ contract MultiVaultTvmTvmEventAlien is
             bool isTokenDeployed = _deployTvmAlienToken(transitionalData.proxy, eventData);
 
             if (isTokenDeployed) {
+
+                // Deploy BridgeTokenFee for this Token
+                IProxyMultiVaultAlien_V9(transitionalData.proxy).deployTokenFee{
+                    value: Gas.calcValue(Gas.getDeployTokenFeeValue()) + gasToValue(Gas.BRIDGE_TOKEN_FEES_EXTRA_GAS),
+                    bounce: false
+                }(transitionalData.token, initializer);
+
                 _requestMergeRouter();
             }
 
@@ -469,7 +476,7 @@ contract MultiVaultTvmTvmEventAlien is
 
                 // Deploy BridgeTokenFee for this Token
                 IProxyMultiVaultAlien_V9(transitionalData.proxy).deployTokenFee{
-                    value: Gas.getDeployTokenFeeValue() + gasToValue(Gas.BRIDGE_TOKEN_FEES_EXTRA_GAS),
+                    value: Gas.calcValue(Gas.getDeployTokenFeeValue()) + gasToValue(Gas.BRIDGE_TOKEN_FEES_EXTRA_GAS),
                     bounce: false
                 }(transitionalData.token, initializer);
 
@@ -505,7 +512,7 @@ contract MultiVaultTvmTvmEventAlien is
 
     // ==== Deploys ====
     function _deployTvmAlienToken(address _alienProxy, EventData _eventData) internal returns (bool) {
-        coins deployTokenValue = Gas.getDeployTokenRootValue();
+        coins deployTokenValue = Gas.calcValue(Gas.getDeployTokenRootValue());
 
         if (address(this).balance < deployTokenValue) {
             _tokenDeployStatus = DeployStatus.NOT_DEPLOYED;
@@ -872,7 +879,7 @@ contract MultiVaultTvmTvmEventAlien is
         // send tokens to original recipient
         if (isWNative && !eventData.payload.hasValue()) {
             IBurnableTokenWallet(eventTokenWallet).burn{
-                value: Gas.getTransferTokenValue() + coins(eventData.expected_gas),
+                value: Gas.calcValue(Gas.getTransferTokenValue()) + coins(eventData.expected_gas),
                 bounce: false,
                 flag: MsgFlag.SENDER_PAYS_FEES
             }(
@@ -883,13 +890,13 @@ contract MultiVaultTvmTvmEventAlien is
             );
         } else {
             ITokenWallet(eventTokenWallet).transfer{
-                value: Gas.getTransferTokenValue() + coins(eventData.expected_gas),
+                value: Gas.calcValue(Gas.getTransferTokenValue()) + coins(eventData.expected_gas),
                 bounce: false,
                 flag: MsgFlag.SENDER_PAYS_FEES
             }(
                 _amount,
                 eventData.recipient,
-                Gas.getDeployTokenWalletValue(),
+                Gas.calcValue(Gas.getDeployTokenWalletValue()),
                 eventData.recipient,
                 eventData.payload.hasValue() ? true : false,
                 eventData.payload.get()

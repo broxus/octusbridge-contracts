@@ -187,7 +187,7 @@ abstract contract ProxyMultiVaultNative_V8_Base is IProxyMultiVaultNative_V8, In
         }(
             _amount,
             _recipient,
-            Gas.getDeployTokenWalletValue(),
+            Gas.calcValue(Gas.getDeployTokenWalletValue()),
             _remainingGasTo,
             true,
             _payload

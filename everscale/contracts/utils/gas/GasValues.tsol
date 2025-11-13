@@ -1,0 +1,113 @@
+pragma tvm-solidity >= 0.79.0;
+
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+import {Gas as BridgeGas} from "../../bridge/libraries/Gas.tsol";
+
+import "./GasParams.tsol";
+import "../common/InternalOwner.tsol";
+import "../ErrorCodes.tsol";
+
+#[ExternalMessage(time)]
+#[TimeReplayProt]
+contract GasValues is InternalOwner {
+
+    uint32 private static _nonce;
+
+    constructor(address _owner) externalMsg {
+        tvm.accept();
+
+        setOwnership(_owner);
+    }
+
+    function getEvmTvmAlienEventInitialBalance(
+        uint32 relaysCount,
+        bool deployMergeRouter,
+        bool deployTokenRoot
+    ) externalMsg external pure returns(GasParams.GasValueStructure) {
+        GasParams.GasValueStructure deployTokenRootValue = BridgeGas.getDeployTokenRootValue();
+        GasParams.GasValueStructure mintTokenValue = BridgeGas.getMintTokenValue();
+
+        return GasParams.GasValueStructure(
+            (deployTokenRoot ? deployTokenRootValue.fixedValue : 0) +
+            mintTokenValue.fixedValue +
+            BridgeGas.DEPLOY_EVENT_COMPENSATION,
+
+            (deployTokenRoot ? deployTokenRootValue.dynamicGas : 0) +
+            (deployMergeRouter ? BridgeGas.DEPLOY_MERGE_ROUTER_GAS : 0) +
+            (relaysCount - 1) * BridgeGas.RELAY_VOTE_MIN + BridgeGas.RELAY_VOTE_MAX +
+            mintTokenValue.dynamicGas +
+            BridgeGas.DEPLOY_EVM_TVM_ALIEN_EVENT_EXTRA_GAS
+        );
+    }
+
+    function getEvmTvmNativeEventInitialBalance(uint32 relaysCount) externalMsg external pure returns(GasParams.GasValueStructure) {
+        GasParams.GasValueStructure transferTokenValue = BridgeGas.getTransferTokenValue();
+
+        return GasParams.GasValueStructure(
+            transferTokenValue.fixedValue +
+            BridgeGas.DEPLOY_EVENT_COMPENSATION,
+
+            transferTokenValue.dynamicGas +
+            (relaysCount - 1) * BridgeGas.RELAY_VOTE_MIN + BridgeGas.RELAY_VOTE_MAX +
+            BridgeGas.DEPLOY_EVENT_ADDRESS_KEEPER +
+            BridgeGas.DEPLOY_EVM_TVM_NATIVE_EVENT_EXTRA_GAS
+        );
+    }
+
+    function getTvmTvmAlienEventInitialBalance(
+        bool deployMergeRouter,
+        bool deployTokenRoot
+    ) externalMsg external pure returns(GasParams.GasValueStructure) {
+        GasParams.GasValueStructure deployTokenFeeValue = BridgeGas.getDeployTokenFeeValue();
+        GasParams.GasValueStructure deployTokenRootValue = BridgeGas.getDeployTokenRootValue();
+        GasParams.GasValueStructure mintTokenValue = BridgeGas.getMintTokenValue();
+
+        return GasParams.GasValueStructure(
+            (deployTokenRoot ?
+                deployTokenRootValue.fixedValue + deployTokenFeeValue.fixedValue :
+                0
+            ) +
+            mintTokenValue.fixedValue +
+            BridgeGas.DEPLOY_EVENT_COMPENSATION,
+
+            BridgeGas.VERIFY_TRANSACTION_GAS +
+            BridgeGas.ACCUMULATE_FEES_GAS +
+            (deployTokenRoot ?
+                deployTokenRootValue.dynamicGas + deployTokenFeeValue.dynamicGas + BridgeGas.BRIDGE_TOKEN_FEES_EXTRA_GAS :
+                0
+            ) +
+            (deployMergeRouter ? BridgeGas.DEPLOY_MERGE_ROUTER_GAS : 0) +
+            mintTokenValue.dynamicGas +
+            BridgeGas.DEPLOY_TVM_TVM_ALIEN_EVENT_EXTRA_GAS
+        );
+    }
+
+    function getTvmTvmNativeEventInitialBalance() externalMsg external pure returns(GasParams.GasValueStructure) {
+        GasParams.GasValueStructure transferTokenValue = BridgeGas.getTransferTokenValue();
+
+        return GasParams.GasValueStructure(
+            transferTokenValue.fixedValue +
+            BridgeGas.DEPLOY_EVENT_COMPENSATION,
+
+            BridgeGas.VERIFY_TRANSACTION_GAS +
+            BridgeGas.ACCUMULATE_FEES_GAS +
+            transferTokenValue.dynamicGas +
+            BridgeGas.DEPLOY_TVM_TVM_NATIVE_EVENT_EXTRA_GAS
+        );
+    }
+
+    function upgrade(TvmCell code) external onlyOwner {
+        tvm.rawReserve(address(this).balance - msg.value, 2);
+
+        TvmBuilder builder;
+
+        builder.store(owner());
+
+        tvm.setcode(code);
+        tvm.setCurrentCode(code);
+
+        onCodeUpgrade(builder.toCell());
+    }
+
+    function onCodeUpgrade(TvmCell data) private {}
+}

@@ -6,6 +6,7 @@ import {
   EthereumEverscaleEventConfigurationAbi,
   EverscaleEthereumEventConfigurationAbi,
   EverscaleSolanaEventConfigurationAbi,
+  GasValuesAbi,
   MergeRouterAbi,
   MultiVaultEVMEverscaleEventAlienAbi,
   ProxyMultiVaultAlien_V10Abi,
@@ -21,12 +22,14 @@ import { expect } from "chai";
 import { deployAccount } from "../../../../utils/account";
 import { logContract } from "../../../../utils/logger";
 import { EventAction, EventType, processEvent } from "../../../../utils/events";
+import { calcValue } from "../../../../utils/gas";
 
 const logger = require("mocha-logger");
 
 let relays: Ed25519KeyPair[];
 let bridge: Contract<BridgeAbi>;
 let cellEncoder: Contract<CellEncoderStandaloneAbi>;
+let gasValues: Contract<GasValuesAbi>;
 let staking: Contract<StakingMockupAbi>;
 let bridgeOwner: Account;
 
@@ -56,8 +59,8 @@ describe("Deposit Alien token to Everscale with no merging", async function () {
   };
 
   it("Setup bridge", async () => {
-    relays = await setupRelays();
-    [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
+    relays = await setupRelays(3);
+    [bridge, bridgeOwner, staking, cellEncoder, , gasValues] = await setupBridge(relays);
 
     const signer = (await locklift.keystore.getSigner("0"))!;
 
@@ -65,13 +68,24 @@ describe("Deposit Alien token to Everscale with no merging", async function () {
 
     await logContract("Initializer", initializer.address);
 
+    const eventInitialBalance = calcValue(
+      await gasValues.methods
+        .getEvmTvmAlienEventInitialBalance({
+          relaysCount: relays.length,
+          deployMergeRouter: false,
+          deployTokenRoot: false,
+        })
+        .call()
+        .then(r => r.value0),
+    );
+
     [
       ethereumEverscaleEventConfiguration,
       everscaleEthereumEventConfiguration,
       solanaEverscaleEventConfiguration,
       everscaleSolanaEventConfiguration,
       proxy,
-    ] = await setupAlienMultiVault(bridgeOwner, staking);
+    ] = await setupAlienMultiVault(bridgeOwner, staking, { evmTvm: eventInitialBalance, tvmTvm: "0" });
   });
 
   describe("Transfer alien token from EVM to Everscale", async () => {
@@ -90,6 +104,17 @@ describe("Deposit Alien token to Everscale with no merging", async function () {
     let eventDataEncoded: string;
 
     it("Initialize event", async () => {
+      const gas = calcValue(
+        await gasValues.methods
+          .getEvmTvmAlienEventInitialBalance({
+            relaysCount: relays.length,
+            deployMergeRouter: true,
+            deployTokenRoot: true,
+          })
+          .call()
+          .then(r => r.value0),
+      );
+
       eventDataStructure = {
         base_chainId: alienTokenBase.chainId,
         base_token: alienTokenBase.token,
@@ -123,9 +148,9 @@ describe("Deposit Alien token to Everscale with no merging", async function () {
         })
         .send({
           from: initializer.address,
-          amount: locklift.utils.toNano(60),
+          amount: gas,
         });
-      // const {traceTree} = await locklift.tracing.trace(tx);
+      // const { traceTree } = await locklift.tracing.trace(tx, { allowedCodes: { compute: [null] } });
       // await traceTree?.beautyPrint();
 
       logger.log(`Event initialization tx: ${tx.id}`);
@@ -302,7 +327,7 @@ describe("Deposit Alien token to Everscale with no merging", async function () {
 
     it("Check event required votes", async () => {
       const requiredVotes = await eventContract.methods
-        .getDetails({answerId: 0})
+        .getDetails({ answerId: 0 })
         .call()
         .then(t => parseInt(t._requiredVotes, 10));
 
@@ -332,7 +357,7 @@ describe("Deposit Alien token to Everscale with no merging", async function () {
         const details = await eventContract.methods.getDetails({ answerId: 0 }).call({ responsible: true });
 
         const requiredVotes = await eventContract.methods
-          .getDetails({answerId: 0})
+          .getDetails({ answerId: 0 })
           .call()
           .then(t => parseInt(t._requiredVotes, 10));
 

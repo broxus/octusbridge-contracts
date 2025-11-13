@@ -24,7 +24,7 @@ abstract contract ProxyMultiVaultAlien_V8_Token is ProxyMultivaultAlien_V8_Base 
         }(
             amount,
             recipient,
-            Gas.getDeployTokenWalletValue(),
+            Gas.calcValue(Gas.getDeployTokenWalletValue()),
             remainingGasTo,
             true,
             payload
@@ -62,7 +62,7 @@ abstract contract ProxyMultiVaultAlien_V8_Token is ProxyMultivaultAlien_V8_Base 
         }(
             address(this), // Initial supply recipient
             0, // Initial supply
-            Gas.getDeployTokenWalletValue(), // Deploy wallet value
+            Gas.calcValue(Gas.getDeployTokenWalletValue()), // Deploy wallet value
             false, // Mint disabled
             false, // Burn by root disabled
             false, // Burn paused
@@ -98,7 +98,7 @@ abstract contract ProxyMultiVaultAlien_V8_Token is ProxyMultivaultAlien_V8_Base 
         }(
             address(this), // Initial supply recipient
             0, // Initial supply
-            Gas.getDeployTokenWalletValue(), // Deploy wallet value
+            Gas.calcValue(Gas.getDeployTokenWalletValue()), // Deploy wallet value
             false, // Mint disabled
             false, // Burn by root disabled
             false, // Burn paused

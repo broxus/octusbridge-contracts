@@ -1,8 +1,10 @@
 pragma tvm-solidity >= 0.79.0;
 
+import "../../utils/gas/GasParams.tsol";
+
 library Gas {
-    coins constant PROPOSAL_INITIAL_BALANCE = 6 ever;
-    coins constant ACCOUNT_INITIAL_BALANCE = 1.2 ever;
+    coins constant PROPOSAL_INITIAL_BALANCE = GasParams.STORAGE_FEE_K * 1 ever;
+    coins constant ACCOUNT_INITIAL_BALANCE = GasParams.STORAGE_FEE_K * 0.2 ever;
 
     coins constant DEPLOY_PROPOSAL_GAS = 9_000_000;
     coins constant EXECUTE_TON_ACTION_GAS = 500_000;

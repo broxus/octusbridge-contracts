@@ -1,0 +1,10 @@
+pragma tvm-solidity >= 0.79.0;
+
+library GasParams {
+    struct GasValueStructure {
+        varuint16 fixedValue;
+        varuint16 dynamicGas;
+    }
+
+    varuint16 constant STORAGE_FEE_K = 1;
+}

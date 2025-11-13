@@ -8,6 +8,7 @@ import {
   EthereumEverscaleEventConfigurationAbi,
   EverscaleEthereumEventConfigurationAbi,
   EverscaleSolanaEventConfigurationAbi,
+  GasValuesAbi,
   MultiVaultEverscaleEVMEventNativeAbi,
   MultiVaultEVMEverscaleEventNativeAbi,
   ProxyMultiVaultNative_V8Abi,
@@ -25,12 +26,14 @@ import { setupNativeMultiVault } from "../../../../utils/multivault/native";
 import { deployTokenRoot, getTokenWalletByAddress, mintTokens } from "../../../../utils/token";
 import { deployAccount } from "../../../../utils/account";
 import { EventAction, EventType, processEvent } from "../../../../utils/events";
+import { calcValue } from "../../../../utils/gas";
 
 const logger = require("mocha-logger");
 
 let relays: Ed25519KeyPair[];
 let bridge: Contract<BridgeAbi>;
 let cellEncoder: Contract<CellEncoderStandaloneAbi>;
+let gasValues: Contract<GasValuesAbi>;
 let staking: Contract<StakingMockupAbi>;
 let bridgeOwner: Account;
 
@@ -46,6 +49,8 @@ let tokenRoot: Contract<TokenRootAbi>;
 let initializerTokenWallet: Contract<TokenWalletAbi>;
 
 let trustlessVerifier: Contract<TrustlessVerifierMockupAbi>;
+
+let eventInitialBalance: string;
 
 describe("Test EVM native multivault pipeline", async function () {
   this.timeout(10000000);
@@ -66,8 +71,8 @@ describe("Test EVM native multivault pipeline", async function () {
   const amount = 500;
 
   it("Setup bridge", async () => {
-    relays = await setupRelays();
-    [bridge, bridgeOwner, staking, cellEncoder, trustlessVerifier] = await setupBridge(relays);
+    relays = await setupRelays(3);
+    [bridge, bridgeOwner, staking, cellEncoder, trustlessVerifier, gasValues] = await setupBridge(relays);
 
     const signer = (await locklift.keystore.getSigner("0"))!;
 
@@ -75,13 +80,27 @@ describe("Test EVM native multivault pipeline", async function () {
 
     await logContract("Initializer", initializer.address);
 
+    eventInitialBalance = calcValue(
+      await gasValues.methods
+        .getEvmTvmNativeEventInitialBalance({
+          relaysCount: relays.length,
+        })
+        .call()
+        .then(r => r.value0),
+    );
+
     [
       ethereumEverscaleEventConfiguration,
       everscaleEthereumEventConfiguration,
       solanaEverscaleEventConfiguration,
       everscaleSolanaEventConfiguration,
       proxy,
-    ] = await setupNativeMultiVault(bridgeOwner, staking, trustlessVerifier);
+    ] = await setupNativeMultiVault(
+      bridgeOwner,
+      staking,
+      { evmTvm: eventInitialBalance, tvmTvm: "0" },
+      trustlessVerifier,
+    );
 
     eventCloser = await deployAccount((await locklift.keystore.getSigner("1"))!, 50);
   });
@@ -311,7 +330,7 @@ describe("Test EVM native multivault pipeline", async function () {
 
     it("Check event required votes", async () => {
       const requiredVotes = await eventContract.methods
-        .getDetails({answerId: 0})
+        .getDetails({ answerId: 0 })
         .call()
         .then(t => parseInt(t._requiredVotes, 10));
 
@@ -334,7 +353,7 @@ describe("Test EVM native multivault pipeline", async function () {
       const details = await eventContract.methods.getDetails({ answerId: 0 }).call({ responsible: true });
 
       const requiredVotes = await eventContract.methods
-        .getDetails({answerId: 0})
+        .getDetails({ answerId: 0 })
         .call()
         .then(t => parseInt(t._requiredVotes, 10));
 
@@ -402,8 +421,10 @@ describe("Test EVM native multivault pipeline", async function () {
         })
         .send({
           from: initializer.address,
-          amount: locklift.utils.toNano(6),
+          amount: eventInitialBalance,
         });
+      // const { traceTree } = await locklift.tracing.trace(tx);
+      // await traceTree?.beautyPrint();
 
       logger.log(`Event initialization tx: ${tx.id}`);
 
@@ -491,7 +512,7 @@ describe("Test EVM native multivault pipeline", async function () {
 
     it("Check event required votes", async () => {
       const requiredVotes = await eventContract.methods
-        .getDetails({answerId: 0})
+        .getDetails({ answerId: 0 })
         .call()
         .then(t => parseInt(t._requiredVotes, 10));
 
@@ -520,7 +541,7 @@ describe("Test EVM native multivault pipeline", async function () {
       const details = await eventContract.methods.getDetails({ answerId: 0 }).call({ responsible: true });
 
       const requiredVotes = await eventContract.methods
-        .getDetails({answerId: 0})
+        .getDetails({ answerId: 0 })
         .call()
         .then(t => parseInt(t._requiredVotes, 10));
 

@@ -72,7 +72,7 @@ abstract contract ProxyMultiVaultAlien_V10_Deposit_TVM is
         if (!isLimitApproved && isLimitReached) {
             IMultiVaultTvmTvmEventAlien(eventContract)
                 .dailyLimitReached{
-                    value: Gas.getMintTokenValue() + coins(expectedGas),
+                    value: Gas.calcValue(Gas.getMintTokenValue()) + coins(expectedGas),
                     flag: MsgFlag.SENDER_PAYS_FEES,
                     bounce: false
                 }(limitApprover);
@@ -106,7 +106,7 @@ abstract contract ProxyMultiVaultAlien_V10_Deposit_TVM is
             recipient,
             recipient,
             abi.encode(BridgeOpCodes.BridgeDeposit, nonce, payload),
-            Gas.getMintTokenValue() + coins(expectedGas)
+            Gas.calcValue(Gas.getMintTokenValue()) + coins(expectedGas)
         );
 
         // Refund remaining gas to event deployer

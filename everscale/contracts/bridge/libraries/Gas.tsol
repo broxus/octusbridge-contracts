@@ -1,11 +1,13 @@
 pragma tvm-solidity >= 0.79.0;
 
+import "../../utils/gas/GasParams.tsol";
+
 library Gas {
-    coins constant TOKEN_ROOT_INITIAL_BALANCE = 6 ever;
-    coins constant TOKEN_WALLET_INITIAL_BALANCE = 0.6 ever;
-    coins constant CONFIGURATION_FACTORY_INITIAL_BALANCE = 6 ever;
-    coins constant TARGET_BALANCE = 6 ever; // most contracts initial balance
-    coins constant BRIDGE_TOKEN_FEES_INITIAL_BALANCE = 0.6 ever;
+    coins constant TOKEN_ROOT_INITIAL_BALANCE = GasParams.STORAGE_FEE_K * 1 ever ;
+    coins constant TOKEN_WALLET_INITIAL_BALANCE = GasParams.STORAGE_FEE_K * 0.1 ever;
+    coins constant CONFIGURATION_FACTORY_INITIAL_BALANCE = GasParams.STORAGE_FEE_K * 1 ever;
+    coins constant TARGET_BALANCE = GasParams.STORAGE_FEE_K * 1 ever; // most contracts initial balance
+    coins constant BRIDGE_TOKEN_FEES_INITIAL_BALANCE = GasParams.STORAGE_FEE_K * 0.1 ever;
 
     // mergePool
     coins constant REQUEST_TOKEN_DECIMALS_GAS = 300_000;
@@ -24,40 +26,74 @@ library Gas {
     coins constant VERIFY_TRANSACTION_GAS = 500_000;
     coins constant NOTIFICATION_GAS = 10_000;
 
+    coins constant DEPLOY_EVENT_COMPENSATION = GasParams.STORAGE_FEE_K * 0.06 ever;
+    coins constant RELAY_VOTE_MIN = 20_000;
+    coins constant RELAY_VOTE_MAX = 35_000;
+    coins constant DEPLOY_EVM_TVM_ALIEN_EVENT_EXTRA_GAS = 270_000;
+    coins constant DEPLOY_EVM_TVM_NATIVE_EVENT_EXTRA_GAS = 190_000;
+
+    coins constant DEPLOY_TVM_TVM_EVENT = 150_000;
+    coins constant DEPLOY_TVM_TVM_EVENT_REMAINING = 250_000;
+    coins constant DEPLOY_TVM_TVM_ALIEN_EVENT_EXTRA_GAS = 350_000;
+    coins constant DEPLOY_TVM_TVM_NATIVE_EVENT_EXTRA_GAS = 200_000;
+
     coins constant DEPLOY_TOKEN_ROOT_GAS = 200_000;
     coins constant DEPLOY_MERGE_ROUTER_GAS = 200_000;
 
-    function getDeployTokenRootValue() public returns(coins) {
-        return gasToValue(DEPLOY_TOKEN_ROOT_GAS) + TOKEN_ROOT_INITIAL_BALANCE;
+    function getDeployTokenRootValue() public returns(GasParams.GasValueStructure) {
+        return GasParams.GasValueStructure(
+            TOKEN_ROOT_INITIAL_BALANCE,
+            DEPLOY_TOKEN_ROOT_GAS
+        );
     }
 
     coins constant DEPLOY_BRIDGE_TOKEN_FEES_GAS = 100_000;
     coins constant BRIDGE_TOKEN_FEES_EXTRA_GAS = 10_000;
     coins constant ACCUMULATE_FEES_GAS = 10_000;
 
-    function getDeployTokenFeeValue()  public returns(coins) {
-        return gasToValue(DEPLOY_BRIDGE_TOKEN_FEES_GAS) + BRIDGE_TOKEN_FEES_INITIAL_BALANCE;
+    function getDeployTokenFeeValue() public returns(GasParams.GasValueStructure) {
+        return GasParams.GasValueStructure(
+            BRIDGE_TOKEN_FEES_INITIAL_BALANCE,
+            DEPLOY_BRIDGE_TOKEN_FEES_GAS
+        );
     }
 
     coins constant TOKEN_WALLET_DEPLOY_GAS = 30_000;
 
-    function getDeployTokenWalletValue() public returns(coins) {
-        return gasToValue(TOKEN_WALLET_DEPLOY_GAS) + TOKEN_WALLET_INITIAL_BALANCE;
+    function getDeployTokenWalletValue() public returns(GasParams.GasValueStructure) {
+        return GasParams.GasValueStructure(
+            TOKEN_WALLET_INITIAL_BALANCE,
+            TOKEN_WALLET_DEPLOY_GAS
+        );
     }
 
     coins constant MINT_TOKEN_GAS = 100_000;
 
-    function getMintTokenValue() public returns (coins) {
-        return gasToValue(MINT_TOKEN_GAS) + getDeployTokenWalletValue();
+    function getMintTokenValue() public returns(GasParams.GasValueStructure) {
+        GasParams.GasValueStructure deployTokenWalletValue = getDeployTokenWalletValue();
+        return GasParams.GasValueStructure(
+            deployTokenWalletValue.fixedValue,
+
+            deployTokenWalletValue.dynamicGas +
+            MINT_TOKEN_GAS
+        );
     }
 
-    coins constant TRANSFER_TOKEN_GAS = 200_000;
+    coins constant TRANSFER_TOKEN_GAS = 100_000;
 
-    function getTransferTokenValue() public returns (coins) {
-        return gasToValue(TRANSFER_TOKEN_GAS) + getDeployTokenWalletValue();
+    function getTransferTokenValue() public returns(GasParams.GasValueStructure) {
+        GasParams.GasValueStructure deployTokenWalletValue = getDeployTokenWalletValue();
+        return GasParams.GasValueStructure(
+            deployTokenWalletValue.fixedValue,
+
+            deployTokenWalletValue.dynamicGas +
+            TRANSFER_TOKEN_GAS
+        );
     }
 
-    coins constant DEPLOY_TVM_TVM_EVENT = 150_000;
-    coins constant DEPLOY_TVM_TVM_EVENT_REMAINING = 400_000;
     coins constant DEPLOY_EVENT_ADDRESS_KEEPER = 20_000;
+
+    function calcValue(GasParams.GasValueStructure value) public returns(coins) {
+        return value.fixedValue + gasToValue(value.dynamicGas);
+    }
 }

@@ -6,6 +6,7 @@ import {
     BridgeAbi,
     CellEncoderStandaloneAbi,
     FactorySource,
+    GasValuesAbi,
     StakingMockupAbi,
     TrustlessVerifierMockupAbi,
 } from "../../build/factorySource";
@@ -38,14 +39,14 @@ export const enableEventConfiguration = async (
             .send({
                 from: bridgeOwner.address,
                 amount: (
-                    parseInt(connectorDeployValue.connectorDeployValue, 10) + 1000000000
+                    parseInt(connectorDeployValue.value0, 10) + 1000000000
                 ).toString(),
             })
     );
 
     const connectorAddress = await bridge.methods
         .deriveConnectorAddress({
-            id: connectorId.connectorCounter,
+            id: connectorId.value0,
         })
         .call();
 
@@ -67,7 +68,7 @@ export const captureConnectors = async (bridge: Contract<FactorySource["Bridge"]
     const connectorCounter = await bridge.methods.connectorCounter().call();
 
     const configurations = await Promise.all<{ _id: string; _eventConfiguration: Address; _enabled: boolean }>(
-        _.range(parseInt(connectorCounter.connectorCounter, 10)).map(
+        _.range(parseInt(connectorCounter.value0, 10)).map(
             async (connectorId: number) => {
                 const connectorAddress = await bridge.methods
                     .deriveConnectorAddress({
@@ -100,6 +101,7 @@ export const setupBridge = async (relays: Ed25519KeyPair[]): Promise<[
     Contract<StakingMockupAbi>,
     Contract<CellEncoderStandaloneAbi>,
     Contract<TrustlessVerifierMockupAbi>,
+    Contract<GasValuesAbi>,
 ]> => {
     const signer = (await locklift.keystore.getSigner("0"))!;
 
@@ -172,6 +174,20 @@ export const setupBridge = async (relays: Ed25519KeyPair[]): Promise<[
 
     await logContract("TrustlessVerifier", trustlessVerifier.address);
 
-    return [bridge, owner, staking, cellEncoder, trustlessVerifier];
+    const { contract: gasValues } = await locklift.factory.deployContract({
+        contract: "GasValues",
+        constructorParams: {
+            _owner : owner.address
+        },
+        initParams: {
+            _nonce: locklift.utils.getRandomNonce(),
+        },
+        publicKey: signer?.publicKey as string,
+        value: locklift.utils.toNano(1)
+    });
+
+    await logContract("GasValues", gasValues.address);
+
+    return [bridge, owner, staking, cellEncoder, trustlessVerifier, gasValues];
 };
 

@@ -11,6 +11,7 @@ import {
   EthereumEverscaleEventConfigurationAbi,
   EverscaleEthereumEventConfigurationAbi,
   EverscaleSolanaEventConfigurationAbi,
+  GasValuesAbi,
   MergePool_V3Abi,
   MergeRouterAbi,
   MultiVaultEVMEverscaleEventAlienAbi,
@@ -24,12 +25,14 @@ import { Account } from "everscale-standalone-client/nodejs";
 import { deployTokenRoot } from "../../../../utils/token";
 import { expect } from "chai";
 import { EventAction, EventType, processEvent } from "../../../../utils/events";
+import { calcValue } from "../../../../utils/gas";
 
 const logger = require("mocha-logger");
 
 let relays: Ed25519KeyPair[];
 let bridge: Contract<BridgeAbi>;
 let cellEncoder: Contract<CellEncoderStandaloneAbi>;
+let gasValues: Contract<GasValuesAbi>;
 let staking: Contract<StakingMockupAbi>;
 let bridgeOwner: Account;
 
@@ -83,8 +86,8 @@ describe("Deposit Alien token with merging with custom token", async function ()
   const amount = 333;
 
   it("Setup bridge", async () => {
-    relays = await setupRelays();
-    [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
+    relays = await setupRelays(3);
+    [bridge, bridgeOwner, staking, cellEncoder, , gasValues] = await setupBridge(relays);
 
     const signer = (await locklift.keystore.getSigner("0"))!;
 
@@ -92,13 +95,24 @@ describe("Deposit Alien token with merging with custom token", async function ()
 
     await logContract("Initializer", initializer.address);
 
+    const eventInitialBalance = calcValue(
+      await gasValues.methods
+        .getEvmTvmAlienEventInitialBalance({
+          relaysCount: relays.length,
+          deployMergeRouter: false,
+          deployTokenRoot: false,
+        })
+        .call()
+        .then(r => r.value0),
+    );
+
     [
       ethereumEverscaleEventConfiguration,
       everscaleEthereumEventConfiguration,
       solanaEverscaleEventConfiguration,
       everscaleSolanaEventConfiguration,
       proxy,
-    ] = await setupAlienMultiVault(bridgeOwner, staking);
+    ] = await setupAlienMultiVault(bridgeOwner, staking, { evmTvm: eventInitialBalance, tvmTvm: "0" });
   });
 
   it("Deploy custom token root", async () => {
@@ -215,6 +229,17 @@ describe("Deposit Alien token with merging with custom token", async function ()
   });
 
   it("Initialize event", async () => {
+    const gas = calcValue(
+      await gasValues.methods
+        .getEvmTvmAlienEventInitialBalance({
+          relaysCount: relays.length,
+          deployMergeRouter: false,
+          deployTokenRoot: false,
+        })
+        .call()
+        .then(r => r.value0),
+    );
+
     eventDataStructure = {
       base_chainId: alienTokenBase.chainId,
       base_token: alienTokenBase.token,
@@ -249,11 +274,10 @@ describe("Deposit Alien token with merging with custom token", async function ()
         })
         .send({
           from: initializer.address,
-          amount: locklift.utils.toNano(6),
+          amount: gas,
         }),
       { raise: false },
     );
-
     // await tx.traceTree?.beautyPrint();
 
     logger.log(`Event initialization tx: ${tx.id.hash}`);

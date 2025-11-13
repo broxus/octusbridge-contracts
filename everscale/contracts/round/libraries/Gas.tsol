@@ -1,8 +1,10 @@
 pragma tvm-solidity >= 0.79.0;
 
+import "../../utils/gas/GasParams.tsol";
+
 library Gas {
-    coins constant ROOT_INITIAL_BALANCE = 12 ever;
-    coins constant RELAY_ROUND_INITIAL_BALANCE = 12 ever;
+    coins constant ROOT_INITIAL_BALANCE = GasParams.STORAGE_FEE_K * 2 ever;
+    coins constant RELAY_ROUND_INITIAL_BALANCE = GasParams.STORAGE_FEE_K * 2 ever;
 
     // deploy
     coins constant DEPLOY_RELAY_ROUND_MIN_GAS = 1_000_000;

@@ -716,6 +716,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     }
 
     onBounce(TvmSlice slice) external view {
+        slice = slice.loadRef().toSlice();
         uint32 functionId = slice.load(uint32);
         // if processing failed - contract was not deployed. Deploy and try again
         if (functionId == abi.functionId(UserData.processDeposit)) {

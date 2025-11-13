@@ -86,7 +86,7 @@ describe("Test EVM-EVM bridge transfers, deposit native withdraw native token", 
       nativeSolanaEverscaleEventConfiguration,
       nativeEverscaleSolanaEventConfiguration,
       nativeProxy,
-    ] = await setupNativeMultiVault(bridgeOwner, staking, trustlessVerifier);
+    ] = await setupNativeMultiVault(bridgeOwner, staking, undefined, trustlessVerifier);
 
     [
       alienEthereumEverscaleEventConfiguration,

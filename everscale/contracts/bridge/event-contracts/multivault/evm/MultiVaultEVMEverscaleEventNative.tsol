@@ -360,7 +360,7 @@ contract MultiVaultEVMEverscaleEventNative is
             }(
                 _amount,
                 recipient,
-                Gas.getDeployTokenWalletValue(),
+                Gas.calcValue(Gas.getDeployTokenWalletValue()),
                 recipient,
                 payload.toSlice().empty() ? false : true,
                 payload

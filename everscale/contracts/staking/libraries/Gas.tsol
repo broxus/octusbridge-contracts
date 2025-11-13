@@ -1,11 +1,13 @@
 pragma tvm-solidity >= 0.79.0;
 
+import "../../utils/gas/GasParams.tsol";
+
 library Gas {
-    coins constant ROOT_INITIAL_BALANCE = 12 ever;
-    coins constant USER_DATA_INITIAL_BALANCE = 12 ever;
-    coins constant ELECTION_INITIAL_BALANCE = 12 ever;
-    coins constant RELAY_ROUND_INITIAL_BALANCE = 12 ever;
-    coins constant TOKEN_WALLET_INITIAL_BALANCE = 0.6 ever;
+    coins constant ROOT_INITIAL_BALANCE = GasParams.STORAGE_FEE_K * 2 ever;
+    coins constant USER_DATA_INITIAL_BALANCE = GasParams.STORAGE_FEE_K * 2 ever;
+    coins constant ELECTION_INITIAL_BALANCE = GasParams.STORAGE_FEE_K * 2 ever;
+    coins constant RELAY_ROUND_INITIAL_BALANCE = GasParams.STORAGE_FEE_K * 2 ever;
+    coins constant TOKEN_WALLET_INITIAL_BALANCE = GasParams.STORAGE_FEE_K * 0.1 ever;
 
     // deploy
     coins constant TOKEN_WALLET_DEPLOY_GAS = 30_000;
@@ -36,7 +38,7 @@ library Gas {
 
     // min values for calls
     coins constant MIN_CALL_MSG_GAS = 8_000_000;
-    coins constant MIN_CALL_MSG_FIXED_VALUE = 12 ever;
+    coins constant MIN_CALL_MSG_FIXED_VALUE = GasParams.STORAGE_FEE_K * 2 ever;
     coins constant MIN_END_ELECTION_MSG_GAS = 15_000_000;
     coins constant MIN_SEND_RELAYS_MSG_GAS = 2_000_000;
     coins constant DESTROY_MSG_GAS = 1_000_000;

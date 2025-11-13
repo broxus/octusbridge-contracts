@@ -80,7 +80,7 @@ describe("Test EVM native multivault pipeline", async function () {
       solanaEverscaleEventConfiguration,
       everscaleSolanaEventConfiguration,
       proxy,
-    ] = await setupNativeMultiVault(bridgeOwner, staking, trustlessVerifier);
+    ] = await setupNativeMultiVault(bridgeOwner, staking, undefined, trustlessVerifier);
   });
 
   it("Deploy native token root", async () => {
@@ -285,7 +285,7 @@ describe("Test EVM native multivault pipeline", async function () {
 
     it("Check event required votes", async () => {
       const requiredVotes = await eventContract.methods
-        .getDetails({answerId: 0})
+        .getDetails({ answerId: 0 })
         .call()
         .then(t => parseInt(t._requiredVotes, 10));
 
@@ -308,7 +308,7 @@ describe("Test EVM native multivault pipeline", async function () {
       const details = await eventContract.methods.getDetails({ answerId: 0 }).call({ responsible: true });
 
       const requiredVotes = await eventContract.methods
-        .getDetails({answerId: 0})
+        .getDetails({ answerId: 0 })
         .call()
         .then(t => parseInt(t._requiredVotes, 10));
 

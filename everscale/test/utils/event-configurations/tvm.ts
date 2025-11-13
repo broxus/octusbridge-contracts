@@ -10,6 +10,7 @@ export const setupTvmTvmEventConfiguration = async (
   eventAction: number,
   transactionChecker: Address,
   eventEmitter: Address,
+  eventInitialBalance: string,
 ) => {
   const signer = (await locklift.keystore.getSigner("10"))!;
 
@@ -23,7 +24,7 @@ export const setupTvmTvmEventConfiguration = async (
     initParams: {
       basicConfiguration: {
         eventABI: "",
-        eventInitialBalance: locklift.utils.toNano(1),
+        eventInitialBalance,
         staking: zeroAddress,
         eventCode,
       },

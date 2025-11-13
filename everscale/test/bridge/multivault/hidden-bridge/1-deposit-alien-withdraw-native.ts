@@ -102,7 +102,7 @@ describe("Test EVM-EVM bridge transfers, deposit alien withdraw native token", a
       nativeSolanaEverscaleEventConfiguration,
       nativeEverscaleSolanaEventConfiguration,
       nativeProxy,
-    ] = await setupNativeMultiVault(bridgeOwner, staking, trustlessVerifier);
+    ] = await setupNativeMultiVault(bridgeOwner, staking, undefined, trustlessVerifier);
   });
 
   it("Setup mediator", async () => {

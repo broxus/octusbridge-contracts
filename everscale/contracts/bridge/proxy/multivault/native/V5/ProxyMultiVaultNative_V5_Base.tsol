@@ -70,7 +70,7 @@ abstract contract ProxyMultiVaultNative_V5_Base is IProxyMultiVaultNative_V3, In
         }(
             amount,
             recipient,
-            Gas.getDeployTokenWalletValue(),
+            Gas.calcValue(Gas.getDeployTokenWalletValue()),
             remainingGasTo,
             true,
             payload

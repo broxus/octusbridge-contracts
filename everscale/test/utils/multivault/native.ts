@@ -9,7 +9,7 @@ import {
   SolanaEverscaleEventConfigurationAbi,
   TvmTvmEventConfigurationAbi,
   BridgeTokenFeeAbi,
-  TokenWalletAbi
+  TokenWalletAbi,
 } from "../../../build/factorySource";
 import { logContract } from "../logger";
 import {
@@ -24,10 +24,17 @@ import { setupTvmTvmEventConfiguration } from "../event-configurations/tvm";
 
 const EVENT_ACTION_MULTIVAULT_NATIVE = 1;
 
+interface InitialBalancesNative {
+  evmTvm: string;
+  tvmTvm: string;
+}
+
 export const setupNativeMultiVault = async (
   owner: Account,
   staking: Contract<FactorySource["StakingMockup"]>,
+  initialBalances: InitialBalancesNative = { evmTvm: "0", tvmTvm: "0" },
   trustlessVerifier: Contract<FactorySource["TrustlessVerifierMockup"]>,
+  nonce?: number,
 ): Promise<
   [
     Contract<EthereumEverscaleEventConfigurationAbi>,
@@ -48,7 +55,7 @@ export const setupNativeMultiVault = async (
       owner_: owner.address,
     },
     initParams: {
-      _randomNonce,
+      _randomNonce: nonce ?? locklift.utils.getRandomNonce(),
     },
     publicKey: signer.publicKey,
     value: locklift.utils.toNano(15),
@@ -69,28 +76,29 @@ export const setupNativeMultiVault = async (
     staking,
     proxy.address,
     ethereumEverscaleEvent.code,
-    EVENT_ACTION_MULTIVAULT_NATIVE
+    EVENT_ACTION_MULTIVAULT_NATIVE,
+    initialBalances.evmTvm,
   );
   const everscaleEthereumEventConfiguration = await setupEverscaleEthereumEventConfiguration(
     owner,
     staking,
     proxy.address,
     everscaleEthereumEvent.code,
-    EVENT_ACTION_MULTIVAULT_NATIVE
+    EVENT_ACTION_MULTIVAULT_NATIVE,
   );
   const solanaEverscaleEventConfiguration = await setupSolanaEverscaleEventConfiguration(
     owner,
     staking,
     proxy.address,
     solanaEverscaleEvent.code,
-    EVENT_ACTION_MULTIVAULT_NATIVE
+    EVENT_ACTION_MULTIVAULT_NATIVE,
   );
   const everscaleSolanaEventConfiguration = await setupEverscaleSolanaEventConfiguration(
     owner,
     staking,
     proxy.address,
     everscaleSolanaEvent.code,
-    EVENT_ACTION_MULTIVAULT_NATIVE
+    EVENT_ACTION_MULTIVAULT_NATIVE,
   );
 
   const tvmTvmEventConfiguration = await setupTvmTvmEventConfiguration(
@@ -99,7 +107,8 @@ export const setupNativeMultiVault = async (
     tvmTvmEvent.code,
     EVENT_ACTION_MULTIVAULT_NATIVE,
     trustlessVerifier.address,
-    new Address("0:92c5662b635e85eac19243888ddfa979d6d9f8de352b1b819cb4e0427ca8e4c4")
+    new Address("0:92c5662b635e85eac19243888ddfa979d6d9f8de352b1b819cb4e0427ca8e4c4"),
+    initialBalances.tvmTvm,
   );
 
   // Set proxy EVM configuration
@@ -141,6 +150,19 @@ export const setupNativeMultiVault = async (
       amount: locklift.utils.toNano(0.5),
     });
 
+  const eventAddressKeeper = await locklift.factory.getContractArtifacts("EventAddressKeeper");
+
+  // Set event address keeper code
+  await proxy.methods
+    .setEventAddressKeeperCode({
+      _eventAddressKeeperCode: eventAddressKeeper.code,
+      remainingGasTo: owner.address,
+    })
+    .send({
+      from: owner.address,
+      amount: locklift.utils.toNano(0.5),
+    });
+
   return [
     ethereumEverscaleEventConfiguration,
     everscaleEthereumEventConfiguration,
@@ -156,46 +178,48 @@ export const deployBridgeTokenFeeAndSetFee = async (
   token: Contract<FactorySource["TokenRoot"]>,
   proxy: Contract<FactorySource["ProxyMultiVaultNative_V8"]>,
   incoming: number,
-  outgoing: number
+  outgoing: number,
 ): Promise<[Contract<BridgeTokenFeeAbi>, Contract<TokenWalletAbi>]> => {
-  const bridgeTokenFeeCode = locklift.factory.getContractArtifacts( "BridgeTokenFee").code;
-  const platformCode = locklift.factory.getContractArtifacts( "TokenFeePlatform").code;
+  const bridgeTokenFeeCode = locklift.factory.getContractArtifacts("BridgeTokenFee").code;
+  const platformCode = locklift.factory.getContractArtifacts("TokenFeePlatform").code;
 
   //set bridge token fee code
-  await proxy.methods.setTokenFeeCode({_code: bridgeTokenFeeCode}).send({
-      from: owner.address,
-      amount: locklift.utils.toNano(0.5)
+  await proxy.methods.setTokenFeeCode({ _code: bridgeTokenFeeCode }).send({
+    from: owner.address,
+    amount: locklift.utils.toNano(0.5),
   });
 
   //set platform
-  await proxy.methods.setPlatformCode({_code: platformCode}).send({
-      from: owner.address,
-      amount: locklift.utils.toNano(0.5)
+  await proxy.methods.setPlatformCode({ _code: platformCode }).send({
+    from: owner.address,
+    amount: locklift.utils.toNano(0.5),
   });
 
-  let proxyTokenWallet = await token.methods.walletOf({answerId: 0, walletOwner: proxy.address})
+  let proxyTokenWallet = await token.methods
+    .walletOf({ answerId: 0, walletOwner: proxy.address })
     .call()
-    .then((a) =>  locklift.factory.getDeployedContract('TokenWallet', a.value0));
+    .then(a => locklift.factory.getDeployedContract("TokenWallet", a.value0));
 
   // deploy bridgeTokenFee
-  const { traceTree } = await locklift.tracing.trace(proxy.methods.deployTokenFee({_token: proxyTokenWallet.address, _remainingGasTo: owner.address})
-    .send({
+  const { traceTree } = await locklift.tracing.trace(
+    proxy.methods.deployTokenFee({ _token: proxyTokenWallet.address, _remainingGasTo: owner.address }).send({
       from: owner.address,
       amount: locklift.utils.toNano(5),
-    }));
+    }),
+  );
 
-  let bridgeTokenFee = await proxy.methods.getExpectedTokenFeeAddress({_token: proxyTokenWallet.address, answerId: 0})
+  let bridgeTokenFee = await proxy.methods
+    .getExpectedTokenFeeAddress({ _token: proxyTokenWallet.address, answerId: 0 })
     .call()
-    .then((a) => locklift.factory.getDeployedContract("BridgeTokenFee", a.value0));
+    .then(a => locklift.factory.getDeployedContract("BridgeTokenFee", a.value0));
 
-    await logContract('BridgeTokenFee', bridgeTokenFee.address);
+  await logContract("BridgeTokenFee", bridgeTokenFee.address);
 
   // Set fees
-  await proxy.methods.setTvmDefaultFeeNumerator({_incoming: incoming, _outgoing: outgoing})
-    .send({
-      from: owner.address,
-      amount: locklift.utils.toNano(0.5),
-    });
+  await proxy.methods.setTvmDefaultFeeNumerator({ _incoming: incoming, _outgoing: outgoing }).send({
+    from: owner.address,
+    amount: locklift.utils.toNano(0.5),
+  });
 
   return [bridgeTokenFee, proxyTokenWallet];
 };
