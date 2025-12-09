@@ -35,6 +35,14 @@
 			]
 		},
 		{
+			"name": "staker_addrs",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address[]"}
+			]
+		},
+		{
 			"name": "getRequests",
 			"inputs": [
 				{"name":"answerId","type":"uint32"},
@@ -137,15 +145,15 @@
 		{"init":false,"name":"_constructorFlag","type":"bool"},
 		{"init":false,"name":"current_version","type":"uint32"},
 		{"init":false,"name":"platform_code","type":"cell"},
-		{"init":false,"name":"_root","type":"address"},
-		{"init":false,"name":"_round_num","type":"uint32"},
+		{"init":false,"name":"root_","type":"address"},
+		{"init":false,"name":"round_num_","type":"uint32"},
 		{"init":false,"name":"ton_keys","type":"uint256[]"},
 		{"init":false,"name":"eth_addrs","type":"uint160[]"},
-		{"init":false,"name":"staker_addrs","type":"address[]"},
+		{"init":false,"name":"staker_addrs_","type":"address[]"},
 		{"init":false,"name":"staked_tokens","type":"uint128[]"},
 		{"components":[{"name":"prev_node","type":"uint256"},{"name":"next_node","type":"uint256"}],"init":false,"name":"requests_nodes","type":"tuple[]"},
 		{"init":false,"name":"list_start_idx","type":"uint256"},
-		{"init":false,"name":"_election_ended","type":"bool"},
+		{"init":false,"name":"election_ended_","type":"bool"},
 		{"init":false,"name":"relay_transfer_start_idx","type":"uint256"}
 	]
 }

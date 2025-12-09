@@ -29,12 +29,12 @@ contract Election is IElection {
     uint32 current_version;
     TvmCell platform_code;
 
-    address _root;
-    uint32 _round_num;
+    address root_;
+    uint32 round_num_;
 
     uint256[] ton_keys; // array of ton pubkeys
     uint160[] eth_addrs; // array of eth pubkeys
-    address[] staker_addrs; // array of staker addrs
+    address[] staker_addrs_; // array of staker addrs
     uint128[] staked_tokens; // array of staked tokens
 
     // this array contains 2-way linked list by request tokens
@@ -44,7 +44,7 @@ contract Election is IElection {
     // sorted list starts with this idx
     uint256 list_start_idx;
 
-    bool _election_ended;
+    bool election_ended_;
 
     // user when sending relays to new relay round
     uint256 relay_transfer_start_idx = 0;
@@ -53,15 +53,19 @@ contract Election is IElection {
     constructor() { revert(); }
 
     function root() externalMsg public view returns (address) {
-        return _root;
+        return root_;
     }
 
     function round_num() externalMsg public view returns (uint32) {
-        return _round_num;
+        return round_num_;
     }
 
     function election_ended() externalMsg public view returns (bool) {
-        return _election_ended;
+        return election_ended_;
+    }
+
+    function staker_addrs() externalMsg public view returns (address[]) {
+        return staker_addrs_;
     }
 
     // return sorted list of requests
@@ -90,7 +94,7 @@ contract Election is IElection {
         uint128 _staked_tokens
     ) {
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }(
-            requests_nodes[idx], ton_keys[idx], eth_addrs[idx], staker_addrs[idx], staked_tokens[idx]
+            requests_nodes[idx], ton_keys[idx], eth_addrs[idx], staker_addrs_[idx], staked_tokens[idx]
         );
     }
 
@@ -114,7 +118,7 @@ contract Election is IElection {
         while (counter < limit && staked_tokens[cur_idx] != 0) {
             _ton_keys_limit[counter] = ton_keys[cur_idx];
             _eth_addrs_limit[counter] = eth_addrs[cur_idx];
-            _staker_addrs_limit[counter] = staker_addrs[cur_idx];
+            _staker_addrs_limit[counter] = staker_addrs_[cur_idx];
             _staked_tokens_limit[counter] = staked_tokens[cur_idx];
             counter++;
             cur_idx = requests_nodes[cur_idx].next_node;
@@ -131,14 +135,14 @@ contract Election is IElection {
         uint32 code_version
     ) external override onlyUserData(staker_addr) {
         require (tokens > 0, ErrorCodes.BAD_RELAY_MEMBERSHIP_REQUEST);
-        require (!_election_ended, ErrorCodes.ELECTION_ENDED);
+        require (!election_ended_, ErrorCodes.ELECTION_ENDED);
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
 
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 0);
 
         for (uint i = 1; i < ton_keys.length; i++) {
             if (
-                staker_addrs[i] == staker_addr ||
+                staker_addrs_[i] == staker_addr ||
                 ton_keys[i] == ton_pubkey ||
                 eth_addrs[i] == eth_addr
             ) {
@@ -150,7 +154,7 @@ contract Election is IElection {
         requests_nodes.push(new_node);
         ton_keys.push(ton_pubkey);
         eth_addrs.push(eth_addr);
-        staker_addrs.push(staker_addr);
+        staker_addrs_.push(staker_addr);
         staked_tokens.push(tokens);
 
         uint256 new_idx = requests_nodes.length - 1;
@@ -194,16 +198,16 @@ contract Election is IElection {
         }
 
         IUserData(msg.sender).relayMembershipRequestAccepted{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-            _round_num, tokens, ton_pubkey, eth_addr, lock_time
+            round_num_, tokens, ton_pubkey, eth_addr, lock_time
         );
     }
 
     // should be called after transfer of relay data to next relay round, controlled by staking
     function destroy() external override onlyRoot {
         // prevent accident call
-        require (_election_ended, ErrorCodes.ELECTION_ENDED);
+        require (election_ended_, ErrorCodes.ELECTION_ENDED);
 
-        _root.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+        root_.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
     function finish(uint32 code_version) external override onlyRoot {
@@ -211,21 +215,21 @@ contract Election is IElection {
 
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 0);
 
-        if (_election_ended) {
+        if (election_ended_) {
             // send gas back to root
-            _root.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+            root_.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
             return;
         }
 
-        _election_ended = true;
+        election_ended_ = true;
         relay_transfer_start_idx = list_start_idx;
-        IStakingPool(_root).onElectionEnded{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-            _round_num, uint32(requests_nodes.length - 1)
+        IStakingPool(root_).onElectionEnded{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
+            round_num_, uint32(requests_nodes.length - 1)
         );
     }
 
     function sendRelaysToRelayRound(address relay_round_addr, uint32 relays_count) external override onlyRoot {
-        require (_election_ended, ErrorCodes.ELECTION_ENDED);
+        require (election_ended_, ErrorCodes.ELECTION_ENDED);
 
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 0);
 
@@ -257,14 +261,14 @@ contract Election is IElection {
 
             TvmBuilder builder;
             uint8 _tmp;
-            builder.store(_root); // address 267
+            builder.store(root_); // address 267
             builder.store(_tmp); // 8
             builder.store(send_gas_to); // address 267
 
             builder.store(platform_code); // ref1
 
             TvmBuilder initial;
-            initial.store(_round_num); // 32
+            initial.store(round_num_); // 32
 
             builder.storeRef(initial); // ref2
 
@@ -280,14 +284,14 @@ contract Election is IElection {
 
             data_builder_1.store(requests_nodes); // 33 + ref1
             data_builder_1.store(list_start_idx); // 256
-            data_builder_1.store(_election_ended); // 1
+            data_builder_1.store(election_ended_); // 1
             data_builder_1.store(relay_transfer_start_idx); // 256
 
             TvmBuilder data_builder_2;
 
             data_builder_2.store(ton_keys); // 33 + ref1
             data_builder_2.store(eth_addrs); // 33 + ref2
-            data_builder_2.store(staker_addrs); // 33 + ref3
+            data_builder_2.store(staker_addrs_); // 33 + ref3
             data_builder_2.store(staked_tokens); // 33 + ref4
 
             data_builder.store(data_builder_1); // ref1
@@ -342,13 +346,12 @@ contract Election is IElection {
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 0);
 
         TvmSlice s = upgrade_data.toSlice();
-        (address root_, ,) = s.load(address, uint8, address);
-        _root = root_;
+        (root_, ,) = s.load(address, uint8, address);
 
         platform_code = s.loadRef();
 
         TvmSlice initialData = s.loadRefAsSlice();
-        _round_num = initialData.load(uint32);
+        round_num_ = initialData.load(uint32);
 
         TvmSlice params = s.loadRefAsSlice();
         (current_version, ) = params.load(uint32, uint32);
@@ -358,10 +361,10 @@ contract Election is IElection {
 
         ton_keys.push(0);
         eth_addrs.push(0);
-        staker_addrs.push(address.addrNone);
+        staker_addrs_.push(address.addrNone);
         staked_tokens.push(0);
 
-        IStakingPool(_root).onElectionStarted{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(_round_num);
+        IStakingPool(root_).onElectionStarted{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num_);
     }
 
     function _buildUserDataParams(address user) private pure returns (TvmCell) {
@@ -386,7 +389,7 @@ contract Election is IElection {
 
     function getUserDataAddress(address user) externalMsg internalMsg public view responsible returns (address) {
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }address.makeAddrStd(address(this).wid, tvm.hash(_buildPlatformInitData(
-            _root,
+            root_,
             PlatformTypes.UserData,
             _buildUserDataParams(user)
         )));
@@ -399,7 +402,7 @@ contract Election is IElection {
     }
 
     modifier onlyRoot() {
-        require(msg.sender == _root, ErrorCodes.NOT_ROOT);
+        require(msg.sender == root_, ErrorCodes.NOT_ROOT);
         _;
     }
 
