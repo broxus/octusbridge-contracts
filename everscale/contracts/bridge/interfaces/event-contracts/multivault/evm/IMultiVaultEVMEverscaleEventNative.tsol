@@ -27,8 +27,7 @@ interface IMultiVaultEVMEverscaleEventNative {
         uint expected_evers_,
         TvmCell payload_,
         address proxy_,
-        address tokenWallet_,
-        uint128 bounty_
+        address tokenWallet_
     );
 
     function dailyLimitReached(address _approver) external;

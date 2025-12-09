@@ -67,8 +67,7 @@
 				{"name":"expected_evers_","type":"uint256"},
 				{"name":"payload_","type":"cell"},
 				{"name":"proxy_","type":"address"},
-				{"name":"tokenWallet_","type":"address"},
-				{"name":"bounty_","type":"uint128"}
+				{"name":"tokenWallet_","type":"address"}
 			]
 		},
 		{

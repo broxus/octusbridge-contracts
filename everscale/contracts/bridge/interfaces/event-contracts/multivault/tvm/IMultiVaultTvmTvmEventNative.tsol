@@ -25,8 +25,7 @@ interface IMultiVaultTvmTvmEventNative {
         uint128 expected_gas_,
         optional(TvmCell) payload_,
         address proxy_,
-        address tokenWallet_,
-        uint128 bounty_
+        address tokenWallet_
     );
 
     function dailyLimitReached(address _approver) external;

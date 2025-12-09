@@ -646,8 +646,7 @@ contract MultiVaultTvmTvmEventAlien is
         optional(TvmCell) payload_,
         address proxy_,
         address token_,
-        optional(address) native_proxy_token_wallet,
-        uint128 bounty_
+        optional(address) native_proxy_token_wallet
     ) {
         EventData eventData = getEventData();
         TransitionalData transitionalData = getTransitionalData();
@@ -671,8 +670,7 @@ contract MultiVaultTvmTvmEventAlien is
             transitionalData.proxy,
             transitionalData.token,
 
-            transitionalData.native_proxy_token_wallet,
-            bounty
+            transitionalData.native_proxy_token_wallet
         );
     }
 

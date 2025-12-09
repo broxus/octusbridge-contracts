@@ -155,8 +155,7 @@
 				{"name":"payload_","type":"optional(cell)"},
 				{"name":"proxy_","type":"address"},
 				{"name":"token_","type":"address"},
-				{"name":"native_proxy_token_wallet","type":"optional(address)"},
-				{"name":"bounty_","type":"uint128"}
+				{"name":"native_proxy_token_wallet","type":"optional(address)"}
 			]
 		},
 		{

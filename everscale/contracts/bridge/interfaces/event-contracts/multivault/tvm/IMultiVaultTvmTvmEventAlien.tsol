@@ -102,8 +102,7 @@ interface IMultiVaultTvmTvmEventAlien {
         optional(TvmCell) payload_,
         address proxy_,
         address token_,
-        optional(address) native_proxy_token_wallet,
-        uint128 bounty_
+        optional(address) native_proxy_token_wallet
     );
 
     function dailyLimitReached(address _approver) external;

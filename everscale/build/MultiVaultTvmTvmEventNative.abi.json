@@ -78,8 +78,7 @@
 				{"name":"expected_gas_","type":"uint128"},
 				{"name":"payload_","type":"optional(cell)"},
 				{"name":"proxy_","type":"address"},
-				{"name":"tokenWallet_","type":"address"},
-				{"name":"bounty_","type":"uint128"}
+				{"name":"tokenWallet_","type":"address"}
 			]
 		},
 		{

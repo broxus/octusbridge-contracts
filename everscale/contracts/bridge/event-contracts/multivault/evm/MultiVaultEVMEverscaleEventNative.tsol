@@ -171,8 +171,7 @@ contract MultiVaultEVMEverscaleEventNative is
         uint expected_evers_,
         TvmCell payload_,
         address proxy_,
-        address tokenWallet_,
-        uint128 bounty_
+        address tokenWallet_
     ) {
         return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS}(
             token,
@@ -182,8 +181,7 @@ contract MultiVaultEVMEverscaleEventNative is
             expected_evers,
             payload,
             proxy,
-            tokenWallet,
-            bounty
+            tokenWallet
         );
     }
 

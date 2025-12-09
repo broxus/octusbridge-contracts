@@ -193,8 +193,7 @@ contract MultiVaultTvmTvmEventNative is
         uint128 expected_gas_,
         optional(TvmCell) payload_,
         address proxy_,
-        address tokenWallet_,
-        uint128 bounty_
+        address tokenWallet_
     ) {
         return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS}(
             token,
@@ -208,8 +207,7 @@ contract MultiVaultTvmTvmEventNative is
             expected_gas,
             payload,
             proxy,
-            proxyTokenWallet,
-            bounty
+            proxyTokenWallet
         );
     }
 
