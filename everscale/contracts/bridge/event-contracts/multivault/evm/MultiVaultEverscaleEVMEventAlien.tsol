@@ -20,7 +20,7 @@ contract MultiVaultEverscaleEVMEventAlien is
     uint32 nonce_;
     address proxy;
     address token;
-    address remainingGasTo;
+    address remaining_gas_to;
     uint128 amount;
     uint160 recipient;
 
@@ -67,13 +67,17 @@ contract MultiVaultEverscaleEVMEventAlien is
         return initial_balance_;
     }
 
+    function remainingGasTo() externalMsg public view returns (address) {
+        return remaining_gas_to;
+    }
+
     function getUnmodifiedEventData() externalMsg internalMsg external override responsible returns(TvmCell) {
         return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} unmodifiedEventData;
     }
 
     function onInit() override internal {
         (
-            nonce_, proxy, token, remainingGasTo, amount, recipient, sender_,
+            nonce_, proxy, token, remaining_gas_to, amount, recipient, sender_,
             callback_recipient, callback_payload, callback_strict
         ) = abi.decode(
             eventInitData.voteData.eventData,
@@ -156,7 +160,7 @@ contract MultiVaultEverscaleEVMEventAlien is
         return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS}(
             proxy,
             token,
-            remainingGasTo,
+            remaining_gas_to,
             amount,
             recipient,
             EVMCallback(
@@ -170,7 +174,7 @@ contract MultiVaultEverscaleEVMEventAlien is
     }
 
     function gasBackAddress() internal override view returns(address) {
-        return remainingGasTo;
+        return remaining_gas_to;
     }
 
     onBounce(TvmSlice slice) external {

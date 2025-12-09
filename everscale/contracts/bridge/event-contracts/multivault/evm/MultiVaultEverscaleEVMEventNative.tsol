@@ -24,7 +24,7 @@ contract MultiVaultEverscaleEVMEventNative is
     address proxy;
     address tokenWallet;
     address token;
-    address remainingGasTo;
+    address remaining_gas_to;
     uint128 amount;
     uint160 recipient;
     uint256 chainId;
@@ -72,6 +72,10 @@ contract MultiVaultEverscaleEVMEventNative is
         return initial_balance_;
     }
 
+    function remainingGasTo() externalMsg public view returns (address) {
+        return remaining_gas_to;
+    }
+
     function getUnmodifiedEventData() externalMsg internalMsg external override responsible returns(TvmCell) {
         return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} unmodifiedEventData;
     }
@@ -82,7 +86,7 @@ contract MultiVaultEverscaleEVMEventNative is
             proxy,
             tokenWallet,
             token,
-            remainingGasTo,
+            remaining_gas_to,
             amount,
             recipient,
             chainId,
@@ -180,7 +184,7 @@ contract MultiVaultEverscaleEVMEventNative is
             proxy,
             tokenWallet,
             token,
-            remainingGasTo,
+            remaining_gas_to,
             amount,
             recipient,
             chainId,
@@ -215,7 +219,7 @@ contract MultiVaultEverscaleEVMEventNative is
     }
 
     function gasBackAddress() internal override view returns(address) {
-        return remainingGasTo;
+        return remaining_gas_to;
     }
 
     onBounce(TvmSlice slice) external {

@@ -37,6 +37,14 @@
 			]
 		},
 		{
+			"name": "remainingGasTo",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
 			"name": "receiveTokenMeta",
 			"inputs": [
 				{"name":"base_token_","type":"uint256"},
@@ -291,7 +299,7 @@
 		{"init":false,"name":"proxy","type":"address"},
 		{"init":false,"name":"token","type":"address"},
 		{"init":false,"name":"tokenWallet","type":"address"},
-		{"init":false,"name":"remainingGasTo","type":"address"},
+		{"init":false,"name":"remaining_gas_to","type":"address"},
 		{"init":false,"name":"amount","type":"uint128"},
 		{"init":false,"name":"recipient","type":"uint256"},
 		{"init":false,"name":"sender_","type":"address"},

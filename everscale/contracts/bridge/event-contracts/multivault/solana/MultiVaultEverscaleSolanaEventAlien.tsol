@@ -21,7 +21,7 @@ contract MultiVaultEverscaleSolanaEventAlien is
     address proxy;
     address token;
     address tokenWallet;
-    address remainingGasTo;
+    address remaining_gas_to;
     uint128 amount;
     uint256 recipient;
 
@@ -48,6 +48,10 @@ contract MultiVaultEverscaleSolanaEventAlien is
         return initial_balance_;
     }
 
+    function remainingGasTo() externalMsg public view returns (address) {
+        return remaining_gas_to;
+    }
+
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
         body.load(uint64, uint32);
         TvmSlice bodyCopy = body;
@@ -59,7 +63,7 @@ contract MultiVaultEverscaleSolanaEventAlien is
     }
 
     function onInit() override internal {
-        (nonce_, proxy, tokenWallet, token, remainingGasTo, amount, recipient, sender_, solanaPayload) = abi.decode(
+        (nonce_, proxy, tokenWallet, token, remaining_gas_to, amount, recipient, sender_, solanaPayload) = abi.decode(
             eventInitData.voteData.eventData,
             (uint32, address, address, address, address, uint128, uint256, address, bytes)
         );
@@ -119,7 +123,7 @@ contract MultiVaultEverscaleSolanaEventAlien is
     }
 
     function gasBackAddress() internal override view returns(address) {
-        return remainingGasTo;
+        return remaining_gas_to;
     }
 
     function getDecodedData() externalMsg internalMsg external override responsible returns(
@@ -137,7 +141,7 @@ contract MultiVaultEverscaleSolanaEventAlien is
             proxy,
             tokenWallet,
             token,
-            remainingGasTo,
+            remaining_gas_to,
             amount,
             recipient,
             base_token,

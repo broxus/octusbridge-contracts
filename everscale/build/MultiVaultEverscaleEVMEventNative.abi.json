@@ -37,6 +37,14 @@
 			]
 		},
 		{
+			"name": "remainingGasTo",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
 			"name": "getUnmodifiedEventData",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}
@@ -328,7 +336,7 @@
 		{"init":false,"name":"proxy","type":"address"},
 		{"init":false,"name":"tokenWallet","type":"address"},
 		{"init":false,"name":"token","type":"address"},
-		{"init":false,"name":"remainingGasTo","type":"address"},
+		{"init":false,"name":"remaining_gas_to","type":"address"},
 		{"init":false,"name":"amount","type":"uint128"},
 		{"init":false,"name":"recipient","type":"uint160"},
 		{"init":false,"name":"chainId","type":"uint256"},

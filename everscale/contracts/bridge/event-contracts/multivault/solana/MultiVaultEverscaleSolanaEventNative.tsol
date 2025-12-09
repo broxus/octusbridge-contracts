@@ -23,7 +23,7 @@ contract MultiVaultEverscaleSolanaEventNative is
     address proxy;
     address tokenWallet;
     address token;
-    address remainingGasTo;
+    address remaining_gas_to;
     uint128 amount;
     uint256 recipient;
 
@@ -52,6 +52,10 @@ contract MultiVaultEverscaleSolanaEventNative is
         return initial_balance_;
     }
 
+    function remainingGasTo() externalMsg public view returns (address) {
+        return remaining_gas_to;
+    }
+
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
         body.load(uint64, uint32);
         TvmSlice bodyCopy = body;
@@ -68,7 +72,7 @@ contract MultiVaultEverscaleSolanaEventNative is
             proxy,
             tokenWallet,
             token,
-            remainingGasTo,
+            remaining_gas_to,
             amount,
             recipient,
             sender_,
@@ -161,7 +165,7 @@ contract MultiVaultEverscaleSolanaEventNative is
             proxy,
             tokenWallet,
             token,
-            remainingGasTo,
+            remaining_gas_to,
             amount,
             recipient,
             name,
@@ -186,7 +190,7 @@ contract MultiVaultEverscaleSolanaEventNative is
     }
 
     function gasBackAddress() internal override view returns(address) {
-        return remainingGasTo;
+        return remaining_gas_to;
     }
 
     onBounce(TvmSlice slice) external {
