@@ -140,6 +140,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
     function deriveConnectorAddress(
         uint64 id
     )
+        externalMsg
         override
         external
     returns(
