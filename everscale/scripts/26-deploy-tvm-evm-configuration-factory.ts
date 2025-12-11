@@ -22,10 +22,10 @@ const main = async () => {
   await locklift.deployments.saveContract({
     contractName: "EverscaleEthereumEventConfigurationFactory",
     address: everscaleEthereumEventConfigurationFactory.address,
-    deploymentName: "EverscaleEthereumEventConfigurationFactory",
+    deploymentName: "TvmEvmEventConfigFactory",
   });
 
-  console.log(`EverscaleEthereumEventConfigFactory: ${everscaleEthereumEventConfigurationFactory.address}`);
+  console.log(`TvmEvmEventConfigFactory: ${everscaleEthereumEventConfigurationFactory.address}`);
 };
 
 main()
