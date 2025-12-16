@@ -1,10 +1,11 @@
 pragma tvm-solidity >= 0.79.0;
 
+import "../../utils/gas/GasParams.tsol";
 
 library EventCreditGas {
-    coins constant EVENT_CLOSER_INITIAL_BALANCE = 10 ever;
-    coins constant EVENT_DEPLOYER_INITIAL_BALANCE = 10 ever;
-    coins constant TOKEN_WALLET_INITIAL_BALANCE = 0.1 ever;
+    coins constant EVENT_CLOSER_INITIAL_BALANCE = GasParams.STORAGE_FEE_K * 10 ever;
+    coins constant EVENT_DEPLOYER_INITIAL_BALANCE = GasParams.STORAGE_FEE_K * 10 ever;
+    coins constant TOKEN_WALLET_INITIAL_BALANCE = GasParams.STORAGE_FEE_K * 0.1 ever;
 
     coins constant EVENT_CLOSER_DEPLOY_GAS = 500_000;
     coins constant EVENT_DEPLOYER_DEPLOY_GAS = 500_000;
