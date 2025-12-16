@@ -2,7 +2,6 @@ pragma tvm-solidity >= 0.79.0;
 
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
-import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 
 import "./../../utils/TransferUtils.tsol";
 import "./../../utils/common/ExternalOwner.tsol";
@@ -18,7 +17,7 @@ import './EventCreditGas.tsol';
 /// Receives the EVERs and immediately transfers them to the EventDeployer contract
 #[ExternalMessage(time, pubkey, expire)]
 #[TimeReplayProt]
-contract EventCloser is ExternalOwner, RandomNonce, TransferUtils, CheckPubKey {
+contract EventCloser is ExternalOwner, RandomNonce, TransferUtils {
     address static factory;
 
     address[] _deployers;
@@ -27,13 +26,11 @@ contract EventCloser is ExternalOwner, RandomNonce, TransferUtils, CheckPubKey {
     constructor(
         uint owner_,
         address[] deployers_
-    ) externalMsg checkPubKey {
+    ) {
         require(msg.sender == factory, ErrorCodes.ZERO_ADDRESS);
         for (address deployer: deployers_) {
             require(deployer != address(0), ErrorCodes.ZERO_ADDRESS);
         }
-
-        tvm.accept();
 
         setOwnership(owner_);
 

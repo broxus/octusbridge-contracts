@@ -2,7 +2,6 @@ pragma tvm-solidity >= 0.79.0;
 
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
-import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 
 import "./../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
 import "./../interfaces/event-configuration-contracts/IEthereumEverscaleEventConfiguration.tsol";
@@ -21,13 +20,12 @@ import './EventCreditGas.tsol';
 /// Allows credit backend to deploy multiple event-contacts at once
 #[ExternalMessage(time, pubkey, expire)]
 #[TimeReplayProt]
-contract EventDeployer is ExternalOwner, RandomNonce, CheckPubKey {
+contract EventDeployer is ExternalOwner, RandomNonce {
     address static factory;
 
-    constructor(uint owner_) externalMsg checkPubKey {
+    constructor(uint owner_) {
         require(owner_ != 0, ErrorCodes.ZERO_ADDRESS);
         require(msg.sender == factory, ErrorCodes.ZERO_ADDRESS);
-        tvm.accept();
 
         setOwnership(owner_);
     }
