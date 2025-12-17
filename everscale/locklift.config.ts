@@ -36,18 +36,18 @@ const config: LockliftConfig = {
         "TokenRootUpgradeable",
         "TokenWalletUpgradeable",
         "TokenWalletPlatform",
-        'AlienTokenWalletUpgradeable',
-        'TokenRootAlienEVM',
-        'TokenRootAlienSolana',
-        'TokenRootAlienTVM',
+        "AlienTokenWalletUpgradeable",
+        "TokenRootAlienEVM",
+        "TokenRootAlienSolana",
+        "TokenRootAlienTVM",
       ],
       "../node_modules/ton-eth-bridge-token-contracts/contracts/bridge": [
-        'AlienTokenWalletUpgradeable',
-        'TokenRootAlienEVM',
-        'TokenRootAlienSolana',
-        'TokenRootAlienTVM',
+        "AlienTokenWalletUpgradeable",
+        "TokenRootAlienEVM",
+        "TokenRootAlienSolana",
+        "TokenRootAlienTVM",
       ],
-    }
+    },
   },
   networks: {
     locklift: {

@@ -44,7 +44,7 @@
     "prompts": "^2.4.1",
     "simple-node-logger": "^18.12.24",
     "solidity-docgen": "^0.5.7",
-    "ton-eth-bridge-token-contracts": "git+ssh://git@gitlab.broxus.com/tokens/tip3-with-jetton-support#fix_address_wid",
+    "ton-eth-bridge-token-contracts": "git+ssh://git@gitlab.broxus.com/tokens/tip3-with-jetton-support#jetton-internal-transfer",
     "underscore": "^1.12.0"
   },
   "devDependencies": {
